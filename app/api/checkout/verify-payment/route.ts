@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Use service role key so this server-side route bypasses RLS
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(request: Request) {
   try {
@@ -9,6 +15,7 @@ export async function POST(request: Request) {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
+      order_items, // array of cart items to persist
     } = await request.json();
 
     if (!order_id || !razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
@@ -18,9 +25,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const keySecret = process.env.RAZORPAY_SECRET_KEY || process.env.Razorpay_SECRET_KEY || '';
+    // ── 1. Verify Razorpay signature ────────────────────────────────────────
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || '';
 
-    // Verify signature cryptographically
+    if (!keySecret) {
+      console.error('RAZORPAY_KEY_SECRET is not set');
+      return NextResponse.json(
+        { message: 'Server configuration error: missing Razorpay secret' },
+        { status: 500 }
+      );
+    }
+
     const hmac = crypto.createHmac('sha256', keySecret);
     hmac.update(razorpay_order_id + '|' + razorpay_payment_id);
     const generatedSignature = hmac.digest('hex');
@@ -32,48 +47,77 @@ export async function POST(request: Request) {
       );
     }
 
-    // Update Order in Supabase
-    const { error: updateError } = await supabase
+    // ── 2. Fetch the internal order record ─────────────────────────────────
+    const { data: orderData, error: fetchError } = await supabaseAdmin
+      .from('orders')
+      .select('id')
+      .eq('order_number', order_id)
+      .single();
+
+    if (fetchError || !orderData) {
+      console.error('Order not found:', fetchError);
+      return NextResponse.json(
+        { message: 'Order not found in database' },
+        { status: 404 }
+      );
+    }
+
+    // ── 3. Update order payment status ─────────────────────────────────────
+    const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({
         payment_status: 'paid',
         fulfillment_status: 'processing',
         razorpay_payment_id: razorpay_payment_id,
+        razorpay_order_id: razorpay_order_id,
         updated_at: new Date().toISOString(),
       })
-      .eq('order_number', order_id);
+      .eq('id', orderData.id);
 
     if (updateError) {
       console.error('Database update error during payment verification:', updateError);
       return NextResponse.json(
-        { message: 'Payment verified but order database update failed' },
+        { message: 'Payment verified but order update failed', error: updateError.message },
         { status: 500 }
       );
     }
 
-    // Create Order Timeline update entry
-    try {
-      // Find the order record ID
-      const { data: orderData } = await supabase
-        .from('orders')
-        .select('id')
-        .eq('order_number', order_id)
-        .single();
+    // ── 4. Insert order items ───────────────────────────────────────────────
+    if (order_items && Array.isArray(order_items) && order_items.length > 0) {
+      const orderItemsRows = order_items.map((item: any) => ({
+        order_id: orderData.id,
+        product_id: item.product_id || null,
+        variant_id: item.variant_id || null,
+        title: item.title,
+        variant_info: item.variant_info || {},
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        line_total: item.line_total,
+      }));
 
-      if (orderData) {
-        await supabase.from('order_timeline').insert([
-          {
-            order_id: orderData.id,
-            status: 'processing',
-            note: `Payment successfully captured. ID: ${razorpay_payment_id}`,
-          },
-        ]);
+      const { error: itemsError } = await supabaseAdmin
+        .from('order_items')
+        .insert(orderItemsRows);
+
+      if (itemsError) {
+        console.error('Error inserting order items:', itemsError);
+        // Non-fatal — order is paid, items can be reconciled manually
       }
-    } catch (timelineErr) {
-      console.error('Error logging order timeline:', timelineErr);
     }
 
-    return NextResponse.json({ success: true, message: 'Payment verified' });
+    // ── 5. Log to order timeline ────────────────────────────────────────────
+    await supabaseAdmin.from('order_timeline').insert([
+      {
+        order_id: orderData.id,
+        status: 'processing',
+        note: `Payment successfully captured via Razorpay. Payment ID: ${razorpay_payment_id}`,
+      },
+    ]);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Payment verified and order confirmed',
+    });
   } catch (error: any) {
     console.error('Error verifying payment:', error);
     return NextResponse.json(

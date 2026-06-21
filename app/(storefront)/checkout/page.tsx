@@ -165,6 +165,16 @@ export default function CheckoutPage() {
                 razorpay_order_id: paymentResponse.razorpay_order_id,
                 razorpay_payment_id: paymentResponse.razorpay_payment_id,
                 razorpay_signature: paymentResponse.razorpay_signature,
+                // Pass cart items so they get saved to order_items table
+                order_items: items.map((item) => ({
+                  product_id: item.product.id,
+                  variant_id: item.variantId || null,
+                  title: item.product.title,
+                  variant_info: { size: item.size, color: item.color },
+                  quantity: item.quantity,
+                  unit_price: item.price,
+                  line_total: item.price * item.quantity,
+                })),
               }),
             });
 
@@ -173,7 +183,8 @@ export default function CheckoutPage() {
               clearCart();
               router.push(`/checkout/success?orderNumber=${orderId}`);
             } else {
-              toast('SIGNATURE VERIFICATION FAILED. SUPPORT CONTACTED.', 'error');
+              const errData = await verifyRes.json();
+              toast(errData.message || 'SIGNATURE VERIFICATION FAILED. SUPPORT CONTACTED.', 'error');
             }
           } catch (e) {
             console.error(e);

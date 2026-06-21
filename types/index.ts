@@ -155,6 +155,7 @@ export interface Order {
   payment_status: PaymentStatus;
   fulfillment_status: FulfillmentStatus;
   razorpay_payment_id: string | null;
+  razorpay_order_id: string | null;
   tracking_number: string | null;
   tracking_carrier: string | null;
   notes: string | null;

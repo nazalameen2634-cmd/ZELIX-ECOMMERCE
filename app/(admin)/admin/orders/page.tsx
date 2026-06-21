@@ -576,7 +576,49 @@ export default function AdminOrdersPage() {
               </div>
             </div>
 
+            {/* Payment Details Card */}
+            <div className="border border-[rgba(245,240,235,0.06)] rounded-sm p-4 bg-[#0A0A0A]">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+                PAYMENT DETAILS
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-[11px]">
+                <div>
+                  <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">PAYMENT STATUS</span>
+                  <span className={`inline-block px-2.5 py-1 rounded-full text-[9px] font-mono font-bold uppercase ${
+                    selectedOrder.payment_status === 'paid'
+                      ? 'bg-green-900/40 text-green-400 border border-green-800'
+                      : selectedOrder.payment_status === 'pending'
+                      ? 'bg-yellow-900/40 text-yellow-400 border border-yellow-800'
+                      : 'bg-red-900/40 text-red-400 border border-red-800'
+                  }`}>
+                    {selectedOrder.payment_status?.toUpperCase() || 'PENDING'}
+                  </span>
+                </div>
+                <div>
+                  <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">GATEWAY</span>
+                  <span className="font-mono text-[#F5F0EB] font-bold">
+                    {selectedOrder.razorpay_payment_id ? 'RAZORPAY' : '—'}
+                  </span>
+                </div>
+                <div className="col-span-2">
+                  <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">RAZORPAY PAYMENT ID</span>
+                  <span className="font-mono text-[11px] text-[#F5F0EB] break-all">
+                    {selectedOrder.razorpay_payment_id || <span className="text-[#4A4642] italic">Not yet captured</span>}
+                  </span>
+                </div>
+                {selectedOrder.razorpay_order_id && (
+                  <div className="col-span-2">
+                    <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">RAZORPAY ORDER ID</span>
+                    <span className="font-mono text-[11px] text-[#6B6560] break-all">
+                      {selectedOrder.razorpay_order_id}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Order Items Table */}
+
             <div>
               <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
                 BAGGED ITEMS ({selectedOrder.order_items?.length})
