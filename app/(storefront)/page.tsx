@@ -43,44 +43,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
   },
 ];
 
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 'p-1', title: 'MATRIX PARKA COAT', slug: 'matrix-parka-coat', price: 26000, sale_price: 21999,
-    sale_start: null, sale_end: null,
-    description: 'Immersive full-length technical coat. Waterproof membrane, magnetic collar lock, and adjustable harness system.',
-    category_id: 'cat-1', sku: 'ZLX-OUT-MPK', stock_quantity: 12, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['OUTERWEAR', 'PREMIUM'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
-  },
-  {
-    id: 'p-2', title: 'SILENT RUNNER BOOTS', slug: 'silent-runner-boots', price: 38000, sale_price: null,
-    sale_start: null, sale_end: null,
-    description: 'Chunky hybrid combat boot with vibram sole, quick-lace locking mechanism, and premium Italian distressed leather.',
-    category_id: 'cat-2', sku: 'ZLX-FOT-SRB', stock_quantity: 5, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['FOOTWEAR', 'LIMITED'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600&auto=format&fit=crop',
-  },
-  {
-    id: 'p-3', title: 'ECLIPSE OVERSIZED HOODIE', slug: 'eclipse-oversized-hoodie', price: 12000, sale_price: null,
-    sale_start: null, sale_end: null,
-    description: 'Heavyweight 500GSM organic cotton hoodie. Drop shoulder silhouette, invisible side pockets, raw-edge seam details.',
-    category_id: 'cat-3', sku: 'ZLX-APP-EOH', stock_quantity: 24, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['APPAREL', 'ESSENTIALS'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600&auto=format&fit=crop',
-  },
-  {
-    id: 'p-4', title: 'KINETIC UTILITY TROUSERS', slug: 'kinetic-utility-trousers', price: 18000, sale_price: 14999,
-    sale_start: null, sale_end: null,
-    description: 'Ergonomic trousers with modular cargo compartments, articulated knees, and custom nylon web belt.',
-    category_id: 'cat-3', sku: 'ZLX-APP-KUT', stock_quantity: 8, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['APPAREL', 'UTILITY'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=600&auto=format&fit=crop',
-  },
-];
+// Removed MOCK_PRODUCTS array
 
 const LIVE_CATEGORIES = [
   { id: '1', name: 'Accessories', slug: 'accessories', image_url: '/products/sunglasses.png', description: 'Avant-garde visor sunglasses, Cuban links, tactical chest rigs, and cuff beanies.' },
@@ -117,8 +80,8 @@ const fadeUpItem = {
 export default function HomePage() {
   const [heroSlides, setHeroSlides]     = useState<HeroSlide[]>(DEFAULT_SLIDES);
   const [activeSlide, setActiveSlide]   = useState(0);
-  const [newArrivals, setNewArrivals]   = useState<Product[]>(MOCK_PRODUCTS);
-  const [bestSellers, setBestSellers]   = useState<Product[]>(MOCK_PRODUCTS);
+  const [newArrivals, setNewArrivals]   = useState<Product[]>([]);
+  const [bestSellers, setBestSellers]   = useState<Product[]>([]);
   const [categories, setCategories]     = useState<Category[]>([]);
   const [announcement, setAnnouncement] = useState({ active: true, text: '' });
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -137,10 +100,10 @@ export default function HomePage() {
         if (slides?.length) setHeroSlides(slides);
 
         const { data: news } = await supabase.from('products').select('*, images:product_images(*)').eq('status', 'active').order('created_at', { ascending: false }).limit(4);
-        if (news?.length) setNewArrivals(news as Product[]);
+        if (news) setNewArrivals(news as Product[]);
 
         const { data: best } = await supabase.from('products').select('*, images:product_images(*)').eq('status', 'active').limit(4);
-        if (best?.length) setBestSellers(best as Product[]);
+        if (best) setBestSellers(best as Product[]);
 
         const { data: cats } = await supabase.from('categories').select('*').order('sort_order');
         if (cats) setCategories(cats as Category[]);
@@ -318,19 +281,25 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-40px' }}
-            variants={staggerContainer}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-5"
-          >
-            {newArrivals.slice(0, 4).map((product) => (
-              <motion.div key={product.id} variants={fadeUpItem}>
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </motion.div>
+          {newArrivals.length > 0 ? (
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={staggerContainer}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-5"
+            >
+              {newArrivals.slice(0, 4).map((product) => (
+                <motion.div key={product.id} variants={fadeUpItem}>
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="py-20 text-center font-mono text-[10px] tracking-[0.2em] text-[#6B6560]">
+              NO FEATURED DROPS CURRENTLY AVAILABLE.
+            </div>
+          )}
         </div>
       </section>
 
@@ -417,19 +386,25 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-40px' }}
-            variants={staggerContainer}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-5"
-          >
-            {bestSellers.slice(0, 4).map((product) => (
-              <motion.div key={product.id} variants={fadeUpItem}>
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </motion.div>
+          {bestSellers.length > 0 ? (
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={staggerContainer}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-5"
+            >
+              {bestSellers.slice(0, 4).map((product) => (
+                <motion.div key={product.id} variants={fadeUpItem}>
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="py-20 text-center font-mono text-[10px] tracking-[0.2em] text-[#6B6560]">
+              NO BEST SELLERS CURRENTLY AVAILABLE.
+            </div>
+          )}
         </div>
       </section>
 

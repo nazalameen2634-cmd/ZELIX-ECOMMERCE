@@ -20,58 +20,7 @@ const MOCK_CATEGORIES = [
   { id: 'cat-4', name: 'ACCESSORIES', slug: 'accessories' },
 ];
 
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 'p-1', title: 'MATRIX PARKA COAT', slug: 'matrix-parka-coat', price: 26000, sale_price: 21999,
-    sale_start: null, sale_end: null,
-    description: 'Immersive full-length technical coat. Waterproof membrane, magnetic collar lock, adjustable harness system.',
-    category_id: 'cat-1', sku: 'ZLX-OUT-MPK', stock_quantity: 12, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['OUTERWEAR', 'PREMIUM'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
-    additional_info: null,
-  },
-  {
-    id: 'p-2', title: 'SILENT RUNNER BOOTS', slug: 'silent-runner-boots', price: 38000, sale_price: null,
-    sale_start: null, sale_end: null,
-    description: 'Chunky hybrid combat boot with vibram sole, quick-lace locking and premium Italian distressed leather.',
-    category_id: 'cat-2', sku: 'ZLX-FOT-SRB', stock_quantity: 5, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['FOOTWEAR', 'LIMITED'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=600&auto=format&fit=crop',
-    additional_info: null,
-  },
-  {
-    id: 'p-3', title: 'ECLIPSE OVERSIZED HOODIE', slug: 'eclipse-oversized-hoodie', price: 12000, sale_price: null,
-    sale_start: null, sale_end: null,
-    description: 'Heavyweight 500GSM organic cotton hoodie. Drop shoulder silhouette, invisible side pockets.',
-    category_id: 'cat-3', sku: 'ZLX-APP-EOH', stock_quantity: 24, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['APPAREL', 'ESSENTIALS'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600&auto=format&fit=crop',
-    additional_info: null,
-  },
-  {
-    id: 'p-4', title: 'KINETIC UTILITY TROUSERS', slug: 'kinetic-utility-trousers', price: 18000, sale_price: 14999,
-    sale_start: null, sale_end: null,
-    description: 'Ergonomic trousers with modular cargo compartments, articulated knees, custom nylon web belt.',
-    category_id: 'cat-3', sku: 'ZLX-APP-KUT', stock_quantity: 8, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['APPAREL', 'UTILITY'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=600&auto=format&fit=crop',
-    additional_info: null,
-  },
-  {
-    id: 'p-5', title: 'SOLSTICE GLASSES', slug: 'solstice-glasses', price: 9000, sale_price: null,
-    sale_start: null, sale_end: null,
-    description: 'Acetate frame sunglasses. 100% UV protection, steel custom hardware, signature dark tint.',
-    category_id: 'cat-4', sku: 'ZLX-ACC-SLG', stock_quantity: 15, track_inventory: true,
-    allow_backorders: false, status: 'draft', meta_title: '', meta_description: '',
-    tags: ['ACCESSORIES', 'GLASSES'], created_at: '2026-06-18T12:00:00Z', updated_at: '2026-06-18T12:00:00Z',
-    og_image_url: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=600&auto=format&fit=crop',
-    additional_info: null,
-  },
-];
+// Removed MOCK_PRODUCTS array
 
 // ─── Filter Sidebar (shared between desktop + mobile) ──────
 function FilterPanel({
@@ -215,7 +164,7 @@ function ProductsListContent() {
   const priceMinParam  = Number(searchParams.get('minPrice')) || 0;
   const priceMaxParam  = Number(searchParams.get('maxPrice')) || 50000;
 
-  const [products, setProducts]         = useState<Product[]>(MOCK_PRODUCTS);
+  const [products, setProducts]         = useState<Product[]>([]);
   const [categories, setCategories]     = useState<Category[]>([]);
   const [loading, setLoading]           = useState(true);
   const [loadingMore, setLoadingMore]   = useState(false);
@@ -270,13 +219,10 @@ function ProductsListContent() {
       }
       setHasMore(fetched.length === pageSize);
     } catch {
-      let filtered = MOCK_PRODUCTS.filter((p) => p.status === 'active');
-      if (categoryParam) filtered = filtered.filter((p) => p.tags.some((t) => t.toLowerCase() === categoryParam));
-      if (searchParam)   filtered = filtered.filter((p) => p.title.toLowerCase().includes(searchParam.toLowerCase()));
-      filtered = filtered.filter((p) => p.price >= priceMinParam && p.price <= priceMaxParam);
-      if (sortParam === 'price-asc')  filtered.sort((a, b) => a.price - b.price);
-      if (sortParam === 'price-desc') filtered.sort((a, b) => b.price - a.price);
-      setProducts(filtered);
+      if (replace) {
+        setProducts([]);
+      }
+      setHasMore(false);
       setHasMore(false);
     } finally {
       setLoading(false);
