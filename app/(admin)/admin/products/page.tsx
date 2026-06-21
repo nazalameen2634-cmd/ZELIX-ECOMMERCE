@@ -182,7 +182,7 @@ export default function AdminProductsPage() {
           .from('categories')
           .select('*')
           .order('sort_order', { ascending: true });
-        if (cats && cats.length > 0) setCategories(cats as Category[]);
+        if (cats) setCategories(cats as Category[]);
       } catch (err) {
         console.warn('Supabase offline. Catalog previews seeded.');
         setProducts(MOCK_PRODUCTS);
