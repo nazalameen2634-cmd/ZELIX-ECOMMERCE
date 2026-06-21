@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, MapPin, Instagram, Send } from 'lucide-react';
+import { Mail, MapPin, AtSign, Send } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ContactPage() {
@@ -40,7 +40,7 @@ export default function ContactPage() {
                 {[
                   { icon: <Mail size={16} />, label: 'GENERAL ENQUIRIES', value: 'hello@zelix.store', href: 'mailto:hello@zelix.store' },
                   { icon: <Mail size={16} />, label: 'CUSTOMER SUPPORT', value: 'support@zelix.store', href: 'mailto:support@zelix.store' },
-                  { icon: <Instagram size={16} />, label: 'INSTAGRAM', value: '@zelixofficial', href: 'https://instagram.com/zelixofficial' },
+                  { icon: <AtSign size={16} />, label: 'INSTAGRAM', value: '@zelixofficial', href: 'https://instagram.com/zelixofficial' },
                   { icon: <MapPin size={16} />, label: 'LOCATION', value: 'INDIA', href: null },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
