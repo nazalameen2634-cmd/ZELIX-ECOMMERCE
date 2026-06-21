@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Product, Category, HeroSlide } from '@/types';
 import ProductCard from '@/components/storefront/ProductCard';
+import OrderTrackingSection from '@/components/storefront/OrderTrackingSection';
 
 // ─── Default Data ──────────────────────────────────────────
 const DEFAULT_SLIDES: HeroSlide[] = [
@@ -525,7 +526,12 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════
-          10. NEWSLETTER STRIP
+          10. ORDER TRACKING
+      ═══════════════════════════════════ */}
+      <OrderTrackingSection />
+
+      {/* ═══════════════════════════════════
+          11. NEWSLETTER STRIP
       ═══════════════════════════════════ */}
       <section className="py-24" style={{ background: '#060606' }}>
         <div className="container-narrow flex flex-col lg:flex-row items-center justify-between gap-10">

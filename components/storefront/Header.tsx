@@ -141,19 +141,6 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
             <Search size={17} />
           </button>
 
-          {/* Account */}
-          <Link
-            href={isAdmin ? '/admin' : user ? '/account' : '/account/login'}
-            className={`transition-colors duration-300 ${
-              pathname.startsWith('/admin') || pathname.startsWith('/account')
-                ? 'text-[#C9A96E]'
-                : 'text-[#6B6560] hover:text-[#F5F0EB]'
-            }`}
-            aria-label="Account"
-          >
-            <User size={17} />
-          </Link>
-
           {/* Cart */}
           <button
             id="cart-icon-btn"
@@ -231,22 +218,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                 </motion.div>
               ))}
 
-              {/* Account link */}
-              <motion.div
-                initial={{ opacity: 0, x: -32 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 + NAV_LINKS.length * 0.08, duration: 0.5 }}
-                className="mt-8"
-              >
-                <Link
-                  href={isAdmin ? '/admin' : user ? '/account' : '/account/login'}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 font-mono text-[10px] font-bold tracking-[0.22em] text-[#6B6560] hover:text-[#C9A96E] transition-colors"
-                >
-                  <User size={13} />
-                  {isAdmin ? 'ADMIN CONSOLE' : user ? 'MY ACCOUNT' : 'LOGIN / REGISTER'}
-                </Link>
-              </motion.div>
+              {/* Account link removed */}
             </div>
 
             {/* Footer */}

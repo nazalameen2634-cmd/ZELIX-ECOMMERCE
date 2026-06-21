@@ -3,41 +3,100 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { user, profile, isAdmin, loading } = useAuth();
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push('/account/login');
-      } else if (!isAdmin) {
-        router.push('/');
-      } else {
-        setIsAuthorized(true);
-      }
+    // Check local storage for admin auth token
+    const auth = localStorage.getItem('zelix_admin_auth');
+    if (auth === 'true') {
+      setIsAuthorized(true);
     }
-  }, [user, isAdmin, loading, router]);
+    setIsChecking(false);
+  }, []);
 
-  if (loading || !isAuthorized) {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    
+    if (email === 'admin@zelix.com' && password === 'admin@zelix@pass8806') {
+      localStorage.setItem('zelix_admin_auth', 'true');
+      setIsAuthorized(true);
+    } else {
+      setError('Invalid credentials.');
+    }
+  };
+
+  if (isChecking) {
     return (
       <div
         className="min-h-screen w-full flex flex-col items-center justify-center gap-6"
         style={{ background: '#080808' }}
       >
-        <div
-          className="font-sans text-[#C9A96E] text-[36px] font-black tracking-[0.4em]"
-        >
-          ZELIX
-        </div>
         <Loader2 className="animate-spin w-5 h-5" style={{ color: '#C9A96E' }} />
-        <span className="font-mono text-[9px] tracking-[0.24em]" style={{ color: '#4A4642' }}>
-          VALIDATING PERMISSIONS...
-        </span>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: '#080808' }}>
+        <div className="w-full max-w-md p-8 border" style={{ borderColor: 'rgba(245,240,235,0.1)', background: '#0A0A0A' }}>
+          <div className="text-center mb-8">
+            <h1 className="font-sans text-[24px] font-black tracking-[0.3em] text-[#F5F0EB] uppercase mb-2">
+              ZELIX ADMIN
+            </h1>
+            <p className="font-mono text-[10px] tracking-[0.2em] text-[#6B6560]">
+              AUTHORIZED PERSONNEL ONLY
+            </p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="flex flex-col gap-5">
+            <div>
+              <input
+                type="email"
+                placeholder="EMAIL ADDRESS"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-transparent border py-3 px-4 outline-none font-mono text-[11px] tracking-widest text-[#F5F0EB]"
+                style={{ borderColor: 'rgba(245,240,235,0.1)' }}
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="PASSWORD"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-transparent border py-3 px-4 outline-none font-mono text-[11px] tracking-widest text-[#F5F0EB]"
+                style={{ borderColor: 'rgba(245,240,235,0.1)' }}
+                required
+              />
+            </div>
+            
+            {error && (
+              <div className="text-red-500 font-mono text-[10px] tracking-widest text-center">
+                {error}
+              </div>
+            )}
+            
+            <button
+              type="submit"
+              className="w-full py-4 mt-2 font-mono text-[11px] font-bold tracking-[0.2em] uppercase transition-colors"
+              style={{ background: '#C9A96E', color: '#080808' }}
+            >
+              AUTHENTICATE
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -62,8 +121,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </span>
             </div>
             <div className="font-mono text-[8px] tracking-[0.14em]" style={{ color: '#4A4642' }}>
-              {profile?.full_name || user?.email || 'ADMIN'}
+              ADMIN
             </div>
+            <button 
+              onClick={() => {
+                localStorage.removeItem('zelix_admin_auth');
+                setIsAuthorized(false);
+              }}
+              className="font-mono text-[8px] tracking-[0.14em] text-red-500 hover:text-red-400 uppercase"
+            >
+              LOGOUT
+            </button>
           </div>
         </div>
 
