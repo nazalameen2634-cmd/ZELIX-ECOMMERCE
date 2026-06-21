@@ -2,9 +2,12 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const getAdminSupabase = () => {
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const sanitizedUrl = rawUrl.trim().replace(/\/$/, '');
+  
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    sanitizedUrl,
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || ''
   );
 };
 

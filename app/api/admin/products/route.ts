@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client with the Service Role Key to bypass RLS for Admin operations
+// Sanitize URL to remove trailing slashes or spaces which cause "Invalid path specified in request URL" errors
 const getAdminSupabase = () => {
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const sanitizedUrl = rawUrl.trim().replace(/\/$/, '');
+  
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    sanitizedUrl,
+    process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || ''
   );
 };
 
