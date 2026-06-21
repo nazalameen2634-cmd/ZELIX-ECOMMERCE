@@ -224,11 +224,12 @@ export default function AdminProductsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('CONFIRM DESTRUCTION OF THIS PRODUCT?')) return;
     try {
-      const { error } = await supabase.from('products').delete().eq('id', id);
-      if (error) throw error;
+      const res = await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
       setProducts((prev) => prev.filter((p) => p.id !== id));
       toast('PRODUCT DELETED FROM CATALOG', 'success');
     } catch (e) {
+      // Fallback
       setProducts((prev) => prev.filter((p) => p.id !== id));
       toast('PRODUCT DELETED FROM CATALOG (PREVIEW MODE)', 'success');
     }
@@ -257,25 +258,33 @@ export default function AdminProductsPage() {
 
     try {
       if (view === 'edit' && editingProductId) {
-        // Update product
-        const { error } = await supabase
-          .from('products')
-          .update(payload)
-          .eq('id', editingProductId);
-
-        if (error) throw error;
+        // Update product via API
+        const res = await fetch(`/api/admin/products/${editingProductId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || 'Failed to update');
+        }
         toast('PRODUCT RE-COMMITTED SUCCESSFULLY', 'success');
       } else {
-        // Create product
-        const { data: newProd, error } = await supabase
-          .from('products')
-          .insert([payload])
-          .select('id')
-          .single();
+        // Create product via API
+        const res = await fetch('/api/admin/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || 'Failed to create');
+        }
+        
+        const { data: newProd } = await res.json();
 
-        if (error) throw error;
-
-        // Insert variants if any
+        // Insert variants if any via API
         if (newProd && variantsList.length > 0) {
           const variantsRows = variantsList.map((v) => ({
             product_id: newProd.id,
@@ -284,7 +293,12 @@ export default function AdminProductsPage() {
             stock_quantity: parseInt(v.stock),
             option_values: [{ option_name: 'Size', value: v.size }],
           }));
-          await supabase.from('product_variants').insert(variantsRows);
+          
+          await fetch('/api/admin/products/variants', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(variantsRows),
+          });
         }
 
         toast('PRODUCT RELEASES PUBLISHED IN CATALOG', 'success');
@@ -375,14 +389,41 @@ export default function AdminProductsPage() {
     e.preventDefault();
   };
 
-  const handleDropMock = (e: React.DragEvent) => {
+  const handleDropUpload = async (e: React.DragEvent) => {
     e.preventDefault();
-    // Simulate image uploading
-    setFormFields((f) => ({
-      ...f,
-      image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
-    }));
-    toast('PRODUCT PHOTO UPLOADED TO product-images BUCKET', 'success');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast('PLEASE UPLOAD AN IMAGE FILE', 'error');
+      return;
+    }
+
+    toast('UPLOADING PRODUCT PHOTO...', 'success');
+    
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+      
+      const data = await res.json();
+      setFormFields((f) => ({ ...f, image: data.url }));
+      toast('PRODUCT PHOTO UPLOADED TO product-images BUCKET', 'success');
+    } catch (err) {
+      console.warn('Upload failed, falling back to mock image', err);
+      // Simulate image uploading fallback
+      setFormFields((f) => ({
+        ...f,
+        image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
+      }));
+      toast('UPLOAD FAILED. MOCK IMAGE INSERTED.', 'error');
+    }
   };
 
   const filteredProducts = products.filter(
@@ -424,7 +465,7 @@ export default function AdminProductsPage() {
         <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col gap-6">
           {/* Search bar */}
           <div className="relative max-w-md w-full flex items-center">
-            <Search className="absolute left-3.5 text-[#282420]" size={16} />
+            <Search className="absolute left-3.5 text-[#8C8782]" size={16} />
             <input
               type="text"
               placeholder="SEARCH CATALOG (TITLE OR SKU)..."
@@ -443,7 +484,7 @@ export default function AdminProductsPage() {
             <div className="overflow-x-auto w-full">
               <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
                 <thead>
-                  <tr className="border-b border-[rgba(245,240,235,0.06)] text-[#282420] font-mono text-[10px] uppercase">
+                  <tr className="border-b border-[rgba(245,240,235,0.06)] text-[#8C8782] font-mono text-[10px] uppercase">
                     <th className="pb-3 font-semibold w-16">IMAGE</th>
                     <th className="pb-3 font-semibold">TITLE</th>
                     <th className="pb-3 font-semibold">SKU</th>
@@ -456,7 +497,7 @@ export default function AdminProductsPage() {
                 <tbody>
                   {filteredProducts.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center font-mono text-[#282420]">
+                      <td colSpan={7} className="py-8 text-center font-mono text-[#8C8782]">
                         NO PRODUCTS MATCH THIS SEARCH CRITERIA.
                       </td>
                     </tr>
@@ -474,7 +515,7 @@ export default function AdminProductsPage() {
                           <td className="py-3 font-mono">{p.stock_quantity} units</td>
                           <td className="py-3">
                             <span className={`text-[8px] font-mono font-bold tracking-widest px-2 py-0.5 rounded-full uppercase ${
-                              p.status === 'active' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-[#121212] text-[#282420] border border-[rgba(245,240,235,0.06)]'
+                              p.status === 'active' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-[#121212] text-[#8C8782] border border-[rgba(245,240,235,0.06)]'
                             }`}>
                               {p.status}
                             </span>
@@ -509,7 +550,7 @@ export default function AdminProductsPage() {
         <form onSubmit={handleFormSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Panel: Primary fields */}
           <div className="lg:col-span-8 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-8 rounded-sm flex flex-col gap-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase">
               GENERAL PRODUCT DETAILS
             </h3>
 
@@ -528,7 +569,7 @@ export default function AdminProductsPage() {
                 onChange={(e) => setFormFields((f) => ({ ...f, slug: e.target.value }))}
               />
               <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#050507] px-4 py-2 justify-center">
-                <span className="font-mono text-[9px] text-[#282420] uppercase font-bold">CATEGORY</span>
+                <span className="font-mono text-[9px] text-[#8C8782] uppercase font-bold">CATEGORY</span>
                 <select
                   value={formFields.categoryId}
                   onChange={(e) => setFormFields((f) => ({ ...f, categoryId: e.target.value }))}
@@ -545,7 +586,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#0F0F0F] p-4">
-              <span className="font-mono text-[9px] text-[#282420] uppercase font-bold mb-2">DESCRIPTION (RICH TEXT HTML)</span>
+              <span className="font-mono text-[9px] text-[#8C8782] uppercase font-bold mb-2">DESCRIPTION (RICH TEXT HTML)</span>
               <textarea
                 rows={6}
                 value={formFields.description}
@@ -556,7 +597,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#0F0F0F] p-4 mt-2">
-              <span className="font-mono text-[9px] text-[#282420] uppercase font-bold mb-2">ADDITIONAL INFORMATION (HTML)</span>
+              <span className="font-mono text-[9px] text-[#8C8782] uppercase font-bold mb-2">ADDITIONAL INFORMATION (HTML)</span>
               <textarea
                 rows={4}
                 value={formFields.additionalInfo}
@@ -584,7 +625,7 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Inventory configuration */}
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-6 uppercase">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-6 uppercase">
               INVENTORY MANAGEMENT
             </h3>
             <div className="grid grid-cols-2 gap-4">
@@ -606,11 +647,11 @@ export default function AdminProductsPage() {
             {/* Variant Option swatches creator (Only shown on create mode) */}
             {view === 'create' && (
               <>
-                <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-6 uppercase">
+                <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-6 uppercase">
                   VARIANT OPTIONS SWATCHES (SIZING)
                 </h3>
                 <div className="flex flex-col gap-2">
-                  <div className="grid grid-cols-4 gap-4 font-mono text-[9px] text-[#282420] font-bold uppercase mb-1">
+                  <div className="grid grid-cols-4 gap-4 font-mono text-[9px] text-[#8C8782] font-bold uppercase mb-1">
                     <span>OPTION SIZE</span>
                     <span>PRICE OVERRIDE</span>
                     <span>STOCK QTY</span>
@@ -628,7 +669,7 @@ export default function AdminProductsPage() {
                           updated[idx].priceOverride = e.target.value;
                           setVariantsList(updated);
                         }}
-                        className="border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
+                        className="bg-transparent text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
                       />
                       <input
                         type="number"
@@ -639,7 +680,7 @@ export default function AdminProductsPage() {
                           updated[idx].stock = e.target.value;
                           setVariantsList(updated);
                         }}
-                        className="border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
+                        className="bg-transparent text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
                       />
                       <input
                         type="text"
@@ -650,7 +691,7 @@ export default function AdminProductsPage() {
                           updated[idx].sku = e.target.value;
                           setVariantsList(updated);
                         }}
-                        className="border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
+                        className="bg-transparent text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
                       />
                     </div>
                   ))}
@@ -664,7 +705,7 @@ export default function AdminProductsPage() {
           <div className="lg:col-span-4 flex flex-col gap-6">
             {/* Status card */}
             <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
                 PUBLISH STATUS
               </h3>
               <div className="flex flex-col gap-4">
@@ -705,14 +746,14 @@ export default function AdminProductsPage() {
 
             {/* Media Upload card */}
             <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
                 MEDIA LIBRARY
               </h3>
               
               {/* Drag/Drop Mock slot */}
               <div
                 onDragOver={handleDragOver}
-                onDrop={handleDropMock}
+                onDrop={handleDropUpload}
                 className="w-full aspect-[3/4] border-2 border-dashed border-[rgba(245,240,235,0.06)] hover:border-neutral-400 rounded-sm bg-[#050507] flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-4"
               >
                 {formFields.image ? (
@@ -724,7 +765,7 @@ export default function AdminProductsPage() {
                       <span className="font-mono text-[9px] font-bold tracking-widest uppercase text-[#6B6560] block">
                         DRAG & DROP PRODUCT PHOTO
                       </span>
-                      <span className="text-[10px] font-sans text-[#282420] mt-1 block">
+                      <span className="text-[10px] font-sans text-[#8C8782] mt-1 block">
                         Upload to product-images Storage bucket
                       </span>
                     </div>
@@ -744,7 +785,7 @@ export default function AdminProductsPage() {
 
             {/* Tagswatches */}
             <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
                 CATALOG TAGS
               </h3>
               <Input
