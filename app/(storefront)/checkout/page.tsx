@@ -148,7 +148,7 @@ export default function CheckoutPage() {
 
       // Configure SDK options
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_PUBLISHABLE_KEY,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: data.amount,
         currency: 'INR',
         name: 'ZELIX STOREFRONT',
@@ -244,7 +244,7 @@ export default function CheckoutPage() {
       }
 
       // 1. If live Razorpay publishable keys are present, open payment gateway
-      if (process.env.NEXT_PUBLIC_RAZORPAY_PUBLISHABLE_KEY) {
+      if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
         await handleLivePayment(data.order_number);
       } else {
         // 2. Fallback to Simulated Checkout success
@@ -541,36 +541,18 @@ export default function CheckoutPage() {
                         <Shield className="text-green-500" size={14} />
                       </div>
 
-                      {/* Card layout inputs representation */}
-                      <div className="flex flex-col gap-3">
-                        <Input
-                          label="CARD NUMBER"
-                          maxLength={19}
-                          placeholder="•••• •••• •••• ••••"
-                          value={cardInfo.number}
-                          onChange={(e) => setCardInfo((c) => ({ ...c, number: e.target.value }))}
-                        />
-                        <div className="grid grid-cols-2 gap-4">
-                          <Input
-                            label="EXPIRY DATE"
-                            maxLength={5}
-                            placeholder="MM/YY"
-                            value={cardInfo.expiry}
-                            onChange={(e) => setCardInfo((c) => ({ ...c, expiry: e.target.value }))}
-                          />
-                          <Input
-                            label="CARD CVC"
-                            maxLength={3}
-                            placeholder="•••"
-                            value={cardInfo.cvc}
-                            onChange={(e) => setCardInfo((c) => ({ ...c, cvc: e.target.value }))}
-                          />
+                      {/* Razorpay explanation */}
+                      <div className="flex flex-col items-center justify-center py-8 text-center gap-4">
+                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+                          <Shield className="text-green-500" size={24} />
+                        </div>
+                        <div>
+                          <h4 className="font-sans font-bold text-white text-sm tracking-wide mb-2">SECURE ENCRYPTED CHECKOUT</h4>
+                          <p className="font-mono text-[10px] text-neutral-500 tracking-wider leading-relaxed max-w-sm mx-auto">
+                            By clicking below, you will open the secure Razorpay payment gateway to complete your transaction using UPI, Cards, Netbanking, or Wallets.
+                          </p>
                         </div>
                       </div>
-
-                      <p className="text-[10px] font-mono text-neutral-600 tracking-wider mt-4 leading-relaxed">
-                        Cards are processed over secure SSL connections. Live Razorpay mode triggers standard payment intent screens.
-                      </p>
                     </div>
 
                     <div className="flex justify-between items-center mt-6">
