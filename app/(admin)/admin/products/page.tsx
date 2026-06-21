@@ -133,7 +133,7 @@ const MOCK_PRODUCTS: Product[] = [
 export default function AdminProductsPage() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>(MOCK_CATEGORIES);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
