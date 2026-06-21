@@ -1,15 +1,34 @@
 'use client';
 
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Box, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { supabase } from '@/lib/supabase';
 
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('orderNumber') || 'ORD-10001';
+  const [order, setOrder] = useState<any>(null);
+
+  // Fetch order details from Supabase
+  useEffect(() => {
+    async function fetchOrder() {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('order_number', orderNumber)
+        .single();
+      if (error) {
+        console.error('Failed to fetch order details', error);
+        return;
+      }
+      setOrder(data);
+    }
+    fetchOrder();
+  }, [orderNumber]);
 
   // Trigger confetti burst on success mount
   useEffect(() => {
@@ -20,6 +39,30 @@ function CheckoutSuccessContent() {
       colors: ['#FFFFFF', '#333333', '#888888'],
     });
   }, []);
+
+  const renderPaymentStatus = () => {
+    if (!order) return null;
+    const status = order.payment_status?.toUpperCase() || 'PENDING';
+    const colorClasses =
+      status === 'PAID'
+        ? 'bg-green-900/40 text-green-400 border border-green-800'
+        : status === 'PENDING'
+        ? 'bg-yellow-900/40 text-yellow-400 border border-yellow-800'
+        : 'bg-red-900/40 text-red-400 border border-red-800';
+    return (
+      <span className={`inline-block px-2.5 py-1 rounded-full text-[9px] font-mono font-bold uppercase ${colorClasses}`}> {status} </span>
+    );
+  };
+
+  const renderRazorpayInfo = () => {
+    if (!order) return null;
+    return (
+      <div className="mt-4 text-[11px] text-neutral-400">
+        <div><span className="font-mono text-[#4A4642] uppercase">RAZORPAY PAYMENT ID:</span> {order.razorpay_payment_id || '—'}</div>
+        <div><span className="font-mono text-[#4A4642] uppercase">RAZORPAY ORDER ID:</span> {order.razorpay_order_id || '—'}</div>
+      </div>
+    );
+  };
 
   const drawPath = {
     hidden: { pathLength: 0, opacity: 0 },
@@ -36,7 +79,6 @@ function CheckoutSuccessContent() {
   return (
     <div className="bg-black min-h-[75vh] flex items-center py-16">
       <div className="container-custom max-w-xl text-center flex flex-col items-center">
-        
         {/* Animated SVG Path Checkmark */}
         <div className="w-24 h-24 rounded-full border border-white/10 flex items-center justify-center bg-neutral-950 shadow-[0_10px_30px_rgba(255,255,255,0.02)] mb-8 relative">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,6 +120,11 @@ function CheckoutSuccessContent() {
             <span>SHIPPING PARTNER:</span>
             <span className="text-white font-bold">EXPRESS COURIER SERVICES</span>
           </div>
+          <div className="flex justify-between items-center text-neutral-500 mt-2">
+            <span>PAYMENT STATUS:</span>
+            {renderPaymentStatus()}
+          </div>
+          {renderRazorpayInfo()}
         </div>
 
         {/* CTA Actions */}
@@ -89,7 +136,7 @@ function CheckoutSuccessContent() {
             <Box size={12} />
             TRACK ORDER
           </Link>
-          
+
           <Link
             href="/products"
             className="flex items-center justify-center gap-2 bg-white hover:bg-neutral-200 px-8 py-4 rounded-full font-mono text-[10px] font-bold tracking-widest text-black transition-all"
@@ -98,7 +145,6 @@ function CheckoutSuccessContent() {
             CONTINUE SHOPPING <ArrowRight size={12} />
           </Link>
         </div>
-
       </div>
     </div>
   );
@@ -111,6 +157,7 @@ export default function CheckoutSuccessPage() {
         LOADING TRANSACTION STATUS...
       </div>
     }>
+    >
       <CheckoutSuccessContent />
     </Suspense>
   );
