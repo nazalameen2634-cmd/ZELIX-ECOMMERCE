@@ -373,10 +373,16 @@ export default function AdminOrdersPage() {
     toast('CSV SHEET EXPORTED SUCCESSFULLY', 'success');
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string | null | undefined) => {
+    const normalized = (status || '').toLowerCase();
     const base = 'text-[8px] font-mono font-bold tracking-widest px-2.5 py-0.5 rounded-full uppercase ';
-    if (status === 'paid' || status === 'delivered') return base + 'bg-green-50 text-green-700 border border-green-100';
-    if (status === 'pending' || status === 'processing') return base + 'bg-yellow-50 text-yellow-700 border border-yellow-100';
+    if (normalized.includes('paid') || normalized.includes('cash') || normalized === 'delivered') {
+      return base + 'bg-green-50 text-green-700 border border-green-100';
+    }
+    if (normalized === 'pending' || normalized === 'processing') {
+      return base + 'bg-yellow-50 text-yellow-700 border border-yellow-100';
+    }
+    // default to red for other statuses
     return base + 'bg-red-50 text-red-700 border border-red-100';
   };
 
