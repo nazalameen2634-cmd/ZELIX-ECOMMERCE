@@ -1,10 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const sanitizedUrl = rawUrl.trim().replace(/\/$/, '');
+const sanitizedUrl = rawUrl.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() || '';
-
-export const supabase = createClient(sanitizedUrl, supabaseAnonKey);
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
   console.warn(
@@ -12,7 +10,7 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_A
   );
 }
 
-const rawSupabase = createClient(supabaseUrl, supabaseAnonKey);
+const rawSupabase = createClient(sanitizedUrl, supabaseAnonKey);
 
 const isRealSupabase = !!(
   process.env.NEXT_PUBLIC_SUPABASE_URL &&

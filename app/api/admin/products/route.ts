@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 // Sanitize URL to remove trailing slashes or spaces which cause "Invalid path specified in request URL" errors
 const getAdminSupabase = () => {
   const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const sanitizedUrl = rawUrl.trim().replace(/\/$/, '');
+  const sanitizedUrl = rawUrl.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
   
   return createClient(
     sanitizedUrl,
