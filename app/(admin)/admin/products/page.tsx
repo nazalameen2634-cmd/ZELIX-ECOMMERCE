@@ -306,57 +306,8 @@ export default function AdminProductsPage() {
       setView('list');
       resetForm();
     } catch (err: any) {
-      console.warn('Supabase offline. CRUD action simulated.');
-      
-      if (view === 'edit' && editingProductId) {
-        setProducts((prev) =>
-          prev.map((p) =>
-            p.id === editingProductId
-              ? {
-                  ...p,
-                  title: payload.title,
-                  slug: payload.slug,
-                  description: payload.description,
-                  category_id: payload.category_id,
-                  price: payload.price,
-                  sale_price: payload.sale_price,
-                  sku: payload.sku,
-                  stock_quantity: payload.stock_quantity,
-                  track_inventory: payload.track_inventory,
-                  allow_backorders: payload.allow_backorders,
-                  status: payload.status,
-                  og_image_url: payload.og_image_url,
-                  tags: payload.tags,
-                }
-              : p
-          )
-        );
-        toast('PRODUCT RE-COMMITTED (PREVIEW MODE)', 'success');
-      } else {
-        const mockNewProduct: Product = {
-          id: 'mock-' + Math.random().toString(36).substring(2, 9),
-          title: payload.title,
-          slug: payload.slug,
-          description: payload.description,
-          category_id: payload.category_id,
-          price: payload.price,
-          sale_price: payload.sale_price,
-          sku: payload.sku,
-          stock_quantity: payload.stock_quantity,
-          track_inventory: payload.track_inventory,
-          allow_backorders: payload.allow_backorders,
-          status: payload.status,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          og_image_url: payload.og_image_url,
-          tags: payload.tags,
-        };
-        setProducts((prev) => [mockNewProduct, ...prev]);
-        toast('PRODUCT RELEASES PUBLISHED IN CATALOG (PREVIEW MODE)', 'success');
-      }
-
-      setView('list');
-      resetForm();
+      console.error('Save failed:', err);
+      toast(`ERROR: ${err.message}`, 'error');
     } finally {
       setIsSaving(false);
     }
