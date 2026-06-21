@@ -68,7 +68,7 @@ export default function CheckoutPage() {
   });
 
   // Calculate fees
-  const baseShippingCost = subtotal > 5000 ? 0 : shippingMethod === 'express' ? 250 : 150;
+  const baseShippingCost = 0; // Free delivery for all orders
   const taxAmount = (subtotal - discountAmount) * 0.18;
   const finalTotal = Math.max(0, subtotal - discountAmount + baseShippingCost + taxAmount);
 
@@ -469,8 +469,8 @@ export default function CheckoutPage() {
                             </span>
                           </div>
                         </div>
-                        <span className="text-[12px] font-semibold text-white">
-                          {subtotal > 5000 ? 'FREE' : '₹150'}
+                        <span className="text-[12px] font-semibold text-green-400">
+                          FREE
                         </span>
                       </label>
 
@@ -497,8 +497,8 @@ export default function CheckoutPage() {
                             </span>
                           </div>
                         </div>
-                        <span className="text-[12px] font-semibold text-white">
-                          {subtotal > 5000 ? 'FREE' : '₹250'}
+                        <span className="text-[12px] font-semibold text-green-400">
+                          FREE
                         </span>
                       </label>
                     </div>
@@ -623,12 +623,6 @@ export default function CheckoutPage() {
                     <span className="font-semibold">-{formatCurrency(discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>SHIPPING FEE</span>
-                  <span className="text-white font-semibold">
-                    {baseShippingCost === 0 ? 'FREE' : formatCurrency(baseShippingCost)}
-                  </span>
-                </div>
                 <div className="flex justify-between">
                   <span>TAX FEE (18%)</span>
                   <span className="text-white font-semibold">{formatCurrency(taxAmount)}</span>
