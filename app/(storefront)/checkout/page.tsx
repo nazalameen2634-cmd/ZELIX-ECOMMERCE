@@ -154,6 +154,7 @@ export default function CheckoutPage() {
         name: 'ZELIX STOREFRONT',
         description: `ORDER PAYMENT Receipt: ${orderId}`,
         order_id: data.id,
+        callback_url: `${window.location.origin}/api/checkout/verify-payment-redirect?order_id=${orderId}`,
         handler: async function (paymentResponse: any) {
           try {
             // Verify payment signature on backend
@@ -254,6 +255,23 @@ export default function CheckoutPage() {
         throw error;
       }
 
+      // Insert order items to DB immediately
+      const orderItemsRows = items.map((item) => ({
+        order_id: data.id,
+        product_id: item.product.id,
+        variant_id: item.variantId || null,
+        title: item.product.title,
+        variant_info: { size: item.size, color: item.color },
+        quantity: item.quantity,
+        unit_price: item.price,
+        line_total: item.price * item.quantity,
+      }));
+
+      const { error: itemsError } = await supabase.from('order_items').insert(orderItemsRows);
+      if (itemsError) {
+        console.error('Error inserting order items upfront:', itemsError);
+      }
+
       // 1. If live Razorpay publishable keys are present, open payment gateway
       if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
         await handleLivePayment(data.order_number);
@@ -265,20 +283,6 @@ export default function CheckoutPage() {
             .from('orders')
             .update({ payment_status: 'paid', fulfillment_status: 'processing' })
             .eq('id', data.id);
-
-          // Add order items to DB
-          const orderItemsRows = items.map((item) => ({
-            order_id: data.id,
-            product_id: item.product.id,
-            variant_id: item.variantId || null,
-            title: item.product.title,
-            variant_info: { size: item.size, color: item.color },
-            quantity: item.quantity,
-            unit_price: item.price,
-            line_total: item.price * item.quantity,
-          }));
-
-          await supabase.from('order_items').insert(orderItemsRows);
 
           // Insert order timeline log
           await supabase.from('order_timeline').insert([{

@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     }
 
     // ── 3. Update order payment status ─────────────────────────────────────
-    const { error: updateError } = await supabaseAdmin
+    let { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({
         payment_status: 'paid',
@@ -73,6 +73,21 @@ export async function POST(request: Request) {
         updated_at: new Date().toISOString(),
       })
       .eq('id', orderData.id);
+
+    // Fallback if razorpay_order_id column is missing in the database table
+    if (updateError && (updateError.message.includes('column') || updateError.message.includes('razorpay_order_id'))) {
+      console.warn('razorpay_order_id column missing. Falling back to updating razorpay_payment_id only.');
+      const { error: fallbackError } = await supabaseAdmin
+        .from('orders')
+        .update({
+          payment_status: 'paid',
+          fulfillment_status: 'processing',
+          razorpay_payment_id: razorpay_payment_id,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', orderData.id);
+      updateError = fallbackError;
+    }
 
     if (updateError) {
       console.error('Database update error during payment verification:', updateError);

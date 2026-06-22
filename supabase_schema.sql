@@ -212,6 +212,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     payment_status payment_status_enum DEFAULT 'pending' NOT NULL,
     fulfillment_status fulfillment_status_enum DEFAULT 'pending' NOT NULL,
     razorpay_payment_id TEXT,
+    razorpay_order_id TEXT,
     tracking_number TEXT,
     tracking_carrier TEXT,
     notes TEXT,

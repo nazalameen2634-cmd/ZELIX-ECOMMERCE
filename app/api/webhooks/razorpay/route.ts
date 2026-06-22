@@ -34,23 +34,59 @@ export async function POST(request: Request) {
       const razorpayPaymentId = paymentEntity.id;
 
       // Locate corresponding order in database
-      const { data: orderData } = await supabase
-        .from('orders')
-        .select('id, order_number')
-        .eq('razorpay_order_id', razorpayOrderId)
-        .single();
+      let orderData = null;
+      try {
+        const { data } = await supabase
+          .from('orders')
+          .select('id, order_number')
+          .eq('razorpay_order_id', razorpayOrderId)
+          .single();
+        orderData = data;
+      } catch (e) {
+        // Safe to ignore if column is missing
+      }
+
+      // Fallback to locating by receipt (order_number)
+      if (!orderData) {
+        const receipt = payload.payload.order?.entity?.receipt || 
+                        paymentEntity.notes?.order_id || 
+                        paymentEntity.notes?.order_number ||
+                        (paymentEntity.description && paymentEntity.description.split('Receipt: ')[1]);
+        if (receipt) {
+          const { data } = await supabase
+            .from('orders')
+            .select('id, order_number')
+            .eq('order_number', receipt)
+            .single();
+          orderData = data;
+        }
+      }
 
       if (orderData) {
         // Update payment and fulfillment states
-        await supabase
+        let { error: updateError } = await supabase
           .from('orders')
           .update({
             payment_status: 'paid',
             fulfillment_status: 'processing',
             razorpay_payment_id: razorpayPaymentId,
+            razorpay_order_id: razorpayOrderId,
             updated_at: new Date().toISOString(),
           })
           .eq('id', orderData.id);
+
+        // Fallback update if razorpay_order_id column is missing
+        if (updateError && (updateError.message.includes('column') || updateError.message.includes('razorpay_order_id'))) {
+          await supabase
+            .from('orders')
+            .update({
+              payment_status: 'paid',
+              fulfillment_status: 'processing',
+              razorpay_payment_id: razorpayPaymentId,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', orderData.id);
+        }
 
         // Add timeline updates log
         await supabase.from('order_timeline').insert([
