@@ -33,15 +33,13 @@ export default function ProductDetails({
   const [selectedColor, setSelectedColor] = useState('BLACK');
   const [quantity, setQuantity] = useState(1);
   const [zoomStyle, setZoomStyle] = useState({ display: 'none', backgroundPosition: '0% 0%' });
-
   // Review Form States
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [newRating, setNewRating] = useState(5);
   const [newReviewTitle, setNewReviewTitle] = useState('');
   const [newReviewBody, setNewReviewBody] = useState('');
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
-
-  // Accordion Sections open/close
+  const [guestName, setGuestName] = useState('');
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);  // Accordion Sections open/close
   const [accordions, setAccordions] = useState({
     description: true,
     specs: false,
@@ -97,8 +95,8 @@ export default function ProductDetails({
   // Submit Review to Supabase
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) {
-      toast('PLEASE SIGN IN TO SUBMIT A REVIEW', 'error');
+    if (!user && !guestName.trim()) {
+      toast('PLEASE ENTER YOUR NAME TO SUBMIT A REVIEW', 'error');
       return;
     }
 
@@ -106,11 +104,12 @@ export default function ProductDetails({
     try {
       const newReview = {
         product_id: product.id,
-        user_id: user.id,
+        user_id: user ? user.id : null,
+        reviewer_name: user ? (profile?.full_name || 'VERIFIED USER') : guestName.trim().toUpperCase(),
         rating: newRating,
         title: newReviewTitle.toUpperCase(),
         body: newReviewBody,
-        is_verified: true,
+        is_verified: user ? true : false,
       };
 
       const { data, error } = await supabase
@@ -127,7 +126,8 @@ export default function ProductDetails({
         setReviews((prev) => [
           {
             ...data,
-            profile: {
+            reviewer_name: newReview.reviewer_name,
+            profile: user ? {
               id: user.id,
               full_name: profile?.full_name || 'Verified User',
               email: profile?.email || '',
@@ -136,25 +136,27 @@ export default function ProductDetails({
               phone: profile?.phone || null,
               created_at: profile?.created_at || new Date().toISOString(),
               updated_at: profile?.updated_at || new Date().toISOString(),
-            },
+            } : null,
           } as Review,
           ...prev,
         ]);
         setNewReviewTitle('');
         setNewReviewBody('');
+        setGuestName('');
       }
     } catch (err) {
       console.warn('Supabase offline. Simulated review submission.');
       const localReview: Review = {
         id: Math.random().toString(),
         product_id: product.id,
-        user_id: user.id,
+        user_id: user ? user.id : null,
+        reviewer_name: user ? (profile?.full_name || 'VERIFIED USER') : guestName.trim().toUpperCase(),
         rating: newRating,
         title: newReviewTitle.toUpperCase(),
         body: newReviewBody,
-        is_verified: true,
+        is_verified: user ? true : false,
         created_at: new Date().toISOString(),
-        profile: {
+        profile: user ? {
           id: user.id,
           full_name: profile?.full_name || 'Verified Customer',
           email: profile?.email || '',
@@ -163,11 +165,12 @@ export default function ProductDetails({
           phone: profile?.phone || null,
           created_at: profile?.created_at || new Date().toISOString(),
           updated_at: profile?.updated_at || new Date().toISOString(),
-        },
+        } : null,
       };
       setReviews((prev) => [localReview, ...prev]);
       setNewReviewTitle('');
       setNewReviewBody('');
+      setGuestName('');
       toast('REVIEW ADDED (PREVIEW MODE)', 'success');
     } finally {
       setIsSubmittingReview(false);
@@ -576,76 +579,76 @@ export default function ProductDetails({
             <div className="lg:col-span-8 flex flex-col gap-10">
               
               {/* Form Submission */}
-              {user ? (
-                <div className="border border-white/5 bg-neutral-950 p-6 rounded-sm">
-                  <h3 className="font-mono text-[11px] font-extrabold tracking-widest text-white uppercase mb-6">
-                    SUBMIT A VERIFIED REVIEW
-                  </h3>
-                  <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
-                    
-                    {/* Star Rating select */}
-                    <div className="flex items-center gap-3">
-                      <span className="font-mono text-[10px] text-neutral-500 uppercase">
-                        YOUR RATING:
-                      </span>
-                      <div className="flex gap-1.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            type="button"
-                            onClick={() => setNewRating(star)}
-                            className="cursor-pointer text-neutral-500 hover:text-white"
-                          >
-                            <Star
-                              size={16}
-                              className={star <= newRating ? 'fill-white text-white' : 'text-neutral-800'}
-                            />
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
+              <div className="border border-white/5 bg-neutral-950 p-6 rounded-sm">
+                <h3 className="font-mono text-[11px] font-extrabold tracking-widest text-white uppercase mb-6">
+                  {user ? 'SUBMIT A VERIFIED REVIEW' : 'SUBMIT A REVIEW (GUEST)'}
+                </h3>
+                <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
+                  
+                  {/* Guest Name input */}
+                  {!user && (
                     <div className="border border-white/10 rounded-sm bg-neutral-900">
                       <input
                         type="text"
                         required
-                        value={newReviewTitle}
-                        onChange={(e) => setNewReviewTitle(e.target.value)}
-                        placeholder="REVIEW HEADLINE (E.G. EXCELLENT COAT)"
-                        className="w-full px-4 py-3 bg-transparent text-[11px] font-mono tracking-widest text-white uppercase placeholder-neutral-600 outline-none border-b border-white/5"
-                      />
-                      <textarea
-                        required
-                        rows={4}
-                        value={newReviewBody}
-                        onChange={(e) => setNewReviewBody(e.target.value)}
-                        placeholder="Write details about comfort, size, and material..."
-                        className="w-full px-4 py-3 bg-transparent text-[13px] text-white placeholder-neutral-500 outline-none resize-none"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        placeholder="YOUR NAME / ALIAS (REQUIRED)"
+                        className="w-full px-4 py-3 bg-transparent text-[11px] font-mono tracking-widest text-white uppercase placeholder-neutral-600 outline-none"
                       />
                     </div>
+                  )}
 
-                    <button
-                      type="submit"
-                      disabled={isSubmittingReview}
-                      className="self-end px-6 py-3 bg-white text-black font-mono text-[10px] font-bold tracking-widest rounded-full uppercase hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
-                    >
-                      {isSubmittingReview ? 'SUBMITTING...' : 'PUBLISH REVIEW'}
-                    </button>
-                  </form>
-                </div>
-              ) : (
-                <div className="border border-white/5 bg-neutral-950 p-6 rounded-sm text-center">
-                  <p className="font-mono text-[10px] tracking-wider text-neutral-500 uppercase mb-4">
-                    YOU MUST LOG IN TO WRITE A REVIEW FOR THIS PRODUCT
-                  </p>
-                  <Link
-                    href="/account/login"
-                    className="inline-block px-6 py-2.5 bg-neutral-900 hover:bg-neutral-800 border border-white/10 text-white font-mono text-[10px] font-bold tracking-widest rounded-full uppercase transition-colors"
+                  {/* Star Rating select */}
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-[10px] text-neutral-500 uppercase">
+                      YOUR RATING:
+                    </span>
+                    <div className="flex gap-1.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setNewRating(star)}
+                          className="cursor-pointer text-neutral-500 hover:text-white"
+                        >
+                          <Star
+                            size={16}
+                            className={star <= newRating ? 'fill-white text-white' : 'text-neutral-800'}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="border border-white/10 rounded-sm bg-neutral-900">
+                    <input
+                      type="text"
+                      required
+                      value={newReviewTitle}
+                      onChange={(e) => setNewReviewTitle(e.target.value)}
+                      placeholder="REVIEW HEADLINE (E.G. EXCELLENT COAT)"
+                      className="w-full px-4 py-3 bg-transparent text-[11px] font-mono tracking-widest text-white uppercase placeholder-neutral-600 outline-none border-b border-white/5"
+                    />
+                    <textarea
+                      required
+                      rows={4}
+                      value={newReviewBody}
+                      onChange={(e) => setNewReviewBody(e.target.value)}
+                      placeholder="Write details about comfort, size, and material..."
+                      className="w-full px-4 py-3 bg-transparent text-[13px] text-white placeholder-neutral-500 outline-none resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmittingReview}
+                    className="self-end px-6 py-3 bg-white text-black font-mono text-[10px] font-bold tracking-widest rounded-full uppercase hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
                   >
-                    LOGIN TO ACCOUNT
-                  </Link>
-                </div>
-              )}
+                    {isSubmittingReview ? 'SUBMITTING...' : 'PUBLISH REVIEW'}
+                  </button>
+                </form>
+              </div>
 
               {/* Reviews Cards List */}
               <div className="flex flex-col gap-6">
@@ -679,7 +682,7 @@ export default function ProductDetails({
 
                         <div className="text-right">
                           <span className="text-[10px] font-mono font-bold text-neutral-300 block">
-                            {review.profile?.full_name?.toUpperCase() || 'ANONYMOUS'}
+                            {review.reviewer_name?.toUpperCase() || review.profile?.full_name?.toUpperCase() || 'ANONYMOUS'}
                           </span>
                           <span className="text-[9px] font-mono text-neutral-500 block mt-0.5">
                             {new Date(review.created_at || '').toLocaleDateString()}

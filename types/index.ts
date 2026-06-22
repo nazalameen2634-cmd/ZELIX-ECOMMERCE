@@ -169,13 +169,14 @@ export interface Order {
 export interface Review {
   id: string;
   product_id: string;
-  user_id: string;
+  user_id: string | null;
+  reviewer_name?: string | null;
   rating: number;
   title: string | null;
   body: string;
   is_verified: boolean;
   created_at: string;
-  profile?: Profile;
+  profile?: Profile | null;
 }
 
 export interface Coupon {

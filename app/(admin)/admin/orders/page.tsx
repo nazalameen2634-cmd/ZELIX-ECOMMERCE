@@ -538,13 +538,13 @@ export default function AdminOrdersPage() {
                 <select
                   value={selectedOrder.fulfillment_status}
                   onChange={(e) => handleUpdateStatus(e.target.value)}
-                  className="border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
+                  className="bg-[#0F0F0F] text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
                 >
-                  <option value="pending">PENDING</option>
-                  <option value="processing">PROCESSING</option>
-                  <option value="shipped">SHIPPED</option>
-                  <option value="delivered">DELIVERED</option>
-                  <option value="cancelled">CANCELLED</option>
+                  <option value="pending" className="bg-[#0F0F0F] text-[#F5F0EB]">PENDING</option>
+                  <option value="processing" className="bg-[#0F0F0F] text-[#F5F0EB]">PROCESSING</option>
+                  <option value="shipped" className="bg-[#0F0F0F] text-[#F5F0EB]">SHIPPED</option>
+                  <option value="delivered" className="bg-[#0F0F0F] text-[#F5F0EB]">DELIVERED</option>
+                  <option value="cancelled" className="bg-[#0F0F0F] text-[#F5F0EB]">CANCELLED</option>
                 </select>
 
                 <Button onClick={handlePrintInvoice} variant="outline" size="sm">

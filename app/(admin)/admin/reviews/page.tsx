@@ -117,7 +117,8 @@ export default function AdminReviewsPage() {
     r.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     r.body?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     r.product?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    r.profile?.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    r.profile?.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    r.reviewer_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -176,8 +177,8 @@ export default function AdminReviewsPage() {
                       <td className="py-4 font-mono text-[#6B6560]">
                         {new Date(review.created_at).toLocaleDateString()}
                       </td>
-                      <td className="py-4 font-mono text-[#F5F0EB] font-bold">
-                        {review.profile?.full_name?.toUpperCase() || review.profile?.email || 'ANONYMOUS'}
+                       <td className="py-4 font-mono text-[#F5F0EB] font-bold">
+                        {review.reviewer_name?.toUpperCase() || review.profile?.full_name?.toUpperCase() || review.profile?.email || 'ANONYMOUS'}
                       </td>
                       <td className="py-4 font-mono text-[#C9A96E]">
                         {review.product?.title || 'UNKNOWN PRODUCT'}

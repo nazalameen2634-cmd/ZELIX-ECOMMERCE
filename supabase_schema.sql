@@ -247,7 +247,8 @@ CREATE TABLE IF NOT EXISTS public.order_timeline (
 CREATE TABLE IF NOT EXISTS public.reviews (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     product_id UUID REFERENCES public.products(id) ON DELETE CASCADE NOT NULL,
-    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    reviewer_name TEXT,
     rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
     title TEXT,
     body TEXT NOT NULL,
@@ -547,7 +548,7 @@ CREATE POLICY "Allow admins all access to order_timeline" ON public.order_timeli
 
 -- 15. Reviews Policies
 CREATE POLICY "Allow public select reviews" ON public.reviews FOR SELECT USING (true);
-CREATE POLICY "Allow authenticated users to insert reviews" ON public.reviews FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Allow public insert reviews" ON public.reviews FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow users to update own reviews" ON public.reviews FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Allow admins and owners to delete reviews" ON public.reviews FOR DELETE USING (
     auth.uid() = user_id OR EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
