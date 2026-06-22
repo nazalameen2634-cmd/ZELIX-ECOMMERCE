@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
 import { triggerOrderSuccessFlow } from '@/lib/whatsapp';
+import { triggerOrderEmailFlow } from '@/lib/email';
 
 // Create a direct admin client to update statuses bypassing RLS
 const supabaseAdmin = createClient(
@@ -101,6 +102,13 @@ export async function POST(request: Request) {
       await triggerOrderSuccessFlow(order_id);
     } catch (flowErr) {
       console.error('Failed to trigger order success flow:', flowErr);
+    }
+
+    // Trigger Email notification with PDF invoice attachment
+    try {
+      await triggerOrderEmailFlow(order_id);
+    } catch (emailErr) {
+      console.error('Failed to trigger order success email flow:', emailErr);
     }
 
     // Redirect to storefront checkout success screen
