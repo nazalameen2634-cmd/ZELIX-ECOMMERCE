@@ -110,44 +110,178 @@ export async function triggerOrderEmailFlow(orderIdOrNumber: string) {
     // 5. Construct Email HTML Body
     const customerName = order.shipping_address?.full_name || 'Customer';
     const trackingLink = `${appUrl}/track/${order.order_number}`;
+    
+    const sa = order.shipping_address || {};
+    const addressLine = sa.address_line1 + (sa.address_line2 ? `, ${sa.address_line2}` : '');
+    const orderDate = new Date(order.created_at).toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    const productRowsHtml = orderItems
+      .map((item: any) => `
+        <tr>
+          <td style="border-bottom: 1px solid #eee; padding: 12px; color: #1f2937; font-size: 14px;">${item.title}</td>
+          <td align="center" style="border-bottom: 1px solid #eee; padding: 12px; color: #4b5563; font-size: 14px;">${item.quantity}</td>
+          <td align="right" style="border-bottom: 1px solid #eee; padding: 12px; color: #1f2937; font-size: 14px; font-weight: bold;">₹${item.unit_price}</td>
+        </tr>
+      `)
+      .join('');
 
     const customerHtml = `
-      <div style="font-family: monospace, sans-serif; background-color: #000; color: #fff; padding: 40px; max-width: 600px; margin: 0 auto; border: 1px solid #111;">
-        <h2 style="font-size: 24px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 20px; color: #fff;">ZELIX ORDER CONFIRMED</h2>
-        <p style="font-size: 13px; color: #aaa; line-height: 1.6;">Hello ${customerName},</p>
-        <p style="font-size: 13px; color: #aaa; line-height: 1.6;">Your drop selection has been verified and registered. Your invoice details are listed below:</p>
-        
-        <table style="width: 100%; font-size: 12px; color: #ccc; margin: 30px 0; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 8px 0; color: #666;">ORDER ID</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #fff;">${order.order_number}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; color: #666;">TOTAL AMOUNT</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #C9A96E;">INR ${order.total}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 0; color: #666;">PAYMENT STATUS</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #00ff00;">${order.payment_status.toUpperCase()}</td>
-          </tr>
-        </table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmation</title>
+</head>
 
-        <div style="background-color: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; margin-bottom: 30px;">
-          <h4 style="margin-top: 0; font-size: 11px; letter-spacing: 1px; color: #fff;">ITEMS PREPARED FOR SHIPMENT</h4>
-          <ul style="padding-left: 20px; font-size: 12px; color: #ccc; line-height: 1.8; margin-bottom: 0;">
-            ${itemsListHtml}
-          </ul>
-        </div>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
 
-        <p style="text-align: center; margin: 40px 0 20px 0;">
-          <a href="${trackingLink}" style="background-color: #fff; color: #000; padding: 14px 28px; text-decoration: none; font-size: 11px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase;">TRACK SHIPMENT</a>
-        </p>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:40px 0;">
+<tr>
+<td align="center">
 
-        <p style="font-size: 10px; color: #444; border-top: 1px solid #222; padding-top: 20px; text-align: center; line-height: 1.5;">
-          THANK YOU FOR SHOPPING WITH ZELIX.<br>
-          ALL DROP ITEMS ARE LIMITED ARCHIVE SELECTIONS.
-        </p>
-      </div>
+<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,0.08);">
+
+<!-- Header -->
+<tr>
+<td align="center" style="background:#111827;padding:40px 20px;">
+<h1 style="color:#ffffff;margin:0;font-size:36px;font-family:monospace;letter-spacing:4px;font-weight:bold;margin-bottom:10px;">
+ZELIX
+</h1>
+<h2 style="color:#ffffff;margin:0;font-size:24px;font-weight:normal;letter-spacing:1px;">
+Order Confirmed 🎉
+</h2>
+<p style="color:#d1d5db;margin-top:10px;font-size:14px;letter-spacing:0.5px;">
+Thank you for shopping with us.
+</p>
+</td>
+</tr>
+
+<!-- Content -->
+<tr>
+<td style="padding:40px;">
+
+<p style="font-size:18px;color:#111827;">
+Hi <strong>${customerName}</strong>,
+</p>
+
+<p style="color:#6b7280;line-height:1.8;">
+We've received your order and it's now being processed.
+We'll notify you again once your package has been shipped.
+</p>
+
+<!-- Order Box -->
+<table width="100%" cellpadding="15" cellspacing="0"
+style="background:#f9fafb;border-radius:12px;margin-top:25px;">
+
+<tr>
+<td>
+<strong>Order ID:</strong> #${order.order_number}
+</td>
+<td align="right">
+<strong>Date:</strong> ${orderDate}
+</td>
+</tr>
+
+</table>
+
+<!-- Products -->
+<h3 style="margin-top:35px;color:#111827;">
+Order Summary
+</h3>
+
+<table width="100%" cellpadding="12" cellspacing="0"
+style="border-collapse:collapse;">
+
+<tr style="background:#f9fafb;">
+<th align="left">Product</th>
+<th align="center">Qty</th>
+<th align="right">Price</th>
+</tr>
+
+${productRowsHtml}
+
+</table>
+
+<!-- Total -->
+<table width="100%" cellpadding="15" cellspacing="0"
+style="margin-top:20px;background:#111827;border-radius:12px;">
+
+<tr>
+<td style="color:#ffffff;font-size:18px;">
+Total
+</td>
+<td align="right" style="color:#ffffff;font-size:24px;font-weight:bold;">
+₹${order.total}
+</td>
+</tr>
+
+</table>
+
+<!-- Tracking Button -->
+<div style="text-align:center;margin-top:35px;">
+<a href="${trackingLink}"
+style="
+background:#111827;
+color:#ffffff;
+text-decoration:none;
+padding:14px 32px;
+border-radius:10px;
+font-weight:bold;
+display:inline-block;">
+Track Order
+</a>
+</div>
+
+<!-- Shipping -->
+<h3 style="margin-top:40px;color:#111827;">
+Shipping Address
+</h3>
+
+<p style="color:#6b7280;line-height:1.8;">
+${customerName}<br>
+${addressLine}<br>
+${sa.city || ''}, ${sa.state || ''}<br>
+${sa.zip || ''}
+</p>
+
+</td>
+</tr>
+
+<!-- Footer -->
+<tr>
+<td align="center" style="background:#f9fafb;padding:30px;">
+
+<p style="margin:0;color:#111827;font-weight:bold;letter-spacing:1px;font-family:monospace;">
+ZELIX
+</p>
+
+<p style="margin-top:10px;color:#6b7280;font-size:14px;">
+Questions? Contact us anytime.
+</p>
+
+<p style="margin-top:5px;">
+<a href="mailto:orders@zelix.shop"
+style="color:#111827;text-decoration:none;">
+orders@zelix.shop
+</a>
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
     `;
 
     // 6. Send Email to Customer
