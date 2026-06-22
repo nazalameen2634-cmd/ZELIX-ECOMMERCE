@@ -178,27 +178,6 @@ function ProductsListContent() {
 
   const displayCategories = categories.length > 0 ? categories : (MOCK_CATEGORIES as unknown as Category[]);
 
-  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data } = await supabase.from('categories').select('*').order('sort_order');
-        if (data) setCategories(data as Category[]);
-      } catch {} finally {
-        setCategoriesLoaded(true);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    if (!categoriesLoaded) return;
-    setLoading(true);
-    setPage(1);
-    fetchProducts(1, true);
-  }, [categoryParam, sortParam, sizeParam, searchParam, priceMinParam, priceMaxParam, categoriesLoaded]);
-
   const fetchProducts = async (pg: number, replace = false) => {
     const from = (pg - 1) * pageSize;
     const to   = from + pageSize - 1;
@@ -232,6 +211,27 @@ function ProductsListContent() {
       setLoadingMore(false);
     }
   };
+
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await supabase.from('categories').select('*').order('sort_order');
+        if (data) setCategories(data as Category[]);
+      } catch {} finally {
+        setCategoriesLoaded(true);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (!categoriesLoaded) return;
+    setLoading(true);
+    setPage(1);
+    fetchProducts(1, true);
+  }, [categoryParam, sortParam, sizeParam, searchParam, priceMinParam, priceMaxParam, categoriesLoaded]);
 
   const updateFilter = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
