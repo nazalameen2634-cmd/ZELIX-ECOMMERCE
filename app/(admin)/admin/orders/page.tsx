@@ -164,13 +164,12 @@ export default function AdminOrdersPage() {
   // Selected Order Detail View
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  
-  // Edit inputs
+    // Edit inputs
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingCarrier, setTrackingCarrier] = useState('BLUE DART');
   const [adminNote, setAdminNote] = useState('');
+  const [tempFulfillmentStatus, setTempFulfillmentStatus] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
-
   // Load Orders
   useEffect(() => {
     async function loadOrders() {
@@ -196,6 +195,7 @@ export default function AdminOrdersPage() {
   // Open Order Detail Drawer
   const handleOpenDetail = async (order: Order) => {
     setSelectedOrder(order);
+    setTempFulfillmentStatus(order.fulfillment_status);
     setTrackingNumber(order.tracking_number || '');
     setTrackingCarrier(order.tracking_carrier || 'BLUE DART');
     setAdminNote('');
@@ -222,25 +222,16 @@ export default function AdminOrdersPage() {
     setUpdatingStatus(true);
 
     try {
-      // Update order table
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({
-          fulfillment_status: newFulfillmentStatus,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', selectedOrder.id);
-
-      if (updateError) throw updateError;
-
-      // Log to timeline
-      await supabase.from('order_timeline').insert([
-        {
+      const response = await fetch('/api/admin/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           order_id: selectedOrder.id,
-          status: newFulfillmentStatus,
-          note: `Fulfillment status changed to: ${newFulfillmentStatus.toUpperCase()}`,
-        },
-      ]);
+          fulfillment_status: newFulfillmentStatus,
+        }),
+      });
+
+      if (!response.ok) throw new Error('API order update failed');
 
       toast(`ORDER STATUS MODIFIED TO ${newFulfillmentStatus.toUpperCase()}`, 'success');
       
@@ -254,7 +245,7 @@ export default function AdminOrdersPage() {
           : null
       );
     } catch (err) {
-      console.warn('Supabase offline. Status simulation active.');
+      console.warn('Fallback status simulation active.');
       setSelectedOrder((prev) =>
         prev ? { ...prev, fulfillment_status: newFulfillmentStatus as any } : null
       );
@@ -270,24 +261,17 @@ export default function AdminOrdersPage() {
     if (!selectedOrder) return;
 
     try {
-      const { error } = await supabase
-        .from('orders')
-        .update({
+      const response = await fetch('/api/admin/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: selectedOrder.id,
           tracking_number: trackingNumber,
           tracking_carrier: trackingCarrier,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', selectedOrder.id);
+        }),
+      });
 
-      if (error) throw error;
-
-      await supabase.from('order_timeline').insert([
-        {
-          order_id: selectedOrder.id,
-          status: selectedOrder.fulfillment_status,
-          note: `Shipment tracking added: ${trackingCarrier} // ID: ${trackingNumber}`,
-        },
-      ]);
+      if (!response.ok) throw new Error('API tracking update failed');
 
       toast('TRACKING ID SAVED & TIMELINE UPDATED', 'success');
       setUpdatingStatus(!updatingStatus); // trigger reload
@@ -302,25 +286,31 @@ export default function AdminOrdersPage() {
     if (!selectedOrder || !adminNote.trim()) return;
 
     try {
-      const { data, error } = await supabase
-        .from('order_timeline')
-        .insert([
-          {
-            order_id: selectedOrder.id,
-            status: selectedOrder.fulfillment_status,
-            note: adminNote.trim(),
-          },
-        ])
-        .select('*')
-        .single();
+      const response = await fetch('/api/admin/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: selectedOrder.id,
+          admin_note: adminNote.trim(),
+        }),
+      });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error('API note update failed');
+
+      const mockLog = {
+        id: Math.random().toString(),
+        order_id: selectedOrder.id,
+        status: selectedOrder.fulfillment_status,
+        note: adminNote.trim(),
+        created_by: null,
+        created_at: new Date().toISOString(),
+      };
 
       setSelectedOrder((prev) =>
         prev
           ? {
               ...prev,
-              order_timeline: [data as OrderTimeline, ...(prev.order_timeline || [])],
+              order_timeline: [mockLog as OrderTimeline, ...(prev.order_timeline || [])],
             }
           : null
       );
@@ -536,8 +526,8 @@ export default function AdminOrdersPage() {
               <div className="flex items-center gap-2">
                 <span className="font-mono text-[9px] text-[#282420] font-bold uppercase">FULFILL STATUS:</span>
                 <select
-                  value={selectedOrder.fulfillment_status}
-                  onChange={(e) => handleUpdateStatus(e.target.value)}
+                  value={tempFulfillmentStatus}
+                  onChange={(e) => setTempFulfillmentStatus(e.target.value)}
                   className="bg-[#0F0F0F] text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
                 >
                   <option value="pending" className="bg-[#0F0F0F] text-[#F5F0EB]">PENDING</option>
@@ -546,6 +536,18 @@ export default function AdminOrdersPage() {
                   <option value="delivered" className="bg-[#0F0F0F] text-[#F5F0EB]">DELIVERED</option>
                   <option value="cancelled" className="bg-[#0F0F0F] text-[#F5F0EB]">CANCELLED</option>
                 </select>
+
+                {tempFulfillmentStatus !== selectedOrder.fulfillment_status && (
+                  <Button
+                    onClick={() => handleUpdateStatus(tempFulfillmentStatus)}
+                    variant="outline"
+                    size="sm"
+                    className="border-green-600 hover:bg-green-900/30 text-green-400 font-mono text-[10px] font-bold"
+                    disabled={updatingStatus}
+                  >
+                    {updatingStatus ? 'SAVING...' : 'SAVE'}
+                  </Button>
+                )}
 
                 <Button onClick={handlePrintInvoice} variant="outline" size="sm">
                   <Printer size={11} /> INVOICE
