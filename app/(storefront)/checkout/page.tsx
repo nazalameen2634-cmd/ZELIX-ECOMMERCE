@@ -43,6 +43,11 @@ export default function CheckoutPage() {
     }
   }, [items, router]);
 
+  // Scroll to top of the page when checkout step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
+
   // Checkout Steps: 1 = Shipping, 2 = Shipping Method, 3 = Payment & Review
   const [step, setStep] = useState(1);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
