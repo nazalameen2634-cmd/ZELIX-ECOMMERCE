@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Trash2, Plus, Minus, Lock, ShoppingBag, ArrowRight, Check, Tag } from 'lucide-react';
+import { Trash2, Plus, Minus, Lock, ShoppingBag, ArrowRight, Check, Tag, Box } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatCurrency } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
@@ -135,12 +135,21 @@ export default function CartPage() {
             <h2 className="font-mono text-[12px] font-bold tracking-widest text-neutral-400 uppercase">
               THERE ARE NO ITEMS IN YOUR BAG
             </h2>
-            <Link
-              href="/products"
-              className="bg-[#C9A96E] hover:bg-[#E8CFA0] text-black font-mono text-[10px] font-bold tracking-[0.18em] px-8 py-4 rounded-full transition-colors uppercase"
-            >
-              CONTINUE SHOPPING
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center">
+              <Link
+                href="/products"
+                className="bg-[#C9A96E] hover:bg-[#E8CFA0] text-black font-mono text-[10px] font-bold tracking-[0.18em] px-8 py-4 rounded-full transition-all uppercase flex items-center justify-center gap-1.5"
+              >
+                CONTINUE SHOPPING
+              </Link>
+              <Link
+                href="/account"
+                className="border border-white/10 hover:border-white text-white font-mono text-[10px] font-bold tracking-[0.18em] px-8 py-4 rounded-full transition-all uppercase flex items-center justify-center gap-1.5"
+              >
+                <Box size={12} />
+                TRACK ORDER
+              </Link>
+            </div>
           </div>
         ) : (
           /* Grid structure */
