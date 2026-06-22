@@ -179,30 +179,32 @@ export default function AdminCoupons() {
 
     try {
       if (editId) {
-        // Edit update
-        const { error } = await supabase
-          .from('coupons')
-          .update(payload)
-          .eq('id', editId);
+        // Edit update via API
+        const response = await fetch('/api/admin/coupons', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, id: editId }),
+        });
 
-        if (error) throw error;
+        if (!response.ok) throw new Error('API update failed');
+        const resData = await response.json();
 
         setCoupons(
-          coupons.map((c) => (c.id === editId ? { ...c, ...payload } : c))
+          coupons.map((c) => (c.id === editId ? { ...c, ...resData.data } : c))
         );
         toast('Coupon updated successfully', 'success');
       } else {
-        // Create insert
-        const newId = crypto.randomUUID();
-        const { data, error } = await supabase
-          .from('coupons')
-          .insert([{ ...payload, id: newId, times_used: 0 }])
-          .select();
+        // Create insert via API
+        const response = await fetch('/api/admin/coupons', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-        if (error) throw error;
+        if (!response.ok) throw new Error('API creation failed');
+        const resData = await response.json();
 
-        const inserted = data ? data[0] : { ...payload, id: newId, times_used: 0, created_at: new Date().toISOString() };
-        setCoupons([inserted as Coupon, ...coupons]);
+        setCoupons([resData.data as Coupon, ...coupons]);
         toast('Coupon created successfully', 'success');
       }
       handleCancel();
@@ -239,8 +241,11 @@ export default function AdminCoupons() {
     if (!confirm('Are you sure you want to delete this coupon?')) return;
 
     try {
-      const { error } = await supabase.from('coupons').delete().eq('id', id);
-      if (error) throw error;
+      const response = await fetch(`/api/admin/coupons?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('API deletion failed');
 
       setCoupons(coupons.filter((c) => c.id !== id));
       toast('Coupon removed successfully', 'success');
@@ -253,15 +258,17 @@ export default function AdminCoupons() {
   const toggleStatus = async (coupon: Coupon) => {
     const nextStatus = !coupon.is_active;
     try {
-      const { error } = await supabase
-        .from('coupons')
-        .update({ is_active: nextStatus })
-        .eq('id', coupon.id);
+      const response = await fetch('/api/admin/coupons', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: coupon.id, is_active: nextStatus }),
+      });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error('API update failed');
+      const resData = await response.json();
 
       setCoupons(
-        coupons.map((c) => (c.id === coupon.id ? { ...c, is_active: nextStatus } : c))
+        coupons.map((c) => (c.id === coupon.id ? { ...c, ...resData.data } : c))
       );
       toast(`Coupon status set to ${nextStatus ? 'ACTIVE' : 'INACTIVE'}`, 'success');
     } catch (err) {
