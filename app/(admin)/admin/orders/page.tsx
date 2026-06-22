@@ -71,6 +71,7 @@ const MOCK_ORDERS: Order[] = [
         order_id: 'ORD-10087',
         status: 'placed',
         note: 'Order placed by client.',
+        created_by: null,
         created_at: new Date(Date.now() - 3600000 * 2).toISOString()
       },
       {
@@ -78,6 +79,7 @@ const MOCK_ORDERS: Order[] = [
         order_id: 'ORD-10087',
         status: 'paid',
         note: 'Payment authorized via Razorpay.',
+        created_by: null,
         created_at: new Date(Date.now() - 3600000 * 1.8).toISOString()
       }
     ]
@@ -134,6 +136,7 @@ const MOCK_ORDERS: Order[] = [
         order_id: 'ORD-10086',
         status: 'placed',
         note: 'Order placed by client.',
+        created_by: null,
         created_at: new Date(Date.now() - 86400000).toISOString()
       },
       {
@@ -141,6 +144,7 @@ const MOCK_ORDERS: Order[] = [
         order_id: 'ORD-10086',
         status: 'paid',
         note: 'Payment authorized.',
+        created_by: null,
         created_at: new Date(Date.now() - 86400000 + 600000).toISOString()
       },
       {
@@ -148,6 +152,7 @@ const MOCK_ORDERS: Order[] = [
         order_id: 'ORD-10086',
         status: 'shipped',
         note: 'Package handed over to DHL/Delhivery.',
+        created_by: null,
         created_at: new Date(Date.now() - 40000000).toISOString()
       }
     ]
@@ -164,12 +169,19 @@ export default function AdminOrdersPage() {
   // Selected Order Detail View
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-    // Edit inputs
+  // Edit inputs
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingCarrier, setTrackingCarrier] = useState('BLUE DART');
   const [adminNote, setAdminNote] = useState('');
   const [tempFulfillmentStatus, setTempFulfillmentStatus] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
+
+  // WhatsApp communication & order history status logs
+  const [statusHistory, setStatusHistory] = useState<any[]>([]);
+  const [whatsappLogs, setWhatsappLogs] = useState<any[]>([]);
+  const [resendingInvoice, setResendingInvoice] = useState(false);
+  const [resendingNotification, setResendingNotification] = useState(false);
+
   // Load Orders
   useEffect(() => {
     async function loadOrders() {
@@ -200,6 +212,8 @@ export default function AdminOrdersPage() {
     setTrackingCarrier(order.tracking_carrier || 'BLUE DART');
     setAdminNote('');
     setIsDetailOpen(true);
+    setStatusHistory([]);
+    setWhatsappLogs([]);
 
     // Fetch timeline updates for this specific order
     try {
@@ -213,6 +227,65 @@ export default function AdminOrdersPage() {
       }
     } catch (e) {
       // Ignore
+    }
+
+    // Fetch order status history
+    try {
+      const { data: history } = await supabase
+        .from('order_status_history')
+        .select('*')
+        .eq('order_id', order.id)
+        .order('changed_at', { ascending: false });
+      if (history) setStatusHistory(history);
+    } catch (e) {
+      console.warn('Error fetching order status history:', e);
+    }
+
+    // Fetch WhatsApp logs
+    try {
+      const { data: logs } = await supabase
+        .from('whatsapp_logs')
+        .select('*')
+        .eq('order_id', order.id)
+        .order('created_at', { ascending: false });
+      if (logs) setWhatsappLogs(logs);
+    } catch (e) {
+      console.warn('Error fetching WhatsApp logs:', e);
+    }
+  };
+
+  const handleResend = async (action: 'invoice' | 'notification') => {
+    if (!selectedOrder) return;
+    if (action === 'invoice') setResendingInvoice(true);
+    else setResendingNotification(true);
+
+    try {
+      const response = await fetch('/api/admin/orders/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: selectedOrder.id,
+          action,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Resend action failed');
+      const data = await response.json();
+      toast(data.message?.toUpperCase() || 'RESEND SUCCESSFUL', 'success');
+
+      // Refresh WhatsApp logs
+      const { data: logs } = await supabase
+        .from('whatsapp_logs')
+        .select('*')
+        .eq('order_id', selectedOrder.id)
+        .order('created_at', { ascending: false });
+      if (logs) setWhatsappLogs(logs);
+
+    } catch (err: any) {
+      toast(err.message?.toUpperCase() || 'RESEND FAILED', 'error');
+    } finally {
+      setResendingInvoice(false);
+      setResendingNotification(false);
     }
   };
 
@@ -531,7 +604,7 @@ export default function AdminOrdersPage() {
                   className="bg-[#0F0F0F] text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
                 >
                   <option value="pending" className="bg-[#0F0F0F] text-[#F5F0EB]">PENDING</option>
-                  <option value="processing" className="bg-[#0F0F0F] text-[#F5F0EB]">PROCESSING</option>
+                  <option value="processing" className="bg-[#0F0F0F] text-[#F5F0EB]">CONFIRMED & PACKED</option>
                   <option value="shipped" className="bg-[#0F0F0F] text-[#F5F0EB]">SHIPPED</option>
                   <option value="delivered" className="bg-[#0F0F0F] text-[#F5F0EB]">DELIVERED</option>
                   <option value="cancelled" className="bg-[#0F0F0F] text-[#F5F0EB]">CANCELLED</option>
@@ -550,7 +623,27 @@ export default function AdminOrdersPage() {
                 )}
 
                 <Button onClick={handlePrintInvoice} variant="outline" size="sm">
-                  <Printer size={11} /> INVOICE
+                  <Printer size={11} /> PRINT SLIP
+                </Button>
+
+                <Button 
+                  onClick={() => handleResend('invoice')} 
+                  variant="outline" 
+                  size="sm"
+                  disabled={resendingInvoice}
+                  className="border-yellow-600 text-yellow-500 hover:bg-yellow-950/20"
+                >
+                  {resendingInvoice ? 'SENDING...' : 'RESEND INVOICE'}
+                </Button>
+
+                <Button 
+                  onClick={() => handleResend('notification')} 
+                  variant="outline" 
+                  size="sm"
+                  disabled={resendingNotification}
+                  className="border-emerald-600 text-emerald-500 hover:bg-emerald-950/20"
+                >
+                  {resendingNotification ? 'SENDING...' : 'RESEND WA'}
                 </Button>
               </div>
             </div>
@@ -747,6 +840,70 @@ export default function AdminOrdersPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* Granular Status Transition History */}
+            <div className="border-t border-[rgba(245,240,235,0.03)] pt-6">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+                GRANULAR STATUS HISTORY
+              </h4>
+              <div className="flex flex-col gap-2.5 max-h-[140px] overflow-y-auto pr-2">
+                {statusHistory.length > 0 ? (
+                  statusHistory.map((hist) => (
+                    <div key={hist.id} className="flex justify-between items-center text-[11px] font-mono border-b border-neutral-900 pb-2">
+                      <div>
+                        <span className="text-[#6B6560] uppercase">{hist.old_status || 'INIT'}</span>
+                        <span className="text-[#282420] mx-2">➜</span>
+                        <span className="text-[#C9A96E] font-bold uppercase">
+                          {hist.new_status === 'processing' ? 'CONFIRMED & PACKED' : hist.new_status}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-[#282420]">
+                        {new Date(hist.changed_at).toLocaleString()}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-[#282420] italic">No granular status transitions logged yet.</p>
+                )}
+              </div>
+            </div>
+
+            {/* WhatsApp Communication Logs */}
+            <div className="border-t border-[rgba(245,240,235,0.03)] pt-6">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+                WHATSAPP MESSAGING LOGS
+              </h4>
+              <div className="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-2">
+                {whatsappLogs.length > 0 ? (
+                  whatsappLogs.map((log) => (
+                    <div key={log.id} className="border border-[rgba(245,240,235,0.06)] bg-[#09090A] p-3 text-[11px] font-mono">
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                          log.status === 'sent' ? 'bg-green-950/40 text-green-400 border border-green-900/50' : 'bg-red-950/40 text-red-400 border border-red-900/50'
+                        }`}>
+                          {log.status}
+                        </span>
+                        <span className="text-[9px] text-[#282420]">
+                          {new Date(log.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="space-y-1 text-[#6B6560]">
+                        <p><span className="text-[#282420]">TYPE:</span> <span className="uppercase text-[#A19B95]">{log.message_type.replace(/_/g, ' ')}</span></p>
+                        <p><span className="text-[#282420]">TO:</span> <span className="text-[#A19B95]">{log.phone_number} ({log.recipient_type.toUpperCase()})</span></p>
+                        <div className="mt-2 p-2 bg-[#000] text-[#A19B95] whitespace-pre-wrap leading-relaxed text-[10px] border border-[rgba(245,240,235,0.03)]">
+                          {log.message_body}
+                        </div>
+                        {log.error_message && (
+                          <p className="text-red-400 text-[10px] mt-1"><span className="text-[#282420]">ALERT:</span> {log.error_message}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-[#282420] italic">No WhatsApp communications logged for this order.</p>
+                )}
               </div>
             </div>
 

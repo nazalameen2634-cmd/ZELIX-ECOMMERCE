@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { triggerOrderSuccessFlow } from '@/lib/whatsapp';
 
 // Create a direct admin client to update statuses bypassing RLS
 const supabaseAdmin = createClient(
@@ -94,6 +95,13 @@ export async function POST(request: Request) {
         note: `Payment successfully captured via redirect. Payment ID: ${razorpay_payment_id}`,
       },
     ]);
+
+    // Trigger WhatsApp notification & invoice PDF generation
+    try {
+      await triggerOrderSuccessFlow(order_id);
+    } catch (flowErr) {
+      console.error('Failed to trigger order success flow:', flowErr);
+    }
 
     // Redirect to storefront checkout success screen
     return NextResponse.redirect(`${url.origin}/checkout/success?orderNumber=${order_id}`, 303);

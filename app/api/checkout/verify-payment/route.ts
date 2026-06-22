@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { triggerOrderSuccessFlow } from '@/lib/whatsapp';
 
 // Use service role key so this server-side route bypasses RLS
 const supabaseAdmin = createClient(
@@ -128,6 +129,13 @@ export async function POST(request: Request) {
         note: `Payment successfully captured via Razorpay. Payment ID: ${razorpay_payment_id}`,
       },
     ]);
+
+    // Trigger WhatsApp notification & invoice PDF generation
+    try {
+      await triggerOrderSuccessFlow(order_id);
+    } catch (flowErr) {
+      console.error('Failed to trigger order success flow:', flowErr);
+    }
 
     return NextResponse.json({
       success: true,

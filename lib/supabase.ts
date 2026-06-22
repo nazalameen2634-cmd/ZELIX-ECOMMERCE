@@ -12,6 +12,9 @@ if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_A
 
 const rawSupabase = createClient(sanitizedUrl, supabaseAnonKey);
 
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || '';
+const rawSupabaseAdmin = createClient(sanitizedUrl, supabaseServiceKey || supabaseAnonKey);
+
 const isRealSupabase = !!(
   process.env.NEXT_PUBLIC_SUPABASE_URL &&
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
@@ -612,3 +615,34 @@ export const supabase = new Proxy(rawSupabase, {
     return Reflect.get(target, prop, receiver);
   }
 });
+
+export const supabaseAdmin = new Proxy(rawSupabaseAdmin, {
+  get(target, prop, receiver) {
+    if (!isRealSupabase) {
+      if (prop === 'from') {
+        return (table: string) => {
+          return new MockBuilder(table) as any;
+        };
+      }
+      if (prop === 'storage') {
+        return {
+          from: (bucket: string) => {
+            return {
+              upload: async (path: string, file: any) => {
+                return { data: { path }, error: null };
+              },
+              getPublicUrl: (path: string) => {
+                return { data: { publicUrl: path } };
+              },
+              remove: async (paths: string[]) => {
+                return { data: null, error: null };
+              }
+            } as any;
+          }
+        };
+      }
+    }
+    return Reflect.get(target, prop, receiver);
+  }
+});
+

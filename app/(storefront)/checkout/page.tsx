@@ -202,7 +202,7 @@ export default function CheckoutPage() {
         },
       };
 
-      const rzp = (window as any).Razorpay(options);
+      const rzp = new (window as any).Razorpay(options);
       rzp.open();
     } catch (err: any) {
       console.error(err);

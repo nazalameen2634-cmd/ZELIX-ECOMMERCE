@@ -8,6 +8,7 @@ import Footer from '@/components/storefront/Footer';
 import CartDrawer from '@/components/storefront/CartDrawer';
 import SearchModal from '@/components/storefront/SearchModal';
 import SupportChat from '@/components/storefront/SupportChat';
+import WhatsAppWidget from '@/components/storefront/WhatsAppWidget';
 
 export default function StorefrontLayout({
   children,
@@ -62,6 +63,9 @@ export default function StorefrontLayout({
 
       {/* Help Desk Chat Support */}
       <SupportChat />
+
+      {/* Floating WhatsApp Widget */}
+      <WhatsAppWidget />
     </div>
   );
 }

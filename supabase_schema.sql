@@ -582,6 +582,61 @@ CREATE POLICY "Allow admins all access to media" ON public.media FOR ALL USING (
     EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
 );
 
+-- 21. Order Status History Table
+CREATE TABLE IF NOT EXISTS public.order_status_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE NOT NULL,
+    old_status TEXT,
+    new_status TEXT NOT NULL,
+    changed_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 22. Invoices Table
+CREATE TABLE IF NOT EXISTS public.invoices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE NOT NULL,
+    invoice_number TEXT UNIQUE NOT NULL,
+    pdf_url TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 23. WhatsApp Logs Table
+CREATE TABLE IF NOT EXISTS public.whatsapp_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id UUID REFERENCES public.orders(id) ON DELETE CASCADE,
+    phone_number TEXT NOT NULL,
+    recipient_type TEXT NOT NULL, -- 'customer' | 'admin'
+    message_type TEXT NOT NULL, -- 'order_confirmation' | 'shipment_update' | 'invoice_ready' | 'admin_alert'
+    message_body TEXT NOT NULL,
+    status TEXT NOT NULL, -- 'sent' | 'failed' | 'delivered'
+    error_message TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable RLS
+ALTER TABLE public.order_status_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.whatsapp_logs ENABLE ROW LEVEL SECURITY;
+
+-- Policies
+CREATE POLICY "Allow users to select own order_status_history" ON public.order_status_history FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.orders WHERE orders.id = order_status_history.order_id AND (orders.user_id = auth.uid() OR orders.email = (SELECT email FROM public.profiles WHERE id = auth.uid())))
+);
+CREATE POLICY "Allow admins all access to order_status_history" ON public.order_status_history FOR ALL USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
+CREATE POLICY "Allow users to select own invoices" ON public.invoices FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.orders WHERE orders.id = invoices.order_id AND (orders.user_id = auth.uid() OR orders.email = (SELECT email FROM public.profiles WHERE id = auth.uid())))
+);
+CREATE POLICY "Allow admins all access to invoices" ON public.invoices FOR ALL USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
+CREATE POLICY "Allow admins all access to whatsapp_logs" ON public.whatsapp_logs FOR ALL USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
 -- Seed Initial site_settings
 INSERT INTO public.site_settings (id, site_name, tagline, contact_email, contact_phone, business_address, currency_code, currency_symbol, tax_rate, tax_inclusive)
 VALUES (1, 'ZELIX', 'Post-Modern Activewear & Streetwear', 'contact@zelix.shop', '+91 98765 43210', '120 Fashion Avenue, Tech District, India', 'INR', '₹', 18.0, true)
