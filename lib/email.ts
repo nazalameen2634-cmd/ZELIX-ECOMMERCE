@@ -14,7 +14,7 @@ interface SendEmailParams {
 
 export async function sendEmail({ to, subject, html, attachments }: SendEmailParams) {
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.EMAIL_FROM || 'ZELIX <onboarding@resend.dev>';
+  const fromEmail = process.env.EMAIL_FROM || 'ZELIX <orders@zelix.shop>';
 
   let isSimulated = true;
   let status: 'sent' | 'failed' = 'sent';
