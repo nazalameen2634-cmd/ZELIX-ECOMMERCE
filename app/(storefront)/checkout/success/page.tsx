@@ -157,7 +157,6 @@ export default function CheckoutSuccessPage() {
         LOADING TRANSACTION STATUS...
       </div>
     }>
-    >
       <CheckoutSuccessContent />
     </Suspense>
   );
