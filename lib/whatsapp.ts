@@ -15,41 +15,43 @@ export async function sendWhatsAppMessage({
   messageType,
   messageBody,
 }: SendWhatsAppParams) {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const fromNumber = process.env.TWILIO_PHONE_NUMBER || 'whatsapp:+14155238886';
+  const accessToken = process.env.META_WHATSAPP_ACCESS_TOKEN;
+  const phoneNumberId = process.env.META_WHATSAPP_PHONE_NUMBER_ID;
   const adminPhoneNumber = process.env.ADMIN_PHONE_NUMBER || '+919876543210';
 
   const targetPhoneNumber = recipientType === 'admin' ? adminPhoneNumber : phoneNumber;
+  // Meta requires numbers to have country code and NO '+' sign (e.g. '919876543210')
+  const cleanPhoneNumber = targetPhoneNumber.replace(/\D/g, '');
   
   let status: 'sent' | 'failed' = 'sent';
   let errorMessage: string | null = null;
   let isSimulated = true;
 
-  if (accountSid && authToken && accountSid !== 'placeholder' && authToken !== 'placeholder' && !accountSid.includes('xxx')) {
+  if (accessToken && phoneNumberId && accessToken !== 'placeholder' && phoneNumberId !== 'placeholder') {
     isSimulated = false;
     try {
-      const formattedTo = targetPhoneNumber.startsWith('whatsapp:') ? targetPhoneNumber : `whatsapp:${targetPhoneNumber.startsWith('+') ? targetPhoneNumber : '+' + targetPhoneNumber}`;
-      const formattedFrom = fromNumber.startsWith('whatsapp:') ? fromNumber : `whatsapp:${fromNumber}`;
-
-      const authHeader = 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64');
-      const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+      const response = await fetch(`https://graph.facebook.com/v19.0/${phoneNumberId}/messages`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': authHeader
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
-        body: new URLSearchParams({
-          To: formattedTo,
-          From: formattedFrom,
-          Body: messageBody
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to: cleanPhoneNumber,
+          type: 'text',
+          text: {
+            preview_url: true,
+            body: messageBody
+          }
         })
       });
 
       if (!response.ok) {
         const errData = await response.json();
         status = 'failed';
-        errorMessage = errData.message || response.statusText;
+        errorMessage = errData.error?.message || response.statusText;
       }
     } catch (e: any) {
       status = 'failed';
