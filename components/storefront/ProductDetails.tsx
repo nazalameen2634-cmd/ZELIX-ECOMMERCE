@@ -49,7 +49,7 @@ export default function ProductDetails({
   const mainImageRef = useRef<HTMLImageElement>(null);
 
   // Product Images list
-  const productImages = product.images?.map((img) => img.image_url) || [
+  const productImages = (product.images || (product as any).product_images)?.map((img: any) => img.image_url) || [
     product.og_image_url || '/placeholder.jpg',
   ];
 
@@ -190,10 +190,10 @@ export default function ProductDetails({
   });
 
   return (
-    <div className="bg-black py-16">
+    <div className="bg-black py-8 md:py-16">
       <div className="container-custom">
         {/* Breadcrumbs */}
-        <div className="text-[10px] font-mono font-bold tracking-widest text-neutral-500 uppercase mb-12">
+        <div className="text-[10px] font-mono font-bold tracking-widest text-neutral-500 uppercase mb-6 md:mb-12">
           <Link href="/" className="hover:text-white transition-colors">HOME</Link>{" // "}
           <Link href="/products" className="hover:text-white transition-colors">PRODUCTS</Link>{" // "}
           <span className="text-white">{product.title}</span>
@@ -384,22 +384,22 @@ export default function ProductDetails({
 
             {/* Quantity Selector & Add to Cart button */}
             <div className="flex flex-col gap-4 border-b border-white/5 pb-8 mb-8">
-              <div className="flex gap-4 items-center">
+              <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
                 {/* Quantity */}
-                <div className="flex items-center border border-white/10 rounded-full px-4 py-3 gap-6 bg-neutral-950">
+                <div className="flex items-center justify-between border border-white/10 rounded-full px-6 py-3.5 bg-neutral-950 sm:w-auto w-full">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     disabled={quantity <= 1}
-                    className="text-neutral-400 hover:text-white disabled:opacity-30 transition-colors cursor-pointer"
+                    className="text-neutral-400 hover:text-white disabled:opacity-30 transition-colors cursor-pointer px-2"
                   >
                     <Minus size={12} />
                   </button>
-                  <span className="font-mono text-[11px] font-bold text-white min-w-[15px] text-center">
+                  <span className="font-mono text-[11px] font-bold text-white min-w-[20px] text-center">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity((q) => Math.min(product.stock_quantity || 99, q + 1))}
-                    className="text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                    className="text-neutral-400 hover:text-white transition-colors cursor-pointer px-2"
                   >
                     <Plus size={12} />
                   </button>
