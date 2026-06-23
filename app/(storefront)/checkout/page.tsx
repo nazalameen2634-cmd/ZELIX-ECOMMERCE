@@ -24,6 +24,14 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 
+const INDIAN_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 
+  'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 
+  'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 
+  'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh', 
+  'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+];
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -48,6 +56,7 @@ export default function CheckoutPage() {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [saveAddress, setSaveAddress] = useState(false);
   const [checkoutSuccessOrder, setCheckoutSuccessOrder] = useState<any | null>(null);
+  const [phoneError, setPhoneError] = useState('');
 
   // Scroll to top of the page when checkout step changes
   useEffect(() => {
@@ -113,6 +122,9 @@ export default function CheckoutPage() {
 
   const handleInputChange = (key: string, val: string) => {
     setFormData((prev) => ({ ...prev, [key]: val }));
+    if (key === 'phone') {
+      setPhoneError('');
+    }
   };
 
   const handleZipChange = async (zipCode: string) => {
@@ -126,8 +138,8 @@ export default function CheckoutPage() {
           const postOffice = data[0].PostOffice[0];
           setFormData((prev) => ({
             ...prev,
-            city: postOffice.District || postOffice.Name || '',
-            state: postOffice.State || '',
+            city: (postOffice.District || postOffice.Name || '').toUpperCase(),
+            state: (postOffice.State || '').toUpperCase(),
           }));
         }
       } catch (err) {
@@ -141,8 +153,11 @@ export default function CheckoutPage() {
     if (step === 1) {
       const cleanedPhone = formData.phone.replace(/\D/g, '');
       if (cleanedPhone.length !== 10) {
-        toast('PLEASE ENTER A VALID 10-DIGIT PHONE NUMBER', 'error');
+        setPhoneError('PLEASE ENTER A VALID 10-DIGIT PHONE NUMBER');
+        toast('PLEASE CORRECT THE ERRORS IN THE FORM', 'error');
         return;
+      } else {
+        setPhoneError('');
       }
     }
     if (step < 3) {
@@ -191,6 +206,7 @@ export default function CheckoutPage() {
         order_id: data.id,
         callback_url: `${window.location.origin}/api/checkout/verify-payment-redirect?order_id=${orderId}`,
         handler: async function (paymentResponse: any) {
+          setIsPlacingOrder(true);
           try {
             // Verify payment signature on backend
             const verifyRes = await fetch('/api/checkout/verify-payment', {
@@ -228,6 +244,8 @@ export default function CheckoutPage() {
           } catch (e) {
             console.error(e);
             toast('VERIFICATION EXCEPTION TRIGGERED', 'error');
+          } finally {
+            setIsPlacingOrder(false);
           }
         },
         prefill: {
@@ -238,6 +256,11 @@ export default function CheckoutPage() {
         theme: {
           color: '#000000',
         },
+        modal: {
+          ondismiss: function () {
+            setIsPlacingOrder(false);
+          }
+        }
       };
 
       const rzp = new (window as any).Razorpay(options);
@@ -245,7 +268,6 @@ export default function CheckoutPage() {
     } catch (err: any) {
       console.error(err);
       toast(err.message || 'GATEWAY INITIATION EXCEPTION', 'error');
-    } finally {
       setIsPlacingOrder(false);
     }
   };
@@ -377,12 +399,12 @@ export default function CheckoutPage() {
 
   if (checkoutSuccessOrder) {
     return (
-      <div className="bg-black min-h-screen py-16 flex items-center justify-center px-4">
+      <div className="bg-black min-h-screen py-24 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="border border-white/5 bg-neutral-950/40 p-8 md:p-12 rounded-sm max-w-2xl w-full text-center flex flex-col items-center shadow-2xl relative overflow-hidden"
+          className="border border-white/5 bg-neutral-950/40 p-10 md:p-16 rounded-sm max-w-3xl w-full text-center flex flex-col items-center shadow-2xl relative overflow-hidden"
         >
           {/* Subtle grid background for premium tech-wear feel */}
           <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
@@ -391,42 +413,42 @@ export default function CheckoutPage() {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="w-16 h-16 rounded-full bg-[#C9A96E]/10 border border-[#C9A96E]/20 flex items-center justify-center text-[#C9A96E] mb-6"
+            className="w-24 h-24 rounded-full bg-[#C9A96E]/10 border border-[#C9A96E]/20 flex items-center justify-center text-[#C9A96E] mb-8"
           >
-            <CheckCircle2 size={32} />
+            <CheckCircle2 size={48} />
           </motion.div>
 
-          <span className="font-mono text-[9px] tracking-widest text-neutral-500 uppercase mb-2">
+          <span className="font-mono text-[10px] tracking-[0.2em] text-neutral-500 uppercase mb-3">
             TRANSACTION VERIFIED
           </span>
-          <h1 className="text-[24px] md:text-[32px] font-sans font-black tracking-tight uppercase text-white mb-6">
+          <h1 className="text-[32px] md:text-[48px] font-sans font-black tracking-tight uppercase text-white mb-8 leading-none">
             ORDER CONFIRMED
           </h1>
 
-          <div className="w-full border-t border-b border-white/5 py-6 my-6 flex flex-col gap-4 font-mono text-[10px] text-left">
-            <div className="flex justify-between border-b border-white/5 pb-3">
+          <div className="w-full border-t border-b border-white/5 py-8 my-8 flex flex-col gap-5 font-mono text-[11px] text-left">
+            <div className="flex justify-between border-b border-white/5 pb-4">
               <span className="text-neutral-500">ORDER NUMBER</span>
-              <span className="text-white font-bold tracking-widest">{checkoutSuccessOrder.order_number}</span>
+              <span className="text-white font-bold tracking-widest text-sm">{checkoutSuccessOrder.order_number}</span>
             </div>
-            <div className="flex justify-between border-b border-white/5 pb-3">
+            <div className="flex justify-between border-b border-white/5 pb-4">
               <span className="text-neutral-500">TOTAL AMOUNT</span>
-              <span className="text-[#C9A96E] font-black">{formatCurrency(checkoutSuccessOrder.total)}</span>
+              <span className="text-[#C9A96E] font-black text-sm">{formatCurrency(checkoutSuccessOrder.total)}</span>
             </div>
-            <div className="flex justify-between border-b border-white/5 pb-3">
+            <div className="flex justify-between border-b border-white/5 pb-4">
               <span className="text-neutral-500">SHIPPING TO</span>
-              <span className="text-white uppercase font-bold text-right max-w-xs truncate">
+              <span className="text-white uppercase font-bold text-right max-w-sm truncate">
                 {formData.fullName}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-neutral-500">DELIVERY METHOD</span>
-              <span className="text-white uppercase font-bold">
+              <span className="text-white uppercase font-bold text-right">
                 {shippingMethod === 'express' ? 'EXPRESS ARCHIVE DELIVERY' : 'STANDARD DELIVERY'}
               </span>
             </div>
           </div>
 
-          <p className="font-sans text-[12px] text-neutral-400 max-w-md mb-8 leading-relaxed">
+          <p className="font-sans text-[13px] text-neutral-400 max-w-lg mb-10 leading-relaxed">
             Your order has been logged into the system. A confirmation email with details of the package tracking has been sent to <span className="text-white font-semibold">{formData.email}</span>.
           </p>
 
@@ -534,6 +556,7 @@ export default function CheckoutPage() {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value)}
+                        error={phoneError}
                       />
                     </div>
                     <Input
@@ -547,25 +570,42 @@ export default function CheckoutPage() {
                       value={formData.address2}
                       onChange={(e) => handleInputChange('address2', e.target.value)}
                     />
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Input
+                      label="PIN CODE"
+                      required
+                      value={formData.zip}
+                      onChange={(e) => handleZipChange(e.target.value)}
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <Input
                         label="CITY"
                         required
                         value={formData.city}
                         onChange={(e) => handleInputChange('city', e.target.value)}
                       />
-                      <Input
-                        label="STATE / PROVINCE"
-                        required
-                        value={formData.state}
-                        onChange={(e) => handleInputChange('state', e.target.value)}
-                      />
-                      <Input
-                        label="ZIP CODE"
-                        required
-                        value={formData.zip}
-                        onChange={(e) => handleZipChange(e.target.value)}
-                      />
+                      <div className="relative w-full">
+                        <div className="relative border rounded-sm bg-neutral-950 border-white/10 hover:border-white/20 transition-colors duration-200">
+                          <label className="absolute left-4 top-1 text-[9px] font-mono font-semibold tracking-wider uppercase text-neutral-500">
+                            STATE / PROVINCE
+                          </label>
+                          <select
+                            value={formData.state}
+                            onChange={(e) => handleInputChange('state', e.target.value)}
+                            className="w-full px-4 pt-5 pb-2 text-[13px] text-white bg-transparent outline-none appearance-none cursor-pointer font-sans"
+                            style={{ colorScheme: 'dark' }}
+                          >
+                            <option value="" disabled className="bg-neutral-950 text-neutral-500">SELECT STATE</option>
+                            {INDIAN_STATES.map((st) => (
+                              <option key={st} value={st.toUpperCase()} className="bg-neutral-950 text-white uppercase font-mono">
+                                {st.toUpperCase()}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500 font-mono text-[9px]">
+                            ▼
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <Input
                       label="COUNTRY"
