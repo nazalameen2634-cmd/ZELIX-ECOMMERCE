@@ -719,7 +719,7 @@ export default function HomePage() {
       <section ref={heroRef} className="relative h-[85vh] flex items-center justify-center overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-background z-10" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02)_0%,transparent_70%)]" />
-        <div className="absolute inset-0 opacity-40 mix-blend-luminosity">
+        <div className="absolute inset-0 opacity-30">
           <img
             alt="Hero Background — jewellery"
             className="object-cover object-center w-full h-full scale-105 blur-sm"
