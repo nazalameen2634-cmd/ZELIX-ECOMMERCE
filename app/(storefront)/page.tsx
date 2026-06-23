@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ShoppingBag } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Product, HeroSlide } from '@/types';
 import ProductCard from '@/components/storefront/ProductCard';
 import OrderTrackingSection from '@/components/storefront/OrderTrackingSection';
+import { useCart } from '@/context/CartContext';
 
 // ─── Default Data ──────────────────────────────────────────
 const DEFAULT_SLIDES: HeroSlide[] = [
@@ -647,6 +648,7 @@ const fadeUpItem = {
 };
 
 export default function HomePage() {
+  const { addItem } = useCart();
   const [heroSlides, setHeroSlides]     = useState<HeroSlide[]>(DEFAULT_SLIDES);
   const [activeSlide, setActiveSlide]   = useState(0);
   const [dbProducts, setDbProducts]     = useState<Product[]>([]);
@@ -787,25 +789,29 @@ export default function HomePage() {
               const hasSale = product.sale_price !== null && product.sale_price !== undefined;
               return (
                 <motion.div key={product.id} variants={fadeUpItem}>
-                  <Link
-                    href={`/products/${product.slug}`}
-                    className="group relative aspect-[3/4] overflow-hidden flex flex-col justify-end p-6 border transition-all duration-300 cursor-pointer block"
-                    style={{ borderColor: 'rgba(245,240,235,0.05)', borderRadius: '2px' }}
+                  <div
+                    className="group relative aspect-[3/4] overflow-hidden flex flex-col justify-end p-6 border transition-all duration-300 cursor-pointer rounded-[2px]"
+                    style={{ borderColor: 'rgba(245,240,235,0.05)' }}
                   >
-                    {/* Dark Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="absolute inset-0 z-0 block"
+                    >
+                      {/* Dark Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent z-10" />
 
-                    {/* Background Image with Zoom & Luminosity Effect */}
-                    <div className="absolute inset-0 bg-zinc-950 scale-100 group-hover:scale-105 transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
-                      <img
-                        alt={product.title}
-                        className="object-cover w-full h-full opacity-60 mix-blend-luminosity group-hover:opacity-85 transition-opacity duration-500"
-                        src={mainImage}
-                      />
-                    </div>
+                      {/* Background Image with Zoom & Color Effect */}
+                      <div className="absolute inset-0 bg-zinc-950 scale-100 group-hover:scale-105 transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
+                        <img
+                          alt={product.title}
+                          className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                          src={mainImage}
+                        />
+                      </div>
+                    </Link>
 
                     {/* Content overlay */}
-                    <div className="relative z-20 text-left">
+                    <div className="relative z-10 text-left pointer-events-none pr-8">
                       <h3 className="text-xs font-bold uppercase tracking-wider text-[#F5F0EB] mb-1.5 group-hover:text-[#C9A96E] transition-colors font-sans leading-tight">
                         {product.title}
                       </h3>
@@ -826,7 +832,21 @@ export default function HomePage() {
                         )}
                       </div>
                     </div>
-                  </Link>
+
+                    {/* Quick Add Button */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const defaultSize = product.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values?.[0]?.value || 'OS';
+                        addItem(product, 1, defaultSize);
+                      }}
+                      className="absolute bottom-5 right-5 z-20 p-2.5 bg-[#C9A96E] hover:bg-[#E8CFA0] text-[#080808] rounded-full transition-all duration-300 shadow-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-95"
+                      title="Add to Cart"
+                    >
+                      <ShoppingBag size={12} />
+                    </button>
+                  </div>
                 </motion.div>
               );
             })}
