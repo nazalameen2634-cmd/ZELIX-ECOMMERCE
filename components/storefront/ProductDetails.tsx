@@ -49,9 +49,8 @@ export default function ProductDetails({
   const mainImageRef = useRef<HTMLImageElement>(null);
 
   // Product Images list
-  const productImages = (product.images || (product as any).product_images)?.map((img: any) => img.image_url) || [
-    product.og_image_url || '/placeholder.jpg',
-  ];
+  const dbImages = (product.images || (product as any).product_images)?.map((img: any) => img.image_url) || [];
+  const productImages = dbImages.length > 0 ? dbImages : [product.og_image_url || '/placeholder.jpg'];
 
   // Colors and sizes configuration from options
   const colors = ['BLACK', 'TACTICAL GREY', 'OFF-WHITE'];
