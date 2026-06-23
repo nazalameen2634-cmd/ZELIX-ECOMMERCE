@@ -44,19 +44,19 @@ export default function CheckoutPage() {
     clearCart,
   } = useCart();
 
-  // Redirect if cart is empty
-  useEffect(() => {
-    if (items.length === 0) {
-      router.push('/cart');
-    }
-  }, [items, router]);
-
   // Checkout Steps: 1 = Shipping, 2 = Shipping Method, 3 = Payment & Review
   const [step, setStep] = useState(1);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [saveAddress, setSaveAddress] = useState(false);
   const [checkoutSuccessOrder, setCheckoutSuccessOrder] = useState<any | null>(null);
   const [phoneError, setPhoneError] = useState('');
+
+  // Redirect if cart is empty (only if checkout hasn't succeeded)
+  useEffect(() => {
+    if (items.length === 0 && !checkoutSuccessOrder) {
+      router.push('/cart');
+    }
+  }, [items, checkoutSuccessOrder, router]);
 
   // Scroll to top of the page when checkout step changes
   useEffect(() => {
