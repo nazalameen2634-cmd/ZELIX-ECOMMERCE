@@ -7,15 +7,15 @@ import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
 
 const SUPPORT_LINKS = [
-  { label: 'SHIPPING & RETURNS', href: '/policies/shipping' },
+  { label: 'SHIPPING & RETURNS', href: '/shipping-returns' },
   { label: 'CONTACT SUPPORT',    href: '/contact' },
-  { label: 'SIZE GUIDE',         href: '/about#size-guide' },
+  { label: 'SIZE GUIDE',         href: '/size-guide' },
   { label: 'FAQ',                href: '/faq' },
 ];
 const LEGAL_LINKS = [
-  { label: 'PRIVACY POLICY',  href: '/policies/privacy' },
-  { label: 'TERMS OF SERVICE', href: '/policies/terms' },
-  { label: 'ACCESSIBILITY',   href: '/policies/accessibility' },
+  { label: 'PRIVACY POLICY',  href: '/privacy-policy' },
+  { label: 'TERMS OF SERVICE', href: '/terms-of-service' },
+  { label: 'ACCESSIBILITY',   href: '/accessibility' },
 ];
 const SOCIAL_LINKS = [
   {
