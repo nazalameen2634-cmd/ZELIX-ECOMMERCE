@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendShipmentUpdateWhatsApp, sendAdminAlertWhatsApp } from '@/lib/whatsapp';
+import { sendStatusUpdateEmail } from '@/lib/email';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -67,6 +68,7 @@ export async function PUT(request: Request) {
         tracking_carrier: tracking_carrier !== undefined ? tracking_carrier : oldOrder.tracking_carrier
       };
 
+      // WhatsApp notifications
       try {
         await sendShipmentUpdateWhatsApp(updatedOrder, oldOrder.fulfillment_status, fulfillment_status);
         if (fulfillment_status === 'cancelled') {
@@ -74,6 +76,15 @@ export async function PUT(request: Request) {
         }
       } catch (waErr) {
         console.error('Failed sending shipment status WhatsApp:', waErr);
+      }
+
+      // Email notifications for shipped, delivered, cancelled
+      if (['shipped', 'delivered', 'cancelled'].includes(fulfillment_status)) {
+        try {
+          await sendStatusUpdateEmail(updatedOrder, fulfillment_status);
+        } catch (emailErr) {
+          console.error('Failed sending status update email:', emailErr);
+        }
       }
     }
 

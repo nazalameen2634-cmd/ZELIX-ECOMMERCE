@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, Truck, RotateCcw, HelpCircle } from 'lucide-react';
+import { ShieldCheck, Truck, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ShippingReturnsPage() {
@@ -9,7 +9,7 @@ export default function ShippingReturnsPage() {
     <div style={{ background: '#080808', minHeight: '100vh', paddingTop: '120px', paddingBottom: '80px' }}>
       
       {/* Editorial Header */}
-      <div className="relative overflow-hidden border-b mb-16" style={{ borderColor: 'rgba(245,240,235,0.05)', pb: '40px' }}>
+      <div className="relative overflow-hidden border-b mb-16" style={{ borderColor: 'rgba(245,240,235,0.05)', paddingBottom: '40px' }}>
         <div className="container-custom relative z-10">
           <div className="section-label mb-4">SUPPORT & POLICIES</div>
           <h1 className="font-sans font-extrabold uppercase tracking-tight leading-none text-[#F5F0EB] text-[40px] md:text-[64px] mb-4">
@@ -89,7 +89,7 @@ export default function ShippingReturnsPage() {
             <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
               If you have any questions regarding your shipment or need to start a return, please reach out to us at <a href="mailto:orders@zelix.shop" style={{ color: '#C9A96E' }}>orders@zelix.shop</a> or use our WhatsApp Support.
             </p>
-          </div>
+          </section>
 
         </div>
 
@@ -99,8 +99,6 @@ export default function ShippingReturnsPage() {
             href="/"
             className="font-mono text-[10px] font-bold tracking-[0.2em] border px-6 py-3 transition-colors text-[#F5F0EB]"
             style={{ borderColor: 'rgba(245,240,235,0.1)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C9A96E'; e.currentTarget.style.color = '#C9A96E'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(245,240,235,0.1)'; e.currentTarget.style.color = '#F5F0EB'; }}
           >
             RETURN TO HOME
           </Link>

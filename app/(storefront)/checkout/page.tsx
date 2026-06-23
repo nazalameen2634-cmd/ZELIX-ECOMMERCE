@@ -46,6 +46,8 @@ export default function CheckoutPage() {
   // Checkout Steps: 1 = Shipping, 2 = Shipping Method, 3 = Payment & Review
   const [step, setStep] = useState(1);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [saveAddress, setSaveAddress] = useState(false);
+  const [checkoutSuccessOrder, setCheckoutSuccessOrder] = useState<any | null>(null);
 
   // Scroll to top of the page when checkout step changes
   useEffect(() => {
@@ -113,8 +115,36 @@ export default function CheckoutPage() {
     setFormData((prev) => ({ ...prev, [key]: val }));
   };
 
+  const handleZipChange = async (zipCode: string) => {
+    handleInputChange('zip', zipCode);
+    const cleaned = zipCode.replace(/\D/g, '');
+    if (cleaned.length === 6) {
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${cleaned}`);
+        const data = await res.json();
+        if (data && data[0] && data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice[0]) {
+          const postOffice = data[0].PostOffice[0];
+          setFormData((prev) => ({
+            ...prev,
+            city: postOffice.District || postOffice.Name || '',
+            state: postOffice.State || '',
+          }));
+        }
+      } catch (err) {
+        console.error('Error fetching postal code details:', err);
+      }
+    }
+  };
+
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
+    if (step === 1) {
+      const cleanedPhone = formData.phone.replace(/\D/g, '');
+      if (cleanedPhone.length !== 10) {
+        toast('PLEASE ENTER A VALID 10-DIGIT PHONE NUMBER', 'error');
+        return;
+      }
+    }
     if (step < 3) {
       setStep((s) => s + 1);
     }
@@ -187,7 +217,10 @@ export default function CheckoutPage() {
             if (verifyRes.ok) {
               toast('PAYMENT VERIFIED AND ORDER CONFIRMED', 'success');
               clearCart();
-              router.push(`/checkout/success?orderNumber=${orderId}`);
+              setCheckoutSuccessOrder({
+                order_number: orderId,
+                total: finalTotal
+              });
             } else {
               const errData = await verifyRes.json();
               toast(errData.message || 'SIGNATURE VERIFICATION FAILED. SUPPORT CONTACTED.', 'error');
@@ -277,6 +310,26 @@ export default function CheckoutPage() {
         console.error('Error inserting order items upfront:', itemsError);
       }
 
+      // Save address if requested
+      if (user && saveAddress) {
+        try {
+          await supabase.from('addresses').insert([{
+            user_id: user.id,
+            full_name: formData.fullName,
+            phone: formData.phone,
+            address_line1: formData.address1,
+            address_line2: formData.address2,
+            city: formData.city,
+            state: formData.state,
+            zip: formData.zip,
+            country: formData.country,
+            is_default: true
+          }]);
+        } catch (addrErr) {
+          console.error('Error saving address:', addrErr);
+        }
+      }
+
       // 1. If live Razorpay publishable keys are present, open payment gateway
       if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
         await handleLivePayment(data.order_number);
@@ -299,7 +352,10 @@ export default function CheckoutPage() {
           toast('PREVIEW ORDER PLACED SUCCESSFULLY', 'success');
           clearCart();
           setIsPlacingOrder(false);
-          router.push(`/checkout/success?orderNumber=${data.order_number}`);
+          setCheckoutSuccessOrder({
+            order_number: data.order_number,
+            total: finalTotal
+          });
         }, 1500);
       }
     } catch (err) {
@@ -311,10 +367,85 @@ export default function CheckoutPage() {
         toast('MOCKUP ORDER PLACED (PREVIEW MODE)', 'success');
         clearCart();
         setIsPlacingOrder(false);
-        router.push(`/checkout/success?orderNumber=${simulatedOrderNumber}`);
+        setCheckoutSuccessOrder({
+          order_number: simulatedOrderNumber,
+          total: finalTotal
+        });
       }, 1500);
     }
   };
+
+  if (checkoutSuccessOrder) {
+    return (
+      <div className="bg-black min-h-screen py-16 flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="border border-white/5 bg-neutral-950/40 p-8 md:p-12 rounded-sm max-w-2xl w-full text-center flex flex-col items-center shadow-2xl relative overflow-hidden"
+        >
+          {/* Subtle grid background for premium tech-wear feel */}
+          <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
+          
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: "spring" }}
+            className="w-16 h-16 rounded-full bg-[#C9A96E]/10 border border-[#C9A96E]/20 flex items-center justify-center text-[#C9A96E] mb-6"
+          >
+            <CheckCircle2 size={32} />
+          </motion.div>
+
+          <span className="font-mono text-[9px] tracking-widest text-neutral-500 uppercase mb-2">
+            TRANSACTION VERIFIED
+          </span>
+          <h1 className="text-[24px] md:text-[32px] font-sans font-black tracking-tight uppercase text-white mb-6">
+            ORDER CONFIRMED
+          </h1>
+
+          <div className="w-full border-t border-b border-white/5 py-6 my-6 flex flex-col gap-4 font-mono text-[10px] text-left">
+            <div className="flex justify-between border-b border-white/5 pb-3">
+              <span className="text-neutral-500">ORDER NUMBER</span>
+              <span className="text-white font-bold tracking-widest">{checkoutSuccessOrder.order_number}</span>
+            </div>
+            <div className="flex justify-between border-b border-white/5 pb-3">
+              <span className="text-neutral-500">TOTAL AMOUNT</span>
+              <span className="text-[#C9A96E] font-black">{formatCurrency(checkoutSuccessOrder.total)}</span>
+            </div>
+            <div className="flex justify-between border-b border-white/5 pb-3">
+              <span className="text-neutral-500">SHIPPING TO</span>
+              <span className="text-white uppercase font-bold text-right max-w-xs truncate">
+                {formData.fullName}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-neutral-500">DELIVERY METHOD</span>
+              <span className="text-white uppercase font-bold">
+                {shippingMethod === 'express' ? 'EXPRESS ARCHIVE DELIVERY' : 'STANDARD DELIVERY'}
+              </span>
+            </div>
+          </div>
+
+          <p className="font-sans text-[12px] text-neutral-400 max-w-md mb-8 leading-relaxed">
+            Your order has been logged into the system. A confirmation email with details of the package tracking has been sent to <span className="text-white font-semibold">{formData.email}</span>.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+            <Link href={`/track?order_number=${checkoutSuccessOrder.order_number}`} className="w-full sm:w-auto">
+              <Button variant="primary" className="w-full">
+                TRACK YOUR ORDER
+              </Button>
+            </Link>
+            <Link href="/products" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full">
+                CONTINUE SHOPPING
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black min-h-screen py-16">
@@ -433,7 +564,7 @@ export default function CheckoutPage() {
                         label="ZIP CODE"
                         required
                         value={formData.zip}
-                        onChange={(e) => handleInputChange('zip', e.target.value)}
+                        onChange={(e) => handleZipChange(e.target.value)}
                       />
                     </div>
                     <Input
@@ -442,6 +573,21 @@ export default function CheckoutPage() {
                       disabled
                       value={formData.country}
                     />
+
+                    {user && (
+                      <div className="flex items-center gap-2 mt-4 select-none">
+                        <input
+                          type="checkbox"
+                          id="saveAddress"
+                          checked={saveAddress}
+                          onChange={(e) => setSaveAddress(e.target.checked)}
+                          className="accent-[#C9A96E] h-4 w-4 rounded-[2px] cursor-pointer"
+                        />
+                        <label htmlFor="saveAddress" className="font-mono text-[9px] tracking-[0.14em] text-neutral-400 cursor-pointer hover:text-white transition-colors">
+                          SAVE THIS ADDRESS FOR FUTURE ORDERS
+                        </label>
+                      </div>
+                    )}
 
                     <Button type="submit" variant="primary" className="self-end mt-6">
                       CONTINUE TO SHIPPING METHOD
@@ -662,6 +808,51 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Loading Overlay */}
+      <AnimatePresence>
+        {isPlacingOrder && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="bg-neutral-900/90 border border-white/10 p-8 rounded-sm max-w-md w-[90%] text-center flex flex-col items-center gap-6 shadow-2xl backdrop-blur-xl"
+            >
+              <div className="relative w-20 h-20 flex items-center justify-center">
+                {/* Outer spinning ring */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#C9A96E] border-r-[#C9A96E]"
+                />
+                {/* Inner counter-spinning ring */}
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-2 rounded-full border-2 border-transparent border-b-white border-l-white opacity-40"
+                />
+                <CreditCard className="text-white animate-pulse" size={24} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <h3 className="font-mono text-[12px] font-black tracking-widest text-white uppercase">
+                  PROCESSING TRANSACTION
+                </h3>
+                <p className="font-mono text-[9px] text-neutral-500 tracking-wider leading-relaxed">
+                  AUTHENTICATING AND SECURING YOUR PAYMENT VIA RAZORPAY.<br />
+                  PLEASE DO NOT REFRESH OR CLOSE THIS WINDOW.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
