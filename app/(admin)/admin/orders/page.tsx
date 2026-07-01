@@ -189,7 +189,7 @@ export default function AdminOrdersPage() {
       try {
         const { data, error } = await supabase
           .from('orders')
-          .select('*, order_items(*), order_timeline(*)')
+          .select('*, order_items(*, products(*)), order_timeline(*)')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -737,7 +737,7 @@ export default function AdminOrdersPage() {
                 <tbody>
                   {selectedOrder.order_items?.map((item: any, i) => (
                     <tr key={i} className="border-b border-neutral-50 last:border-0">
-                      <td className="py-2.5 font-bold uppercase">{item.title}</td>
+                      <td className="py-2.5 font-bold uppercase">{item.products?.title || item.title}</td>
                       <td className="py-2.5 font-mono uppercase">{item.variant_info?.size || 'OS'}</td>
                       <td className="py-2.5 text-right">{formatCurrency(item.unit_price)}</td>
                       <td className="py-2.5 text-right font-mono">{item.quantity}</td>
