@@ -194,34 +194,32 @@ export default function CheckoutPage() {
       fulfillment_status: 'pending',
     };
 
-    // Try live insertion to Supabase first
+    // Use the API route to safely insert order and items bypassing RLS
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .insert([finalOrder])
-        .select('id, order_number')
-        .single();
+      const response = await fetch('/api/checkout/place-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderData: finalOrder,
+          orderItems: items.map((item) => ({
+            product_id: item.product.id,
+            variant_id: item.variantId || null,
+            title: item.product.title,
+            variant_info: { size: item.size, color: item.color },
+            quantity: item.quantity,
+            unit_price: item.price,
+            line_total: item.price * item.quantity,
+          })),
+        }),
+      });
 
-      if (error) {
-        throw error;
+      const responseData = await response.json();
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || 'Failed to place order');
       }
 
-      // Insert order items to DB immediately
-      const orderItemsRows = items.map((item) => ({
-        order_id: data.id,
-        product_id: item.product.id,
-        variant_id: item.variantId || null,
-        title: item.product.title,
-        variant_info: { size: item.size, color: item.color },
-        quantity: item.quantity,
-        unit_price: item.price,
-        line_total: item.price * item.quantity,
-      }));
+      const data = responseData.order;
 
-      const { error: itemsError } = await supabase.from('order_items').insert(orderItemsRows);
-      if (itemsError) {
-        console.error('Error inserting order items upfront:', itemsError);
-      }
 
       // Save address if requested
       if (user && saveAddress) {
