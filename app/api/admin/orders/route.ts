@@ -11,7 +11,7 @@ const supabaseAdmin = createClient(
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { order_id, fulfillment_status, tracking_number, tracking_carrier, admin_note } = body;
+    const { order_id, fulfillment_status, tracking_number, tracking_carrier, estimated_delivery, admin_note } = body;
 
     if (!order_id) {
       return NextResponse.json({ message: 'Missing order_id' }, { status: 400 });
@@ -40,6 +40,15 @@ export async function PUT(request: Request) {
     }
     if (tracking_carrier !== undefined) {
       updates.tracking_carrier = tracking_carrier;
+    }
+    if (estimated_delivery !== undefined) {
+      let newNotes = oldOrder.notes || '';
+      if (newNotes.includes('Estimated Delivery:')) {
+        newNotes = newNotes.replace(/Estimated Delivery: .*/, `Estimated Delivery: ${estimated_delivery}`);
+      } else {
+        newNotes = newNotes ? `${newNotes}\nEstimated Delivery: ${estimated_delivery}` : `Estimated Delivery: ${estimated_delivery}`;
+      }
+      updates.notes = newNotes;
     }
 
     const { error: updateError } = await supabaseAdmin

@@ -172,6 +172,7 @@ export default function AdminOrdersPage() {
   // Edit inputs
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingCarrier, setTrackingCarrier] = useState('BLUE DART');
+  const [estimatedDelivery, setEstimatedDelivery] = useState('');
   const [adminNote, setAdminNote] = useState('');
   const [tempFulfillmentStatus, setTempFulfillmentStatus] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
@@ -210,6 +211,11 @@ export default function AdminOrdersPage() {
     setTempFulfillmentStatus(order.fulfillment_status);
     setTrackingNumber(order.tracking_number || '');
     setTrackingCarrier(order.tracking_carrier || 'BLUE DART');
+    
+    // Parse estimated delivery from notes if it exists
+    const estDelMatch = order.notes?.match(/Estimated Delivery: (.*)/);
+    setEstimatedDelivery(estDelMatch ? estDelMatch[1].trim() : '');
+    
     setAdminNote('');
     setIsDetailOpen(true);
     setStatusHistory([]);
@@ -341,6 +347,7 @@ export default function AdminOrdersPage() {
           order_id: selectedOrder.id,
           tracking_number: trackingNumber,
           tracking_carrier: trackingCarrier,
+          estimated_delivery: estimatedDelivery || '',
         }),
       });
 
@@ -770,6 +777,14 @@ export default function AdminOrdersPage() {
                     required
                     value={trackingCarrier}
                     onChange={(e) => setTrackingCarrier(e.target.value)}
+                  />
+                </div>
+                <div className="w-[160px]">
+                  <Input theme="light"
+                    label="EST. DELIVERY"
+                    placeholder="e.g. 15 July"
+                    value={estimatedDelivery}
+                    onChange={(e) => setEstimatedDelivery(e.target.value)}
                   />
                 </div>
                 <button
