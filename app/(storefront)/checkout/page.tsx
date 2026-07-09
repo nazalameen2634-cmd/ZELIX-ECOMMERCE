@@ -227,6 +227,12 @@ export default function CheckoutPage() {
         theme: {
           color: '#111111',
         },
+        modal: {
+          ondismiss: function () {
+            toast('PAYMENT CANCELLED. PLEASE TRY AGAIN.', 'error');
+            setIsPlacingOrder(false);
+          },
+        },
       };
 
       const paymentObject = new (window as any).Razorpay(options);
