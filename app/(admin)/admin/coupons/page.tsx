@@ -436,7 +436,7 @@ export default function AdminCoupons() {
               )}
               <button
                 type="submit"
-                className="flex-1 py-3 px-4 bg-black text-[#111111] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 py-3 px-4 bg-black text-[#FFFFFF] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Save size={14} /> {isEditing ? 'SAVE CHANGES' : 'CREATE COUPON'}
               </button>

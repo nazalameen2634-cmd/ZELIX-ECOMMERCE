@@ -547,7 +547,7 @@ export default function AdminProductsPage() {
               GENERAL PRODUCT DETAILS
             </h3>
 
-            <Input
+            <Input theme="light"
               label="PRODUCT TITLE"
               required
               value={formFields.title}
@@ -555,7 +555,7 @@ export default function AdminProductsPage() {
             />
 
             <div className="grid grid-cols-2 gap-4">
-              <Input
+              <Input theme="light"
                 label="URL PATH SLUG (AUTO-GENERATED)"
                 required
                 value={formFields.slug}
@@ -602,14 +602,14 @@ export default function AdminProductsPage() {
 
             {/* Pricing Area */}
             <div className="grid grid-cols-2 gap-4 mt-2">
-              <Input
+              <Input theme="light"
                 label="REGULAR PRICE (INR)"
                 required
                 type="number"
                 value={formFields.price}
                 onChange={(e) => setFormFields((f) => ({ ...f, price: e.target.value }))}
               />
-              <Input
+              <Input theme="light"
                 label="SALE PRICE (INR, OPTIONAL)"
                 type="number"
                 value={formFields.salePrice}
@@ -622,13 +622,13 @@ export default function AdminProductsPage() {
               INVENTORY MANAGEMENT
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <Input
+              <Input theme="light"
                 label="SKU REFERENCE NUMBER"
                 required
                 value={formFields.sku}
                 onChange={(e) => setFormFields((f) => ({ ...f, sku: e.target.value }))}
               />
-              <Input
+              <Input theme="light"
                 label="STOCK QUANTITY IN WAREHOUSE"
                 required
                 type="number"
@@ -654,7 +654,7 @@ export default function AdminProductsPage() {
                   ENABLE SIZE VARIATIONS
                 </label>
                 {formFields.hasSizes && (
-                  <Input 
+                  <Input theme="light" 
                     label="AVAILABLE SIZES (COMMA SEPARATED)" 
                     value={availableSizes}
                     onChange={(e) => setAvailableSizes(e.target.value)}
@@ -672,7 +672,7 @@ export default function AdminProductsPage() {
                   ENABLE COLOR VARIATIONS
                 </label>
                 {formFields.hasColors && (
-                  <Input 
+                  <Input theme="light" 
                     label="AVAILABLE COLORS (COMMA SEPARATED)" 
                     value={availableColors}
                     onChange={(e) => setAvailableColors(e.target.value)}
@@ -814,7 +814,7 @@ export default function AdminProductsPage() {
 
               {/* Text URL backup */}
               <div className="mt-4">
-                <Input
+                <Input theme="light"
                   label="OR INSERT IMAGE URL"
                   value={formFields.image}
                   onChange={(e) => setFormFields((f) => ({ ...f, image: e.target.value }))}
@@ -827,7 +827,7 @@ export default function AdminProductsPage() {
               <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-4 uppercase">
                 CATALOG TAGS
               </h3>
-              <Input
+              <Input theme="light"
                 label="COMMA SEPARATED TAGS"
                 placeholder="E.G. NEW, LIMITED, OUTERWEAR"
                 value={formFields.tags}

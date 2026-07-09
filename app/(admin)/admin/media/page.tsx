@@ -249,7 +249,7 @@ export default function AdminMedia() {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="py-2.5 px-4 bg-black text-[#111111] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+          className="py-2.5 px-4 bg-black text-[#FFFFFF] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
         >
           {uploading ? (
             <>
@@ -372,7 +372,7 @@ export default function AdminMedia() {
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleCopyUrl(asset)}
-                          className="p-2 bg-[#FFFFFF] rounded-full text-[#111111] hover:bg-[#121212] transition-colors shadow-sm cursor-pointer"
+                          className="p-2 bg-[#FFFFFF] rounded-full text-[#FFFFFF] hover:bg-[#121212] transition-colors shadow-sm cursor-pointer"
                           title="Copy Link URL"
                         >
                           {copiedId === asset.id ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}

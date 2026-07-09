@@ -303,13 +303,13 @@ export default function AdminSettingsPage() {
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
+                <Input theme="light"
                   label="SITE NAME"
                   required
                   value={brandSettings.siteName}
                   onChange={(e) => setBrandSettings((b) => ({ ...b, siteName: e.target.value }))}
                 />
-                <Input
+                <Input theme="light"
                   label="SITE TAGLINE"
                   required
                   value={brandSettings.tagline}
@@ -318,14 +318,14 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
+                <Input theme="light"
                   label="CONTACT SUPPORT EMAIL"
                   required
                   type="email"
                   value={brandSettings.contactEmail}
                   onChange={(e) => setBrandSettings((b) => ({ ...b, contactEmail: e.target.value }))}
                 />
-                <Input
+                <Input theme="light"
                   label="CONTACT SUPPORT PHONE"
                   required
                   value={brandSettings.contactPhone}
@@ -333,7 +333,7 @@ export default function AdminSettingsPage() {
                 />
               </div>
 
-              <Input
+              <Input theme="light"
                 label="BUSINESS HQ PHYSICAL ADDRESS"
                 required
                 value={brandSettings.businessAddress}
@@ -341,13 +341,13 @@ export default function AdminSettingsPage() {
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
+                <Input theme="light"
                   label="CURRENCY CODE"
                   required
                   value={brandSettings.currencyCode}
                   onChange={(e) => setBrandSettings((b) => ({ ...b, currencyCode: e.target.value }))}
                 />
-                <Input
+                <Input theme="light"
                   label="CURRENCY SYMBOL"
                   required
                   value={brandSettings.currencySymbol}
@@ -356,12 +356,12 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
+                <Input theme="light"
                   label="PRIMARY HEADER LOGO URL"
                   value={brandSettings.logoUrl}
                   onChange={(e) => setBrandSettings((b) => ({ ...b, logoUrl: e.target.value }))}
                 />
-                <Input
+                <Input theme="light"
                   label="INVERTED FOOTER LOGO URL"
                   value={brandSettings.logoInvertedUrl}
                   onChange={(e) => setBrandSettings((b) => ({ ...b, logoInvertedUrl: e.target.value }))}
@@ -393,19 +393,19 @@ export default function AdminSettingsPage() {
                 </label>
               </div>
 
-              <Input
+              <Input theme="light"
                 label="ANNOUNCEMENT TEXT CONTENT"
                 value={announcementSettings.text}
                 onChange={(e) => setAnnouncementSettings((a) => ({ ...a, text: e.target.value }))}
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
+                <Input theme="light"
                   label="CTA REDIRECT URL (OPTIONAL)"
                   value={announcementSettings.link}
                   onChange={(e) => setAnnouncementSettings((a) => ({ ...a, link: e.target.value }))}
                 />
-                <Input
+                <Input theme="light"
                   label="BACKGROUND HEX COLOR"
                   value={announcementSettings.color}
                   onChange={(e) => setAnnouncementSettings((a) => ({ ...a, color: e.target.value }))}
@@ -427,7 +427,7 @@ export default function AdminSettingsPage() {
                 </h3>
                 <button
                   onClick={() => setIsAddingSlide(!isAddingSlide)}
-                  className="bg-black hover:bg-neutral-800 text-[#111111] font-mono text-[9px] font-bold tracking-widest px-4 py-2 rounded-full uppercase cursor-pointer"
+                  className="bg-black hover:bg-neutral-800 text-[#FFFFFF] font-mono text-[9px] font-bold tracking-widest px-4 py-2 rounded-full uppercase cursor-pointer"
                 >
                   {isAddingSlide ? 'CLOSE FORM' : 'ADD CAROUSEL SLIDE'}
                 </button>
@@ -439,20 +439,20 @@ export default function AdminSettingsPage() {
                   <h4 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase">
                     NEW CAROUSEL SLIDE DETAILS
                   </h4>
-                  <Input
+                  <Input theme="light"
                     label="SLIDE BACKGROUND IMAGE URL"
                     required
                     value={newSlide.imageUrl}
                     onChange={(e) => setNewSlide((s) => ({ ...s, imageUrl: e.target.value }))}
                   />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
+                    <Input theme="light"
                       label="HERO HEADING (STAGGERED TEXT)"
                       required
                       value={newSlide.heading}
                       onChange={(e) => setNewSlide((s) => ({ ...s, heading: e.target.value }))}
                     />
-                    <Input
+                    <Input theme="light"
                       label="HERO SUBHEADING"
                       required
                       value={newSlide.subheading}
@@ -460,13 +460,13 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
+                    <Input theme="light"
                       label="CTA BTN LABEL"
                       required
                       value={newSlide.ctaText}
                       onChange={(e) => setNewSlide((s) => ({ ...s, ctaText: e.target.value }))}
                     />
-                    <Input
+                    <Input theme="light"
                       label="CTA BTN LINK"
                       required
                       value={newSlide.ctaLink}
@@ -495,7 +495,7 @@ export default function AdminSettingsPage() {
                     </div>
 
                     <div className="font-mono text-[10px] tracking-wide text-[#6B6560] uppercase flex flex-col gap-1.5">
-                      <p><strong className="text-[#111111]">HEADING:</strong> {slide.heading}</p>
+                      <p><strong className="text-[#FFFFFF]">HEADING:</strong> {slide.heading}</p>
                       <p><strong className="text-[#111111]">SUB-TEXT:</strong> {slide.subheading}</p>
                       <p><strong className="text-[#111111]">ACTION BTN:</strong> {slide.cta_text} // {slide.cta_link}</p>
                     </div>
@@ -512,7 +512,7 @@ export default function AdminSettingsPage() {
                 GLOBAL SEARCH ENGINE OPTIMIZATIONS
               </h3>
 
-              <Input
+              <Input theme="light"
                 label="META TITLE PAGE TEMPLATE"
                 required
                 value={seoSettings.metaTemplate}
@@ -530,13 +530,13 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
+                <Input theme="light"
                   label="GOOGLE ANALYTICS GA4 TRACKING ID"
                   placeholder="G-XXXXXXXXXX"
                   value={seoSettings.gaTrackingId}
                   onChange={(e) => setSeoSettings((s) => ({ ...s, gaTrackingId: e.target.value }))}
                 />
-                <Input
+                <Input theme="light"
                   label="SEARCH CONSOLE HTML VERIFYING META TAG"
                   placeholder='<meta name="google-site-verification" content="..." />'
                   value={seoSettings.searchConsoleMeta}

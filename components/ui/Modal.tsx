@@ -10,6 +10,7 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  theme?: 'light' | 'dark';
 }
 
 export default function Modal({
@@ -18,6 +19,7 @@ export default function Modal({
   title,
   children,
   maxWidth = 'md',
+  theme = 'dark',
 }: ModalProps) {
   // Prevent background scroll when modal is open
   useEffect(() => {
@@ -59,12 +61,12 @@ export default function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className={`relative w-full ${maxWidthClasses[maxWidth]} bg-neutral-950 border border-white/10 rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-10 overflow-hidden flex flex-col`}
+            className={`relative w-full ${maxWidthClasses[maxWidth]} ${theme === 'light' ? 'bg-[#FFFFFF] border-[rgba(0,0,0,0.06)] shadow-lg' : 'bg-neutral-950 border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'} border rounded-sm z-10 overflow-hidden flex flex-col`}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+            <div className={`flex items-center justify-between px-6 py-5 border-b ${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]' : 'border-white/5'}`}>
               {title ? (
-                <h3 className="font-mono text-[11px] font-extrabold uppercase tracking-widest text-neutral-300">
+                <h3 className={`font-mono text-[11px] font-extrabold uppercase tracking-widest ${theme === 'light' ? 'text-[#111111]' : 'text-neutral-300'}`}>
                   {title}
                 </h3>
               ) : (
@@ -72,7 +74,7 @@ export default function Modal({
               )}
               <button
                 onClick={onClose}
-                className="text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                className={`${theme === 'light' ? 'text-neutral-500 hover:text-black' : 'text-neutral-400 hover:text-white'} transition-colors cursor-pointer`}
               >
                 <X size={16} />
               </button>

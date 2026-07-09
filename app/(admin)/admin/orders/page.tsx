@@ -583,7 +583,7 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Selected Order Detail View Modal */}
-      <Modal
+      <Modal theme="light"
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         title={`SPECIFICATIONS VIEW // ${selectedOrder?.order_number}`}
@@ -757,7 +757,7 @@ export default function AdminOrdersPage() {
               {/* Left Column: Shipment tracking form setter */}
               <form onSubmit={handleSaveTracking} className="flex-1 flex gap-2 w-full">
                 <div className="flex-1">
-                  <Input
+                  <Input theme="light"
                     label="TRACKING ID"
                     required
                     value={trackingNumber}
@@ -765,7 +765,7 @@ export default function AdminOrdersPage() {
                   />
                 </div>
                 <div className="w-[140px]">
-                  <Input
+                  <Input theme="light"
                     label="CARRIER"
                     required
                     value={trackingCarrier}
@@ -774,7 +774,7 @@ export default function AdminOrdersPage() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-black hover:bg-neutral-800 text-[#111111] font-mono text-[9px] font-bold tracking-widest px-4 h-12 self-start rounded-sm uppercase cursor-pointer"
+                  className="bg-black hover:bg-neutral-800 text-[#FFFFFF] font-mono text-[9px] font-bold tracking-widest px-4 h-12 self-start rounded-sm uppercase cursor-pointer"
                 >
                   SAVE
                 </button>
@@ -816,7 +816,7 @@ export default function AdminOrdersPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                 {/* Note creator */}
                 <form onSubmit={handleAddTimelineNote} className="flex flex-col gap-3">
-                  <Input
+                  <Input theme="light"
                     label="ADD AUDIT TIMELINE NOTE"
                     required
                     value={adminNote}
@@ -824,7 +824,7 @@ export default function AdminOrdersPage() {
                   />
                   <button
                     type="submit"
-                    className="self-end px-6 py-2.5 bg-black hover:bg-neutral-800 text-[#111111] font-mono text-[9px] font-bold tracking-widest rounded-full uppercase cursor-pointer"
+                    className="self-end px-6 py-2.5 bg-black hover:bg-neutral-800 text-[#FFFFFF] font-mono text-[9px] font-bold tracking-widest rounded-full uppercase cursor-pointer"
                   >
                     ADD LOG ENTRY
                   </button>

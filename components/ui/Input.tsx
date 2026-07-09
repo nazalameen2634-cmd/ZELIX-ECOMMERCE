@@ -7,10 +7,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
   helperText?: string;
+  theme?: 'light' | 'dark';
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, type = 'text', className = '', onFocus, onBlur, onChange, value, defaultValue, ...props }, ref) => {
+  ({ label, error, helperText, theme = 'dark', type = 'text', className = '', onFocus, onBlur, onChange, value, defaultValue, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [hasValue, setHasValue] = useState(
       !!value || !!defaultValue || false
@@ -45,7 +46,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       floating: {
         y: -10,
         scale: 0.85,
-        color: error ? '#DC2626' : '#FFFFFF',
+        color: error ? '#DC2626' : (theme === 'light' ? '#111111' : '#FFFFFF'),
         fontSize: '11px',
       },
     };
@@ -55,12 +56,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative w-full mb-4">
         <div
-          className={`relative border rounded-sm bg-neutral-950 transition-colors duration-200 ${
+          className={`relative border rounded-sm transition-colors duration-200 ${theme === 'light' ? 'bg-[#FFFFFF]' : 'bg-neutral-950'} ${
             error
               ? 'border-red-600'
               : isFocused
-              ? 'border-white/30'
-              : 'border-white/10 hover:border-white/20'
+              ? (theme === 'light' ? 'border-[rgba(0,0,0,0.3)]' : 'border-white/30')
+              : (theme === 'light' ? 'border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.2)]' : 'border-white/10 hover:border-white/20')
           }`}
         >
           {/* Animated Floating Label */}
@@ -83,7 +84,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={handleChange}
             value={value}
             defaultValue={defaultValue}
-            className={`w-full px-4 pt-5 pb-2 text-[13px] text-white bg-transparent outline-none ${className}`}
+            className={`w-full px-4 pt-5 pb-2 text-[13px] ${theme === 'light' ? 'text-[#111111]' : 'text-white'} bg-transparent outline-none ${className}`}
             {...props}
           />
         </div>
