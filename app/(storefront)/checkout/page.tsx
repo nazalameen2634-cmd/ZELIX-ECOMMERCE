@@ -474,6 +474,7 @@ export default function CheckoutPage() {
                     </Button>
                   </form>
                 </motion.div>
+              )}
             </AnimatePresence>
           </div>
 
