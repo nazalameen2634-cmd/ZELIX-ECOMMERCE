@@ -158,6 +158,8 @@ export default function AdminProductsPage() {
     status: 'active' as 'active' | 'draft',
     image: '',
     tags: '',
+    hasSizes: true,
+    hasColors: false,
   });
 
   // Variant options creator
@@ -217,6 +219,8 @@ export default function AdminProductsPage() {
       status: product.status,
       image: product.og_image_url || '',
       tags: product.tags?.join(', ') || '',
+      hasSizes: true, // Assuming true for edited products or parse from existing
+      hasColors: false,
     });
     setView('edit');
   };
@@ -284,7 +288,7 @@ export default function AdminProductsPage() {
         const { data: newProd } = await res.json();
 
         // Insert variants if any via API
-        if (newProd && variantsList.length > 0) {
+        if (newProd && formFields.hasSizes && variantsList.length > 0) {
           const variantsRows = variantsList.map((v) => ({
             product_id: newProd.id,
             sku: v.sku || `${formFields.sku}-${v.size.toUpperCase()}`,
@@ -298,7 +302,12 @@ export default function AdminProductsPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(variantsRows),
           });
+        } else if (newProd) {
+          // If no size variations, you might insert a default generic variant here
+          // depending on db schema requirement for variants, 
+          // or just leave it empty if the product itself holds the stock.
         }
+
 
         toast('PRODUCT RELEASES PUBLISHED IN CATALOG', 'success');
       }
@@ -329,6 +338,8 @@ export default function AdminProductsPage() {
       status: 'active',
       image: '',
       tags: '',
+      hasSizes: true,
+      hasColors: false,
     });
     setEditingProductId(null);
   };
@@ -383,12 +394,12 @@ export default function AdminProductsPage() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Header breadcrumbs */}
-      <div className="flex justify-between items-center border-b border-[rgba(245,240,235,0.06)] pb-5">
+      <div className="flex justify-between items-center border-b border-[rgba(0,0,0,0.06)] pb-5">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             PRODUCT MANAGEMENT
           </h1>
-          <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
+          <p className="text-[12px] text-[#444444] font-mono tracking-wider uppercase mt-1">
             {view === 'list'
               ? 'MANAGE CORE INVENTORIES, SPECIFICATIONS, AND PRICING OVERRIDES'
               : view === 'create'
@@ -410,29 +421,29 @@ export default function AdminProductsPage() {
 
       {view === 'list' ? (
         /* PRODUCT CATALOG LISTING */
-        <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col gap-6">
+        <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col gap-6">
           {/* Search bar */}
           <div className="relative max-w-md w-full flex items-center">
-            <Search className="absolute left-3.5 text-[#8C8782]" size={16} />
+            <Search className="absolute left-3.5 text-[#666666]" size={16} />
             <input
               type="text"
               placeholder="SEARCH CATALOG (TITLE OR SKU)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-[rgba(245,240,235,0.06)] rounded-sm font-mono text-[11px] text-[#F5F0EB] outline-none focus:border-neutral-400"
+              className="w-full pl-10 pr-4 py-2.5 border border-[rgba(0,0,0,0.06)] rounded-sm font-mono text-[11px] text-[#111111] outline-none focus:border-neutral-400"
             />
           </div>
 
           {/* Catalog grid/table */}
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="animate-spin text-[#F5F0EB] w-8 h-8" />
+              <Loader2 className="animate-spin text-[#111111] w-8 h-8" />
             </div>
           ) : (
             <div className="overflow-x-auto w-full">
-              <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+              <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
                 <thead>
-                  <tr className="border-b border-[rgba(245,240,235,0.06)] text-[#8C8782] font-mono text-[10px] uppercase">
+                  <tr className="border-b border-[rgba(0,0,0,0.06)] text-[#666666] font-mono text-[10px] uppercase">
                     <th className="pb-3 font-semibold w-16">IMAGE</th>
                     <th className="pb-3 font-semibold">TITLE</th>
                     <th className="pb-3 font-semibold">SKU</th>
@@ -445,7 +456,7 @@ export default function AdminProductsPage() {
                 <tbody>
                   {filteredProducts.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center font-mono text-[#8C8782]">
+                      <td colSpan={7} className="py-8 text-center font-mono text-[#666666]">
                         NO PRODUCTS MATCH THIS SEARCH CRITERIA.
                       </td>
                     </tr>
@@ -453,17 +464,17 @@ export default function AdminProductsPage() {
                     filteredProducts.map((p) => {
                       const image = p.og_image_url || '/placeholder.jpg';
                       return (
-                        <tr key={p.id} className="border-b border-[rgba(245,240,235,0.03)] last:border-0 hover:bg-[#050507]/50 transition-colors">
+                        <tr key={p.id} className="border-b border-[rgba(0,0,0,0.03)] last:border-0 hover:bg-[#FAFAFA]/50 transition-colors">
                           <td className="py-3">
-                            <img src={image} alt={p.title} className="w-10 h-12 object-cover rounded-sm border border-[rgba(245,240,235,0.06)]" />
+                            <img src={image} alt={p.title} className="w-10 h-12 object-cover rounded-sm border border-[rgba(0,0,0,0.06)]" />
                           </td>
-                          <td className="py-3 font-bold text-[#F5F0EB] uppercase">{p.title}</td>
+                          <td className="py-3 font-bold text-[#111111] uppercase">{p.title}</td>
                           <td className="py-3 font-mono text-[#6B6560]">{p.sku}</td>
                           <td className="py-3 font-semibold">{formatCurrency(p.price)}</td>
                           <td className="py-3 font-mono">{p.stock_quantity} units</td>
                           <td className="py-3">
                             <span className={`text-[8px] font-mono font-bold tracking-widest px-2 py-0.5 rounded-full uppercase ${
-                              p.status === 'active' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-[#121212] text-[#8C8782] border border-[rgba(245,240,235,0.06)]'
+                              p.status === 'active' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-[#121212] text-[#666666] border border-[rgba(0,0,0,0.06)]'
                             }`}>
                               {p.status}
                             </span>
@@ -472,7 +483,7 @@ export default function AdminProductsPage() {
                             <div className="flex gap-3 justify-end">
                               <button
                                 onClick={() => handleEdit(p)}
-                                className="text-[#4A4642] hover:text-[#F5F0EB] flex items-center gap-1 font-mono text-[9px] font-bold uppercase cursor-pointer"
+                                className="text-[#444444] hover:text-[#111111] flex items-center gap-1 font-mono text-[9px] font-bold uppercase cursor-pointer"
                               >
                                 <Edit size={10} /> EDIT
                               </button>
@@ -497,8 +508,8 @@ export default function AdminProductsPage() {
         /* PRODUCT ADD / EDIT FORMS */
         <form onSubmit={handleFormSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Panel: Primary fields */}
-          <div className="lg:col-span-8 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-8 rounded-sm flex flex-col gap-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase">
+          <div className="lg:col-span-8 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] p-8 rounded-sm flex flex-col gap-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 uppercase">
               GENERAL PRODUCT DETAILS
             </h3>
 
@@ -516,12 +527,12 @@ export default function AdminProductsPage() {
                 value={formFields.slug}
                 onChange={(e) => setFormFields((f) => ({ ...f, slug: e.target.value }))}
               />
-              <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#050507] px-4 py-2 justify-center">
-                <span className="font-mono text-[9px] text-[#8C8782] uppercase font-bold">CATEGORY</span>
+              <div className="flex flex-col border border-[rgba(0,0,0,0.06)] rounded-sm bg-[#FAFAFA] px-4 py-2 justify-center">
+                <span className="font-mono text-[9px] text-[#666666] uppercase font-bold">CATEGORY</span>
                 <select
                   value={formFields.categoryId}
                   onChange={(e) => setFormFields((f) => ({ ...f, categoryId: e.target.value }))}
-                  className="bg-transparent font-mono text-[11px] text-[#F5F0EB] uppercase font-bold mt-1 outline-none cursor-pointer"
+                  className="bg-transparent font-mono text-[11px] text-[#111111] uppercase font-bold mt-1 outline-none cursor-pointer"
                 >
                   <option value="">SELECT A CATEGORY</option>
                   {categories.map((cat) => (
@@ -533,25 +544,25 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#0F0F0F] p-4">
-              <span className="font-mono text-[9px] text-[#8C8782] uppercase font-bold mb-2">DESCRIPTION (RICH TEXT HTML)</span>
+            <div className="flex flex-col border border-[rgba(0,0,0,0.06)] rounded-sm bg-[#FFFFFF] p-4">
+              <span className="font-mono text-[9px] text-[#666666] uppercase font-bold mb-2">DESCRIPTION (RICH TEXT HTML)</span>
               <textarea
                 rows={6}
                 value={formFields.description}
                 onChange={(e) => setFormFields((f) => ({ ...f, description: e.target.value }))}
                 placeholder="Describe product details, fits, materials..."
-                className="w-full bg-transparent font-sans text-[13px] text-[#F5F0EB] outline-none resize-none placeholder-[#4A4642]"
+                className="w-full bg-transparent font-sans text-[13px] text-[#111111] outline-none resize-none placeholder-[#444444]"
               />
             </div>
 
-            <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#0F0F0F] p-4 mt-2">
-              <span className="font-mono text-[9px] text-[#8C8782] uppercase font-bold mb-2">ADDITIONAL INFORMATION (HTML)</span>
+            <div className="flex flex-col border border-[rgba(0,0,0,0.06)] rounded-sm bg-[#FFFFFF] p-4 mt-2">
+              <span className="font-mono text-[9px] text-[#666666] uppercase font-bold mb-2">ADDITIONAL INFORMATION (HTML)</span>
               <textarea
                 rows={4}
                 value={formFields.additionalInfo}
                 onChange={(e) => setFormFields((f) => ({ ...f, additionalInfo: e.target.value }))}
                 placeholder="Fabric tech specs, washing instructions..."
-                className="w-full bg-transparent font-sans text-[13px] text-[#F5F0EB] outline-none resize-none placeholder-[#4A4642]"
+                className="w-full bg-transparent font-sans text-[13px] text-[#111111] outline-none resize-none placeholder-[#444444]"
               />
             </div>
 
@@ -573,7 +584,7 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Inventory configuration */}
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-6 uppercase">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mt-6 uppercase">
               INVENTORY MANAGEMENT
             </h3>
             <div className="grid grid-cols-2 gap-4">
@@ -592,14 +603,39 @@ export default function AdminProductsPage() {
               />
             </div>
 
-            {/* Variant Option swatches creator (Only shown on create mode) */}
-            {view === 'create' && (
+            {/* Variant configuration toggles */}
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mt-6 uppercase">
+              PRODUCT OPTIONS
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formFields.hasSizes}
+                  onChange={(e) => setFormFields((f) => ({ ...f, hasSizes: e.target.checked }))}
+                  className="accent-black"
+                />
+                ENABLE SIZE VARIATIONS
+              </label>
+              <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formFields.hasColors}
+                  onChange={(e) => setFormFields((f) => ({ ...f, hasColors: e.target.checked }))}
+                  className="accent-black"
+                />
+                ENABLE COLOR VARIATIONS
+              </label>
+            </div>
+
+            {/* Variant Option swatches creator (Only shown on create mode & hasSizes) */}
+            {view === 'create' && formFields.hasSizes && (
               <>
-                <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-6 uppercase">
+                <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mt-6 uppercase">
                   VARIANT OPTIONS SWATCHES (SIZING)
                 </h3>
                 <div className="flex flex-col gap-2">
-                  <div className="grid grid-cols-4 gap-4 font-mono text-[9px] text-[#8C8782] font-bold uppercase mb-1">
+                  <div className="grid grid-cols-4 gap-4 font-mono text-[9px] text-[#666666] font-bold uppercase mb-1">
                     <span>OPTION SIZE</span>
                     <span>PRICE OVERRIDE</span>
                     <span>STOCK QTY</span>
@@ -607,7 +643,7 @@ export default function AdminProductsPage() {
                   </div>
                   {variantsList.map((item, idx) => (
                     <div key={idx} className="grid grid-cols-4 gap-4 items-center">
-                      <span className="font-mono text-[12px] font-bold text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] px-3 py-3.5 rounded-sm text-center uppercase bg-[#050507]">{item.size}</span>
+                      <span className="font-mono text-[12px] font-bold text-[#111111] border border-[rgba(0,0,0,0.06)] px-3 py-3.5 rounded-sm text-center uppercase bg-[#FAFAFA]">{item.size}</span>
                       <input
                         type="number"
                         placeholder="Default"
@@ -617,7 +653,7 @@ export default function AdminProductsPage() {
                           updated[idx].priceOverride = e.target.value;
                           setVariantsList(updated);
                         }}
-                        className="bg-transparent text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
+                        className="bg-transparent text-[#111111] border border-[rgba(0,0,0,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
                       />
                       <input
                         type="number"
@@ -628,7 +664,7 @@ export default function AdminProductsPage() {
                           updated[idx].stock = e.target.value;
                           setVariantsList(updated);
                         }}
-                        className="bg-transparent text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
+                        className="bg-transparent text-[#111111] border border-[rgba(0,0,0,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
                       />
                       <input
                         type="text"
@@ -639,7 +675,7 @@ export default function AdminProductsPage() {
                           updated[idx].sku = e.target.value;
                           setVariantsList(updated);
                         }}
-                        className="bg-transparent text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
+                        className="bg-transparent text-[#111111] border border-[rgba(0,0,0,0.06)] rounded-sm px-3 py-3 font-mono text-[11px]"
                       />
                     </div>
                   ))}
@@ -652,25 +688,25 @@ export default function AdminProductsPage() {
           {/* Right Panel: Media drop, tags, SEO status */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             {/* Status card */}
-            <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
+            <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-4 uppercase">
                 PUBLISH STATUS
               </h3>
               <div className="flex flex-col gap-4">
                 <div className="flex justify-between items-center">
-                  <span className="font-mono text-[11px] text-[#4A4642] uppercase">CATALOG VISIBILITY:</span>
+                  <span className="font-mono text-[11px] text-[#444444] uppercase">CATALOG VISIBILITY:</span>
                   <select
                     value={formFields.status}
                     onChange={(e) => setFormFields((f) => ({ ...f, status: e.target.value as 'active' | 'draft' }))}
-                    className="border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
+                    className="border border-[rgba(0,0,0,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
                   >
                     <option value="active">ACTIVE</option>
                     <option value="draft">DRAFT / HIDDEN</option>
                   </select>
                 </div>
 
-                <div className="flex flex-col border-t border-[rgba(245,240,235,0.03)] pt-4 gap-2">
-                  <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#4A4642] cursor-pointer">
+                <div className="flex flex-col border-t border-[rgba(0,0,0,0.03)] pt-4 gap-2">
+                  <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formFields.trackInventory}
@@ -679,7 +715,7 @@ export default function AdminProductsPage() {
                     />
                     TRACK INVENTORY LOGIC
                   </label>
-                  <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#4A4642] cursor-pointer">
+                  <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formFields.allowBackorders}
@@ -693,8 +729,8 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Media Upload card */}
-            <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
+            <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-4 uppercase">
                 MEDIA LIBRARY
               </h3>
               
@@ -702,7 +738,7 @@ export default function AdminProductsPage() {
               <div
                 onDragOver={handleDragOver}
                 onDrop={handleDropUpload}
-                className="w-full aspect-[3/4] border-2 border-dashed border-[rgba(245,240,235,0.06)] hover:border-neutral-400 rounded-sm bg-[#050507] flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-4"
+                className="w-full aspect-[3/4] border-2 border-dashed border-[rgba(0,0,0,0.06)] hover:border-neutral-400 rounded-sm bg-[#FAFAFA] flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-4"
               >
                 {formFields.image ? (
                   <img src={formFields.image} alt="preview" className="w-full h-full object-cover rounded-sm" />
@@ -713,7 +749,7 @@ export default function AdminProductsPage() {
                       <span className="font-mono text-[9px] font-bold tracking-widest uppercase text-[#6B6560] block">
                         DRAG & DROP PRODUCT PHOTO
                       </span>
-                      <span className="text-[10px] font-sans text-[#8C8782] mt-1 block">
+                      <span className="text-[10px] font-sans text-[#666666] mt-1 block">
                         Upload to product-images Storage bucket
                       </span>
                     </div>
@@ -732,8 +768,8 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Tagswatches */}
-            <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#8C8782] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-4 uppercase">
+            <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-4 uppercase">
                 CATALOG TAGS
               </h3>
               <Input

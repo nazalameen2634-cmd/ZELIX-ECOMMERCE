@@ -460,12 +460,12 @@ export default function AdminOrdersPage() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Header breadcrumbs */}
-      <div className="flex justify-between items-center border-b border-[rgba(245,240,235,0.06)] pb-5">
+      <div className="flex justify-between items-center border-b border-[rgba(0,0,0,0.06)] pb-5">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             ORDERS FULFILLMENT
           </h1>
-          <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
+          <p className="text-[12px] text-[#444444] font-mono tracking-wider uppercase mt-1">
             VIEW AND UPDATE CUSTOMER TRANSACTIONS, TRACKING IDs, AND STATUS TIMELINES
           </p>
         </div>
@@ -478,7 +478,7 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Filters & Orders List */}
-      <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col gap-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+      <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col gap-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
           <div className="relative max-w-md w-full flex items-center">
@@ -488,7 +488,7 @@ export default function AdminOrdersPage() {
               placeholder="SEARCH ORDERS (REF OR EMAIL)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-[rgba(245,240,235,0.06)] rounded-sm font-mono text-[11px] text-[#F5F0EB] outline-none focus:border-neutral-400"
+              className="w-full pl-10 pr-4 py-2.5 border border-[rgba(0,0,0,0.06)] rounded-sm font-mono text-[11px] text-[#111111] outline-none focus:border-neutral-400"
             />
           </div>
 
@@ -497,7 +497,7 @@ export default function AdminOrdersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
+              className="border border-[rgba(0,0,0,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
             >
               <option value="">ALL ORDERS</option>
               <option value="pending">PENDING</option>
@@ -512,16 +512,17 @@ export default function AdminOrdersPage() {
         {/* Listing Grid table */}
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="animate-spin text-[#F5F0EB] w-8 h-8" />
+            <Loader2 className="animate-spin text-[#111111] w-8 h-8" />
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+            <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
               <thead>
-                <tr className="border-b border-[rgba(245,240,235,0.06)] text-[#282420] font-mono text-[10px] uppercase">
+                <tr className="border-b border-[rgba(0,0,0,0.06)] text-[#282420] font-mono text-[10px] uppercase">
                   <th className="pb-3 font-semibold">ORDER ID</th>
                   <th className="pb-3 font-semibold">DATE</th>
                   <th className="pb-3 font-semibold">CUSTOMER EMAIL</th>
+                  <th className="pb-3 font-semibold">ITEMS</th>
                   <th className="pb-3 font-semibold">PAYMENT</th>
                   <th className="pb-3 font-semibold">FULFILLMENT</th>
                   <th className="pb-3 font-semibold text-right">TOTAL</th>
@@ -531,16 +532,19 @@ export default function AdminOrdersPage() {
               <tbody>
                 {filteredOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center font-mono text-[#282420]">
+                    <td colSpan={8} className="py-8 text-center font-mono text-[#282420]">
                       NO LOGGED ORDERS FILED IN CATALOG.
                     </td>
                   </tr>
                 ) : (
                   filteredOrders.map((ord) => (
-                    <tr key={ord.id} className="border-b border-[rgba(245,240,235,0.03)] last:border-0 hover:bg-[#050507]/50 transition-colors">
+                    <tr key={ord.id} className="border-b border-[rgba(0,0,0,0.03)] last:border-0 hover:bg-[#FAFAFA]/50 transition-colors">
                       <td className="py-3.5 font-bold font-mono uppercase">{ord.order_number}</td>
                       <td className="py-3.5 text-[#6B6560]">{new Date(ord.created_at).toLocaleDateString()}</td>
                       <td className="py-3.5 text-[#6B6560] font-mono">{ord.email}</td>
+                      <td className="py-3.5 text-[#111111] font-mono text-[10px]">
+                        {ord.order_items?.map(item => item.products?.title || item.title).join(', ') || 'N/A'}
+                      </td>
                       <td className="py-3.5">
                         <span className={getStatusBadge(ord.payment_status)}>
                           {ord.payment_status}
@@ -556,14 +560,14 @@ export default function AdminOrdersPage() {
                         <div className="flex gap-4 justify-end items-center">
                           <button
                             onClick={() => window.open(`/api/orders/${ord.id}/invoice?print=true`, '_blank')}
-                            className="text-[#4A4642] hover:text-[#F5F0EB] flex items-center gap-1 font-mono text-[9px] font-bold uppercase cursor-pointer"
+                            className="text-[#444444] hover:text-[#111111] flex items-center gap-1 font-mono text-[9px] font-bold uppercase cursor-pointer"
                             title="Print Invoice"
                           >
                             <Printer size={10} /> PRINT
                           </button>
                           <button
                             onClick={() => handleOpenDetail(ord)}
-                            className="text-[#4A4642] hover:text-[#F5F0EB] flex items-center gap-1 font-mono text-[9px] font-bold uppercase cursor-pointer"
+                            className="text-[#444444] hover:text-[#111111] flex items-center gap-1 font-mono text-[9px] font-bold uppercase cursor-pointer"
                           >
                             <Eye size={10} /> DETAILS
                           </button>
@@ -586,13 +590,13 @@ export default function AdminOrdersPage() {
         maxWidth="lg"
       >
         {selectedOrder && (
-          <div className="flex flex-col gap-8 text-[#F5F0EB]">
+          <div className="flex flex-col gap-8 text-[#111111]">
             {/* Customer Details & Actions */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[rgba(245,240,235,0.03)] pb-5 gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[rgba(0,0,0,0.03)] pb-5 gap-4">
               <div>
                 <span className="font-mono text-[9px] text-[#282420] font-bold uppercase">RECIPIENT SUMMARY</span>
-                <p className="font-bold text-[14px] text-[#F5F0EB] mt-1 uppercase">{selectedOrder.shipping_address.full_name}</p>
-                <p className="text-[12px] text-[#4A4642] font-mono mt-0.5">{selectedOrder.email} // {selectedOrder.shipping_address.phone}</p>
+                <p className="font-bold text-[14px] text-[#111111] mt-1 uppercase">{selectedOrder.shipping_address.full_name}</p>
+                <p className="text-[12px] text-[#444444] font-mono mt-0.5">{selectedOrder.email} // {selectedOrder.shipping_address.phone}</p>
               </div>
 
               {/* Status Update Trigger */}
@@ -601,13 +605,13 @@ export default function AdminOrdersPage() {
                 <select
                   value={tempFulfillmentStatus}
                   onChange={(e) => setTempFulfillmentStatus(e.target.value)}
-                  className="bg-[#0F0F0F] text-[#F5F0EB] border border-[rgba(245,240,235,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
+                  className="bg-[#FFFFFF] text-[#111111] border border-[rgba(0,0,0,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
                 >
-                  <option value="pending" className="bg-[#0F0F0F] text-[#F5F0EB]">PENDING</option>
-                  <option value="processing" className="bg-[#0F0F0F] text-[#F5F0EB]">CONFIRMED & PACKED</option>
-                  <option value="shipped" className="bg-[#0F0F0F] text-[#F5F0EB]">SHIPPED</option>
-                  <option value="delivered" className="bg-[#0F0F0F] text-[#F5F0EB]">DELIVERED</option>
-                  <option value="cancelled" className="bg-[#0F0F0F] text-[#F5F0EB]">CANCELLED</option>
+                  <option value="pending" className="bg-[#FFFFFF] text-[#111111]">PENDING</option>
+                  <option value="processing" className="bg-[#FFFFFF] text-[#111111]">CONFIRMED & PACKED</option>
+                  <option value="shipped" className="bg-[#FFFFFF] text-[#111111]">SHIPPED</option>
+                  <option value="delivered" className="bg-[#FFFFFF] text-[#111111]">DELIVERED</option>
+                  <option value="cancelled" className="bg-[#FFFFFF] text-[#111111]">CANCELLED</option>
                 </select>
 
                 {tempFulfillmentStatus !== selectedOrder.fulfillment_status && (
@@ -651,11 +655,11 @@ export default function AdminOrdersPage() {
             {/* Address Columns side by side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-[12px]">
               <div>
-                <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-3 uppercase">
+                <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-3 uppercase">
                   SHIPPING ADDRESS
                 </h4>
                 <div className="leading-relaxed text-[#6B6560] font-mono uppercase">
-                  <p className="font-bold text-[#F5F0EB]">{selectedOrder.shipping_address.full_name}</p>
+                  <p className="font-bold text-[#111111]">{selectedOrder.shipping_address.full_name}</p>
                   <p>{selectedOrder.shipping_address.address_line1}</p>
                   {selectedOrder.shipping_address.address_line2 && <p>{selectedOrder.shipping_address.address_line2}</p>}
                   <p>{selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state} - {selectedOrder.shipping_address.zip}</p>
@@ -664,11 +668,11 @@ export default function AdminOrdersPage() {
               </div>
 
               <div>
-                <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-3 uppercase">
+                <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-3 uppercase">
                   BILLING DETAILS
                 </h4>
                 <div className="leading-relaxed text-[#6B6560] font-mono uppercase">
-                  <p className="font-bold text-[#F5F0EB]">{selectedOrder.billing_address.full_name}</p>
+                  <p className="font-bold text-[#111111]">{selectedOrder.billing_address.full_name}</p>
                   <p>{selectedOrder.billing_address.address_line1}</p>
                   {selectedOrder.billing_address.address_line2 && <p>{selectedOrder.billing_address.address_line2}</p>}
                   <p>{selectedOrder.billing_address.city}, {selectedOrder.billing_address.state} - {selectedOrder.billing_address.zip}</p>
@@ -678,13 +682,13 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Payment Details Card */}
-            <div className="border border-[rgba(245,240,235,0.06)] rounded-sm p-4 bg-[#0A0A0A]">
-              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+            <div className="border border-[rgba(0,0,0,0.06)] rounded-sm p-4 bg-[#0A0A0A]">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-4 uppercase">
                 PAYMENT DETAILS
               </h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-[11px]">
                 <div>
-                  <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">PAYMENT STATUS</span>
+                  <span className="block font-mono text-[9px] text-[#444444] uppercase mb-1">PAYMENT STATUS</span>
                   <span className={`inline-block px-2.5 py-1 rounded-full text-[9px] font-mono font-bold uppercase ${
                     selectedOrder.payment_status === 'paid'
                       ? 'bg-green-900/40 text-green-400 border border-green-800'
@@ -696,20 +700,20 @@ export default function AdminOrdersPage() {
                   </span>
                 </div>
                 <div>
-                  <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">GATEWAY</span>
-                  <span className="font-mono text-[#F5F0EB] font-bold">
+                  <span className="block font-mono text-[9px] text-[#444444] uppercase mb-1">GATEWAY</span>
+                  <span className="font-mono text-[#111111] font-bold">
                     {selectedOrder.razorpay_payment_id ? 'RAZORPAY' : '—'}
                   </span>
                 </div>
                 <div className="col-span-2">
-                  <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">RAZORPAY PAYMENT ID</span>
-                  <span className="font-mono text-[11px] text-[#F5F0EB] break-all">
-                    {selectedOrder.razorpay_payment_id || <span className="text-[#4A4642] italic">Not yet captured</span>}
+                  <span className="block font-mono text-[9px] text-[#444444] uppercase mb-1">RAZORPAY PAYMENT ID</span>
+                  <span className="font-mono text-[11px] text-[#111111] break-all">
+                    {selectedOrder.razorpay_payment_id || <span className="text-[#444444] italic">Not yet captured</span>}
                   </span>
                 </div>
                 {selectedOrder.razorpay_order_id && (
                   <div className="col-span-2">
-                    <span className="block font-mono text-[9px] text-[#4A4642] uppercase mb-1">RAZORPAY ORDER ID</span>
+                    <span className="block font-mono text-[9px] text-[#444444] uppercase mb-1">RAZORPAY ORDER ID</span>
                     <span className="font-mono text-[11px] text-[#6B6560] break-all">
                       {selectedOrder.razorpay_order_id}
                     </span>
@@ -721,12 +725,12 @@ export default function AdminOrdersPage() {
             {/* Order Items Table */}
 
             <div>
-              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-4 uppercase">
                 BAGGED ITEMS ({selectedOrder.order_items?.length})
               </h4>
-              <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+              <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
                 <thead>
-                  <tr className="border-b border-[rgba(245,240,235,0.03)] text-[#282420] font-mono text-[9px] uppercase">
+                  <tr className="border-b border-[rgba(0,0,0,0.03)] text-[#282420] font-mono text-[9px] uppercase">
                     <th className="pb-2 font-semibold">ITEM TITLE</th>
                     <th className="pb-2 font-semibold">SIZE</th>
                     <th className="pb-2 font-semibold text-right">UNIT PRICE</th>
@@ -749,7 +753,7 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Financial Summary */}
-            <div className="border-t border-[rgba(245,240,235,0.03)] pt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="border-t border-[rgba(0,0,0,0.03)] pt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               {/* Left Column: Shipment tracking form setter */}
               <form onSubmit={handleSaveTracking} className="flex-1 flex gap-2 w-full">
                 <div className="flex-1">
@@ -777,10 +781,10 @@ export default function AdminOrdersPage() {
               </form>
 
               {/* Right Column: Financial totals calculation */}
-              <div className="w-full md:w-[240px] flex flex-col gap-2 font-mono text-[10px] tracking-wide text-[#4A4642]">
+              <div className="w-full md:w-[240px] flex flex-col gap-2 font-mono text-[10px] tracking-wide text-[#444444]">
                 <div className="flex justify-between">
                   <span>SUB-TOTAL:</span>
-                  <span className="text-[#F5F0EB] font-semibold">{formatCurrency(selectedOrder.subtotal)}</span>
+                  <span className="text-[#111111] font-semibold">{formatCurrency(selectedOrder.subtotal)}</span>
                 </div>
                 {selectedOrder.discount_amount > 0 && (
                   <div className="flex justify-between text-red-600">
@@ -790,13 +794,13 @@ export default function AdminOrdersPage() {
                 )}
                 <div className="flex justify-between">
                   <span>SHIPPING:</span>
-                  <span className="text-[#F5F0EB] font-semibold">{formatCurrency(selectedOrder.shipping_cost)}</span>
+                  <span className="text-[#111111] font-semibold">{formatCurrency(selectedOrder.shipping_cost)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>TAX FEE:</span>
-                  <span className="text-[#F5F0EB] font-semibold">{formatCurrency(selectedOrder.tax_amount)}</span>
+                  <span className="text-[#111111] font-semibold">{formatCurrency(selectedOrder.tax_amount)}</span>
                 </div>
-                <div className="flex justify-between border-t border-[rgba(245,240,235,0.03)] pt-2 text-[13px] font-bold text-[#F5F0EB] mt-1">
+                <div className="flex justify-between border-t border-[rgba(0,0,0,0.03)] pt-2 text-[13px] font-bold text-[#111111] mt-1">
                   <span>FINAL TOTAL:</span>
                   <span>{formatCurrency(selectedOrder.total)}</span>
                 </div>
@@ -804,8 +808,8 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Timeline updates logs & Custom Note Forms */}
-            <div className="border-t border-[rgba(245,240,235,0.03)] pt-6">
-              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+            <div className="border-t border-[rgba(0,0,0,0.03)] pt-6">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-4 uppercase">
                 OPERATION TIMELINE & AUDIT LOGS
               </h4>
 
@@ -829,8 +833,8 @@ export default function AdminOrdersPage() {
                 {/* Timeline lists */}
                 <div className="flex flex-col gap-3.5 max-h-[160px] overflow-y-auto pr-2">
                   {selectedOrder.order_timeline?.map((log) => (
-                    <div key={log.id} className="border-l border-[rgba(245,240,235,0.06)] pl-4 py-0.5 relative">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#4A4642] absolute top-1.5 -left-1" />
+                    <div key={log.id} className="border-l border-[rgba(0,0,0,0.06)] pl-4 py-0.5 relative">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#444444] absolute top-1.5 -left-1" />
                       <span className="block text-[9px] font-mono text-[#282420]">
                         {new Date(log.created_at).toLocaleString()} // STATE: {log.status.toUpperCase()}
                       </span>
@@ -844,8 +848,8 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Granular Status Transition History */}
-            <div className="border-t border-[rgba(245,240,235,0.03)] pt-6">
-              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+            <div className="border-t border-[rgba(0,0,0,0.03)] pt-6">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-4 uppercase">
                 GRANULAR STATUS HISTORY
               </h4>
               <div className="flex flex-col gap-2.5 max-h-[140px] overflow-y-auto pr-2">
@@ -871,14 +875,14 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* WhatsApp Communication Logs */}
-            <div className="border-t border-[rgba(245,240,235,0.03)] pt-6">
-              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-2 mb-4 uppercase">
+            <div className="border-t border-[rgba(0,0,0,0.03)] pt-6">
+              <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-4 uppercase">
                 WHATSAPP MESSAGING LOGS
               </h4>
               <div className="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-2">
                 {whatsappLogs.length > 0 ? (
                   whatsappLogs.map((log) => (
-                    <div key={log.id} className="border border-[rgba(245,240,235,0.06)] bg-[#09090A] p-3 text-[11px] font-mono">
+                    <div key={log.id} className="border border-[rgba(0,0,0,0.06)] bg-[#09090A] p-3 text-[11px] font-mono">
                       <div className="flex justify-between items-center mb-1.5">
                         <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full uppercase ${
                           log.status === 'sent' ? 'bg-green-950/40 text-green-400 border border-green-900/50' : 'bg-red-950/40 text-red-400 border border-red-900/50'
@@ -892,7 +896,7 @@ export default function AdminOrdersPage() {
                       <div className="space-y-1 text-[#6B6560]">
                         <p><span className="text-[#282420]">TYPE:</span> <span className="uppercase text-[#A19B95]">{log.message_type.replace(/_/g, ' ')}</span></p>
                         <p><span className="text-[#282420]">TO:</span> <span className="text-[#A19B95]">{log.phone_number} ({log.recipient_type.toUpperCase()})</span></p>
-                        <div className="mt-2 p-2 bg-[#000] text-[#A19B95] whitespace-pre-wrap leading-relaxed text-[10px] border border-[rgba(245,240,235,0.03)]">
+                        <div className="mt-2 p-2 bg-[#000] text-[#A19B95] whitespace-pre-wrap leading-relaxed text-[10px] border border-[rgba(0,0,0,0.03)]">
                           {log.message_body}
                         </div>
                         {log.error_message && (

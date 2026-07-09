@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div
         className="min-h-screen w-full flex flex-col items-center justify-center gap-6"
-        style={{ background: '#080808' }}
+        style={{ background: '#F0F0F0' }}
       >
         <Loader2 className="animate-spin w-5 h-5" style={{ color: '#C9A96E' }} />
       </div>
@@ -47,10 +47,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!isAuthorized) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: '#080808' }}>
-        <div className="w-full max-w-md p-8 border" style={{ borderColor: 'rgba(245,240,235,0.1)', background: '#0A0A0A' }}>
+      <div className="min-h-screen w-full flex items-center justify-center" style={{ background: '#F0F0F0' }}>
+        <div className="w-full max-w-md p-8 border" style={{ borderColor: 'rgba(0,0,0,0.1)', background: '#FAFAFA' }}>
           <div className="text-center mb-8">
-            <h1 className="font-sans text-[24px] font-black tracking-[0.3em] text-[#F5F0EB] uppercase mb-2">
+            <h1 className="font-sans text-[24px] font-black tracking-[0.3em] text-[#111111] uppercase mb-2">
               ZELIX ADMIN
             </h1>
             <p className="font-mono text-[10px] tracking-[0.2em] text-[#6B6560]">
@@ -65,8 +65,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 placeholder="EMAIL ADDRESS"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent border py-3 px-4 outline-none font-mono text-[11px] tracking-widest text-[#F5F0EB]"
-                style={{ borderColor: 'rgba(245,240,235,0.1)' }}
+                className="w-full bg-transparent border py-3 px-4 outline-none font-mono text-[11px] tracking-widest text-[#111111]"
+                style={{ borderColor: 'rgba(0,0,0,0.1)' }}
                 required
               />
             </div>
@@ -76,8 +76,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 placeholder="PASSWORD"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent border py-3 px-4 outline-none font-mono text-[11px] tracking-widest text-[#F5F0EB]"
-                style={{ borderColor: 'rgba(245,240,235,0.1)' }}
+                className="w-full bg-transparent border py-3 px-4 outline-none font-mono text-[11px] tracking-widest text-[#111111]"
+                style={{ borderColor: 'rgba(0,0,0,0.1)' }}
                 required
               />
             </div>
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button
               type="submit"
               className="w-full py-4 mt-2 font-mono text-[11px] font-bold tracking-[0.2em] uppercase transition-colors"
-              style={{ background: '#C9A96E', color: '#080808' }}
+              style={{ background: '#C9A96E', color: '#111111' }}
             >
               AUTHENTICATE
             </button>
@@ -102,7 +102,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen flex w-full" style={{ background: '#0A0A0A', color: '#E8E4DF' }}>
+    <div className="min-h-screen flex w-full" style={{ background: '#FAFAFA', color: '#111111' }}>
       {/* Sidebar */}
       <AdminSidebar />
 
@@ -111,7 +111,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Top bar */}
         <div
           className="hidden lg:flex items-center justify-end px-10 shrink-0"
-          style={{ height: '72px', borderBottom: '1px solid rgba(245,240,235,0.06)', background: '#0A0A0A' }}
+          style={{ height: '72px', borderBottom: '1px solid rgba(0,0,0,0.06)', background: '#FAFAFA' }}
         >
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">

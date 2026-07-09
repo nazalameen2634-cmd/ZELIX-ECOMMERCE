@@ -18,15 +18,41 @@ export default function TrackGeneralPage() {
     document.title = 'TRACK YOUR ORDER | ZELIX';
   }, []);
 
-  const handleTrack = (e: React.FormEvent) => {
+  const handleTrack = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!orderNumber.trim()) {
-      toast('PLEASE ENTER A VALID ORDER NUMBER', 'error');
+      toast('PLEASE ENTER A VALID ORDER OR PHONE NUMBER', 'error');
       return;
     }
     setIsSubmitting(true);
-    // Format if they forgot ORD- prefix
-    let target = orderNumber.trim().toUpperCase();
+    let target = orderNumber.trim();
+    
+    // Check if it's likely a phone number (contains mostly digits and optional +, length >= 10)
+    const isPhone = /^\+?\d{10,}$/.test(target.replace(/[\s-]/g, ''));
+    
+    if (isPhone) {
+      try {
+        const res = await fetch(`/api/orders/track?phone=${encodeURIComponent(target)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.orders && data.orders.length > 0) {
+            router.push(`/track/${data.orders[0].order_number}`);
+            return;
+          } else {
+            toast('NO ORDERS FOUND FOR THIS PHONE NUMBER', 'error');
+            setIsSubmitting(false);
+            return;
+          }
+        }
+      } catch (err) {
+        toast('FAILED TO LOOKUP BY PHONE', 'error');
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    // Format if they forgot ORD- prefix for order numbers
+    target = target.toUpperCase();
     if (!target.startsWith('ORD-') && /^\d+$/.test(target)) {
       target = `ORD-${target}`;
     }
@@ -57,15 +83,15 @@ export default function TrackGeneralPage() {
             TRACK YOUR SHIPMENT
           </h1>
           <p className="font-sans text-[11px] text-neutral-400 mb-8 leading-relaxed max-w-xs">
-            Enter your 8-digit order number (e.g. ORD-12345) to view real-time status and package logs.
+            Enter your 8-digit order number (e.g. ORD-12345) or registered phone number to view real-time status and package logs.
           </p>
 
           <form onSubmit={handleTrack} className="w-full flex flex-col gap-4">
             <div className="relative">
               <Input
-                label="ORDER NUMBER"
+                label="ORDER OR PHONE NUMBER"
                 required
-                placeholder="ORD-XXXXX"
+                placeholder="ORD-XXXXX or 9876543210"
                 value={orderNumber}
                 onChange={(e) => setOrderNumber(e.target.value)}
                 className="w-full text-center tracking-widest uppercase font-bold text-white placeholder-neutral-700"

@@ -291,7 +291,7 @@ export default function ProductDetails({
                     ))}
                 </div>
                 <span className="font-mono text-[10px] tracking-wider font-bold text-neutral-400">
-                  {avgRating} ({reviews.length} VERIFIED REVIEWS)
+                  {avgRating}
                 </span>
               </div>
             )}
@@ -531,7 +531,7 @@ export default function ProductDetails({
         {/* Customer Reviews Section */}
         <section className="border-t border-white/5 pt-20 mb-24">
           <h2 className="font-mono text-[11px] font-black tracking-widest uppercase text-white mb-12">
-            CUSTOMER REVIEWS ({reviews.length})
+            CUSTOMER REVIEWS
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">

@@ -42,16 +42,16 @@ function SidebarContent({ collapsed, onClose }: { collapsed: boolean; onClose?: 
   }, {} as Record<string, typeof MENU_ITEMS>);
 
   return (
-    <div className="flex flex-col h-full" style={{ background: '#0A0A0A' }}>
+    <div className="flex flex-col h-full" style={{ background: '#FAFAFA' }}>
       {/* ─── Logo ─── */}
       <div
         className="flex items-center justify-between px-5 shrink-0"
-        style={{ height: '72px', borderBottom: '1px solid rgba(245,240,235,0.06)' }}
+        style={{ height: '72px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
       >
         {!collapsed && (
           <div>
             <div
-              className="font-serif text-[#F5F0EB] text-[18px] font-light tracking-[0.3em]"
+              className="font-serif text-[#111111] text-[18px] font-light tracking-[0.3em]"
             >
               ZELIX
             </div>
@@ -68,7 +68,7 @@ function SidebarContent({ collapsed, onClose }: { collapsed: boolean; onClose?: 
           </div>
         )}
         {onClose && (
-          <button onClick={onClose} className="text-[#6B6560] hover:text-[#F5F0EB] transition-colors cursor-pointer">
+          <button onClick={onClose} className="text-[#6B6560] hover:text-[#111111] transition-colors cursor-pointer">
             <X size={16} />
           </button>
         )}
@@ -111,8 +111,8 @@ function SidebarContent({ collapsed, onClose }: { collapsed: boolean; onClose?: 
                     }
                     onMouseEnter={(e) => {
                       if (!isActive) {
-                        (e.currentTarget as HTMLElement).style.color = '#9A9490';
-                        (e.currentTarget as HTMLElement).style.background = 'rgba(245,240,235,0.03)';
+                        (e.currentTarget as HTMLElement).style.color = '#111111';
+                        (e.currentTarget as HTMLElement).style.background = 'rgba(0,0,0,0.03)';
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -133,7 +133,7 @@ function SidebarContent({ collapsed, onClose }: { collapsed: boolean; onClose?: 
       </nav>
 
       {/* ─── User Footer ─── */}
-      <div className="px-3 pb-5 shrink-0 border-t" style={{ borderColor: 'rgba(245,240,235,0.06)', paddingTop: '16px' }}>
+      <div className="px-3 pb-5 shrink-0 border-t" style={{ borderColor: 'rgba(0,0,0,0.06)', paddingTop: '16px' }}>
         {!collapsed && user && (
           <div className="flex items-center gap-3 px-3 mb-4">
             <div
@@ -179,7 +179,7 @@ export default function AdminSidebar() {
         <button
           onClick={() => setIsMobileOpen(true)}
           className="flex items-center justify-center w-10 h-10 rounded-[3px] cursor-pointer transition-all duration-200"
-          style={{ background: '#161616', border: '1px solid rgba(245,240,235,0.08)', color: '#9A9490' }}
+          style={{ background: '#EAEAEA', border: '1px solid rgba(0,0,0,0.08)', color: '#333333' }}
         >
           <Menu size={16} />
         </button>
@@ -190,8 +190,8 @@ export default function AdminSidebar() {
         className="hidden lg:flex flex-col h-screen sticky top-0 shrink-0 transition-all duration-300 z-40"
         style={{
           width: isCollapsed ? '64px' : '240px',
-          borderRight: '1px solid rgba(245,240,235,0.06)',
-          background: '#0A0A0A',
+          borderRight: '1px solid rgba(0,0,0,0.06)',
+          background: '#FAFAFA',
         }}
       >
         <SidebarContent collapsed={isCollapsed} />
@@ -200,9 +200,9 @@ export default function AdminSidebar() {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3.5 top-[84px] flex items-center justify-center w-7 h-7 rounded-full cursor-pointer z-10 transition-all duration-200"
-          style={{ background: '#161616', border: '1px solid rgba(245,240,235,0.1)', color: '#6B6560' }}
+          style={{ background: '#EAEAEA', border: '1px solid rgba(0,0,0,0.1)', color: '#6B6560' }}
           onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = '#C9A96E'; (e.currentTarget as HTMLElement).style.color = '#C9A96E'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,240,235,0.1)'; (e.currentTarget as HTMLElement).style.color = '#6B6560'; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,0,0,0.1)'; (e.currentTarget as HTMLElement).style.color = '#6B6560'; }}
         >
           {isCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
         </button>
@@ -226,7 +226,7 @@ export default function AdminSidebar() {
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               className="lg:hidden fixed inset-y-0 left-0 z-50 w-[240px] shadow-2xl"
-              style={{ background: '#0A0A0A' }}
+              style={{ background: '#FAFAFA' }}
             >
               <SidebarContent collapsed={false} onClose={() => setIsMobileOpen(false)} />
             </motion.div>
