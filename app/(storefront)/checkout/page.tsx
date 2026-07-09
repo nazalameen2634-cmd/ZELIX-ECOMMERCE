@@ -150,126 +150,17 @@ export default function CheckoutPage() {
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
-    if (step === 1) {
-      const cleanedPhone = formData.phone.replace(/\D/g, '');
-      if (cleanedPhone.length !== 10) {
-        setPhoneError('PLEASE ENTER A VALID 10-DIGIT PHONE NUMBER');
-        toast('PLEASE CORRECT THE ERRORS IN THE FORM', 'error');
-        return;
-      } else {
-        setPhoneError('');
-      }
-    }
-    if (step < 3) {
-      setStep((s) => s + 1);
-    }
-  };
-
-  const handlePrevStep = () => {
-    if (step > 1) {
-      setStep((s) => s - 1);
-    }
-  };
-
-  // Process Live Razorpay Checkout
-  const handleLivePayment = async (orderId: string) => {
-    const isScriptLoaded = await loadRazorpayScript();
-    if (!isScriptLoaded) {
-      toast('RAZORPAY GATEWAY FAILED TO LOAD', 'error');
-      setIsPlacingOrder(false);
+    const cleanedPhone = formData.phone.replace(/\D/g, '');
+    if (cleanedPhone.length !== 10) {
+      setPhoneError('PLEASE ENTER A VALID 10-DIGIT PHONE NUMBER');
+      toast('PLEASE CORRECT THE ERRORS IN THE FORM', 'error');
       return;
+    } else {
+      setPhoneError('');
     }
-
-    try {
-      // Create Razorpay Order on server
-      const response = await fetch('/api/checkout/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: finalTotal,
-          receipt: orderId,
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok || !data.id) {
-        throw new Error(data.message || 'Razorpay order creation failed');
-      }
-
-      // Configure SDK options
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: data.amount,
-        currency: 'INR',
-        name: 'ZELIX STOREFRONT',
-        description: `ORDER PAYMENT Receipt: ${orderId}`,
-        order_id: data.id,
-        callback_url: `${window.location.origin}/api/checkout/verify-payment-redirect?order_id=${orderId}`,
-        handler: async function (paymentResponse: any) {
-          setIsPlacingOrder(true);
-          try {
-            // Verify payment signature on backend
-            const verifyRes = await fetch('/api/checkout/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                order_id: orderId,
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_signature: paymentResponse.razorpay_signature,
-                // Pass cart items so they get saved to order_items table
-                order_items: items.map((item) => ({
-                  product_id: item.product.id,
-                  variant_id: item.variantId || null,
-                  title: item.product.title,
-                  variant_info: { size: item.size, color: item.color },
-                  quantity: item.quantity,
-                  unit_price: item.price,
-                  line_total: item.price * item.quantity,
-                })),
-              }),
-            });
-
-            if (verifyRes.ok) {
-              toast('PAYMENT VERIFIED AND ORDER CONFIRMED', 'success');
-              clearCart();
-              setCheckoutSuccessOrder({
-                order_number: orderId,
-                total: finalTotal
-              });
-            } else {
-              const errData = await verifyRes.json();
-              toast(errData.message || 'SIGNATURE VERIFICATION FAILED. SUPPORT CONTACTED.', 'error');
-            }
-          } catch (e) {
-            console.error(e);
-            toast('VERIFICATION EXCEPTION TRIGGERED', 'error');
-          } finally {
-            setIsPlacingOrder(false);
-          }
-        },
-        prefill: {
-          name: formData.fullName,
-          email: formData.email,
-          contact: formData.phone,
-        },
-        theme: {
-          color: '#000000',
-        },
-        modal: {
-          ondismiss: function () {
-            setIsPlacingOrder(false);
-          }
-        }
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (err: any) {
-      console.error(err);
-      toast(err.message || 'GATEWAY INITIATION EXCEPTION', 'error');
-      setIsPlacingOrder(false);
-    }
+    
+    // Instead of advancing step, place the order immediately!
+    handlePlaceOrder();
   };
 
   // Submit Order Details
@@ -352,34 +243,17 @@ export default function CheckoutPage() {
         }
       }
 
-      // 1. If live Razorpay publishable keys are present, open payment gateway
-      if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
-        await handleLivePayment(data.order_number);
-      } else {
-        // 2. Fallback to Simulated Checkout success
-        setTimeout(async () => {
-          // Update payment status to paid in preview mode
-          await supabase
-            .from('orders')
-            .update({ payment_status: 'paid', fulfillment_status: 'processing' })
-            .eq('id', data.id);
 
-          // Insert order timeline log
-          await supabase.from('order_timeline').insert([{
-            order_id: data.id,
-            status: 'processing',
-            note: 'Order paid and processed in mock payment mode',
-          }]);
-
-          toast('PREVIEW ORDER PLACED SUCCESSFULLY', 'success');
-          clearCart();
-          setIsPlacingOrder(false);
-          setCheckoutSuccessOrder({
-            order_number: data.order_number,
-            total: finalTotal
-          });
-        }, 1500);
-      }
+      // Finalize order directly (Cash on Delivery / Direct placement)
+      setTimeout(async () => {
+        toast('ORDER PLACED SUCCESSFULLY', 'success');
+        clearCart();
+        setIsPlacingOrder(false);
+        setCheckoutSuccessOrder({
+          order_number: data.order_number,
+          total: finalTotal
+        });
+      }, 500);
     } catch (err) {
       console.warn('Supabase offline. Placing order in memory mockup.');
       
@@ -482,40 +356,6 @@ export default function CheckoutPage() {
           <h1 className="text-[28px] md:text-[36px] font-sans font-black tracking-tight uppercase text-white mt-2">
             CHECKOUT
           </h1>
-        </div>
-
-        {/* Checkout Steps navigation indicators */}
-        <div className="flex items-center justify-between max-w-lg mx-auto mb-16 relative">
-          {/* Progress bar */}
-          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-white/10 -translate-y-1/2 z-0" />
-          <div
-            style={{ width: step === 1 ? '0%' : step === 2 ? '50%' : '100%' }}
-            className="absolute top-1/2 left-0 h-[1px] bg-white -translate-y-1/2 z-0 transition-all duration-300"
-          />
-
-          {/* Steps */}
-          {[
-            { id: 1, label: 'SHIPPING', icon: <Truck size={12} /> },
-            { id: 2, label: 'METHOD', icon: <ClipboardList size={12} /> },
-            { id: 3, label: 'PAYMENT', icon: <CreditCard size={12} /> },
-          ].map((item) => (
-            <div key={item.id} className="relative z-10 flex flex-col items-center">
-              <div
-                className={`w-8 h-8 rounded-full border flex items-center justify-center font-mono text-[11px] font-bold transition-all duration-300 ${
-                  step >= item.id ? 'bg-white text-black border-white' : 'bg-black border-white/10 text-neutral-500'
-                }`}
-              >
-                {step > item.id ? <CheckCircle2 size={14} className="text-black" /> : item.icon}
-              </div>
-              <span
-                className={`font-mono text-[9px] font-bold tracking-widest uppercase mt-2 transition-colors duration-300 ${
-                  step >= item.id ? 'text-white' : 'text-neutral-600'
-                }`}
-              >
-                {item.label}
-              </span>
-            </div>
-          ))}
         </div>
 
         {/* Checkout Grid */}
@@ -629,160 +469,11 @@ export default function CheckoutPage() {
                       </div>
                     )}
 
-                    <Button type="submit" variant="primary" className="self-end mt-6">
-                      CONTINUE TO SHIPPING METHOD
+                    <Button type="submit" variant="primary" className="self-end mt-6" isLoading={isPlacingOrder}>
+                      {isPlacingOrder ? 'PLACING ORDER...' : 'PLACE ORDER'}
                     </Button>
                   </form>
                 </motion.div>
-              )}
-
-              {step === 2 && (
-                /* Step 2: Shipping Method Selector */
-                <motion.div
-                  key="step-2"
-                  initial={{ opacity: 0, x: -15 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 15 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col"
-                >
-                  <h2 className="font-mono text-[11px] font-black tracking-widest text-white uppercase border-b border-white/5 pb-4 mb-6">
-                    SELECT DELIVERY SERVICE
-                  </h2>
-                  <form onSubmit={handleNextStep} className="flex flex-col gap-4">
-                    {/* Method Radio Cards */}
-                    <div className="flex flex-col gap-3">
-                      {/* Standard option */}
-                      <label
-                        className={`flex items-center justify-between p-5 border rounded-sm cursor-pointer transition-colors ${
-                          shippingMethod === 'standard' ? 'border-white bg-white/5' : 'border-white/10 hover:border-white/20 bg-neutral-950/40'
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <input
-                            type="radio"
-                            name="shippingMethod"
-                            checked={shippingMethod === 'standard'}
-                            onChange={() => setShippingMethod('standard')}
-                            className="accent-white cursor-pointer"
-                          />
-                          <div>
-                            <span className="font-mono text-[11px] font-bold text-white tracking-widest uppercase">
-                              STANDARD DELIVERY
-                            </span>
-                            <span className="block text-[12px] text-neutral-500 mt-1 font-sans">
-                              ESTIMATED ARRIVAL IN 5-7 BUSINESS DAYS
-                            </span>
-                          </div>
-                        </div>
-                        <span className="text-[12px] font-semibold text-green-400">
-                          FREE
-                        </span>
-                      </label>
-
-                      {/* Express option */}
-                      <label
-                        className={`flex items-center justify-between p-5 border rounded-sm cursor-pointer transition-colors ${
-                          shippingMethod === 'express' ? 'border-white bg-white/5' : 'border-white/10 hover:border-white/20 bg-neutral-950/40'
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <input
-                            type="radio"
-                            name="shippingMethod"
-                            checked={shippingMethod === 'express'}
-                            onChange={() => setShippingMethod('express')}
-                            className="accent-white cursor-pointer"
-                          />
-                          <div>
-                            <span className="font-mono text-[11px] font-bold text-white tracking-widest uppercase">
-                              EXPRESS ARCHIVE DELIVERY
-                            </span>
-                            <span className="block text-[12px] text-neutral-500 mt-1 font-sans">
-                              ESTIMATED ARRIVAL IN 2-3 BUSINESS DAYS
-                            </span>
-                          </div>
-                        </div>
-                        <span className="text-[12px] font-semibold text-green-400">
-                          FREE
-                        </span>
-                      </label>
-                    </div>
-
-                    <div className="flex justify-between mt-8">
-                      <Button type="button" variant="outline" onClick={handlePrevStep}>
-                        GO BACK
-                      </Button>
-                      <Button type="submit" variant="primary">
-                        CONTINUE TO PAYMENT
-                      </Button>
-                    </div>
-                  </form>
-                </motion.div>
-              )}
-
-              {step === 3 && (
-                /* Step 3: Payment Section & Custom Elements Fallback */
-                <motion.div
-                  key="step-3"
-                  initial={{ opacity: 0, x: -15 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 15 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <h2 className="font-mono text-[11px] font-black tracking-widest text-white uppercase border-b border-white/5 pb-4 mb-6">
-                    SECURE TRANSACTION METHOD
-                  </h2>
-
-                  <div className="flex flex-col gap-6">
-                    {/* Razorpay element styling mock card input */}
-                    <div className="border border-white/10 bg-neutral-950 p-6 rounded-sm">
-                      <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-6">
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="text-neutral-400" size={16} />
-                          <span className="font-mono text-[10px] font-bold tracking-widest text-white uppercase">
-                            RAZORPAY PAYMENTS PORTAL
-                          </span>
-                        </div>
-                        <Shield className="text-green-500" size={14} />
-                      </div>
-
-                      {/* Razorpay explanation */}
-                      <div className="flex flex-col items-center justify-center py-8 text-center gap-4">
-                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
-                          <Shield className="text-green-500" size={24} />
-                        </div>
-                        <div>
-                          <h4 className="font-sans font-bold text-white text-sm tracking-wide mb-2">SECURE ENCRYPTED CHECKOUT</h4>
-                          <p className="font-mono text-[10px] text-neutral-500 tracking-wider leading-relaxed max-w-sm mx-auto">
-                            By clicking below, you will open the secure Razorpay payment gateway to complete your transaction using UPI, Cards, Netbanking, or Wallets.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center mt-6">
-                      <Button type="button" variant="outline" onClick={handlePrevStep} disabled={isPlacingOrder}>
-                        GO BACK
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="primary"
-                        onClick={handlePlaceOrder}
-                        isLoading={isPlacingOrder}
-                      >
-                        {isPlacingOrder ? (
-                          <span className="flex items-center gap-2">
-                            <Loader2 size={12} className="animate-spin" /> PLACING ORDER
-                          </span>
-                        ) : (
-                          'PAY & PLACE ORDER'
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
             </AnimatePresence>
           </div>
 
