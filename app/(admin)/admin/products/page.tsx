@@ -642,7 +642,7 @@ export default function AdminProductsPage() {
               PRODUCT OPTIONS
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
+
               <div className="flex flex-col gap-2">
                 <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
                   <input
