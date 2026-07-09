@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit, Trash2, Search, ArrowLeft, Loader2, Image as ImageIcon, Upload, Save, HelpCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Product, Category } from '@/types';
@@ -136,6 +136,7 @@ export default function AdminProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form Panel Toggle: 'list' | 'create' | 'edit'
   const [view, setView] = useState<'list' | 'create' | 'edit'>('list');
@@ -385,6 +386,42 @@ export default function AdminProductsPage() {
   const handleDropUpload = async (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast('PLEASE UPLOAD AN IMAGE FILE', 'error');
+      return;
+    }
+
+    toast('UPLOADING PRODUCT PHOTO...', 'success');
+    
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Upload failed');
+      
+      const data = await res.json();
+      setFormFields((f) => ({ ...f, image: data.url }));
+      toast('PRODUCT PHOTO UPLOADED TO product-images BUCKET', 'success');
+    } catch (err) {
+      console.warn('Upload failed, falling back to mock image', err);
+      // Simulate image uploading fallback
+      setFormFields((f) => ({
+        ...f,
+        image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
+      }));
+      toast('UPLOAD FAILED. MOCK IMAGE INSERTED.', 'error');
+    }
+  };
+
+  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -793,6 +830,7 @@ export default function AdminProductsPage() {
               <div
                 onDragOver={handleDragOver}
                 onDrop={handleDropUpload}
+                onClick={() => fileInputRef.current?.click()}
                 className="w-full aspect-[3/4] border-2 border-dashed border-[rgba(0,0,0,0.06)] hover:border-neutral-400 rounded-sm bg-[#FAFAFA] flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-4"
               >
                 {formFields.image ? (
@@ -802,7 +840,7 @@ export default function AdminProductsPage() {
                     <Upload className="text-neutral-300 w-10 h-10" />
                     <div>
                       <span className="font-mono text-[9px] font-bold tracking-widest uppercase text-[#6B6560] block">
-                        DRAG & DROP PRODUCT PHOTO
+                        DRAG & DROP OR CLICK TO UPLOAD
                       </span>
                       <span className="text-[10px] font-sans text-[#666666] mt-1 block">
                         Upload to product-images Storage bucket
@@ -811,6 +849,13 @@ export default function AdminProductsPage() {
                   </>
                 )}
               </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileInput}
+              />
 
               {/* Text URL backup */}
               <div className="mt-4">
