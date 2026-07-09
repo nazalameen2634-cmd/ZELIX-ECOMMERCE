@@ -163,11 +163,39 @@ export default function AdminProductsPage() {
   });
 
   // Variant options creator
-  const [variantsList, setVariantsList] = useState<{ size: string; priceOverride: string; stock: string; sku: string }[]>([
-    { size: 'S', priceOverride: '', stock: '10', sku: '' },
-    { size: 'M', priceOverride: '', stock: '10', sku: '' },
-    { size: 'L', priceOverride: '', stock: '10', sku: '' },
-  ]);
+  const [availableSizes, setAvailableSizes] = useState<string>('S, M, L, XL');
+  const [availableColors, setAvailableColors] = useState<string>('MATTE BLACK, BONE WHITE');
+  const [variantsList, setVariantsList] = useState<{ size?: string; color?: string; priceOverride: string; stock: string; sku: string }[]>([]);
+
+  useEffect(() => {
+    if (view !== 'create') return;
+    
+    let matrix: any[] = [];
+    const sizes = availableSizes.split(',').map(s => s.trim()).filter(Boolean);
+    const colors = availableColors.split(',').map(c => c.trim()).filter(Boolean);
+    
+    if (formFields.hasSizes && formFields.hasColors) {
+      sizes.forEach(s => {
+        colors.forEach(c => {
+          matrix.push({ size: s, color: c, priceOverride: '', stock: '10', sku: '' });
+        });
+      });
+    } else if (formFields.hasSizes) {
+      sizes.forEach(s => {
+        matrix.push({ size: s, priceOverride: '', stock: '10', sku: '' });
+      });
+    } else if (formFields.hasColors) {
+      colors.forEach(c => {
+        matrix.push({ color: c, priceOverride: '', stock: '10', sku: '' });
+      });
+    }
+    
+    // Preserve existing overrides
+    setVariantsList(prev => matrix.map(newVar => {
+      const existing = prev.find(ev => ev.size === newVar.size && ev.color === newVar.color);
+      return existing ? { ...newVar, priceOverride: existing.priceOverride, stock: existing.stock, sku: existing.sku } : newVar;
+    }));
+  }, [formFields.hasSizes, formFields.hasColors, availableSizes, availableColors, view]);
 
   // Load Products & Categories
   useEffect(() => {
@@ -288,14 +316,20 @@ export default function AdminProductsPage() {
         const { data: newProd } = await res.json();
 
         // Insert variants if any via API
-        if (newProd && formFields.hasSizes && variantsList.length > 0) {
-          const variantsRows = variantsList.map((v) => ({
-            product_id: newProd.id,
-            sku: v.sku || `${formFields.sku}-${v.size.toUpperCase()}`,
-            price: v.priceOverride ? parseFloat(v.priceOverride) : null,
-            stock_quantity: parseInt(v.stock),
-            option_values: [{ option_name: 'Size', value: v.size }],
-          }));
+        if (newProd && (formFields.hasSizes || formFields.hasColors) && variantsList.length > 0) {
+          const variantsRows = variantsList.map((v) => {
+            const option_values = [];
+            if (v.size) option_values.push({ option_name: 'Size', value: v.size });
+            if (v.color) option_values.push({ option_name: 'Color', value: v.color });
+            
+            return {
+              product_id: newProd.id,
+              sku: v.sku || `${formFields.sku}-${(v.size || 'OS').toUpperCase()}`,
+              price: v.priceOverride ? parseFloat(v.priceOverride) : null,
+              stock_quantity: parseInt(v.stock),
+              option_values,
+            };
+          });
           
           await fetch('/api/admin/products/variants', {
             method: 'POST',
@@ -609,41 +643,62 @@ export default function AdminProductsPage() {
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formFields.hasSizes}
-                  onChange={(e) => setFormFields((f) => ({ ...f, hasSizes: e.target.checked }))}
-                  className="accent-black"
-                />
-                ENABLE SIZE VARIATIONS
-              </label>
-              <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formFields.hasColors}
-                  onChange={(e) => setFormFields((f) => ({ ...f, hasColors: e.target.checked }))}
-                  className="accent-black"
-                />
-                ENABLE COLOR VARIATIONS
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formFields.hasSizes}
+                    onChange={(e) => setFormFields((f) => ({ ...f, hasSizes: e.target.checked }))}
+                    className="accent-black"
+                  />
+                  ENABLE SIZE VARIATIONS
+                </label>
+                {formFields.hasSizes && (
+                  <Input 
+                    label="AVAILABLE SIZES (COMMA SEPARATED)" 
+                    value={availableSizes}
+                    onChange={(e) => setAvailableSizes(e.target.value)}
+                  />
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-3 font-mono text-[10px] tracking-wider text-[#444444] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formFields.hasColors}
+                    onChange={(e) => setFormFields((f) => ({ ...f, hasColors: e.target.checked }))}
+                    className="accent-black"
+                  />
+                  ENABLE COLOR VARIATIONS
+                </label>
+                {formFields.hasColors && (
+                  <Input 
+                    label="AVAILABLE COLORS (COMMA SEPARATED)" 
+                    value={availableColors}
+                    onChange={(e) => setAvailableColors(e.target.value)}
+                  />
+                )}
+              </div>
             </div>
 
-            {/* Variant Option swatches creator (Only shown on create mode & hasSizes) */}
-            {view === 'create' && formFields.hasSizes && (
+            {/* Variant Option swatches creator */}
+            {view === 'create' && (formFields.hasSizes || formFields.hasColors) && (
               <>
                 <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mt-6 uppercase">
-                  VARIANT OPTIONS SWATCHES (SIZING)
+                  VARIANT OPTIONS SWATCHES
                 </h3>
                 <div className="flex flex-col gap-2">
                   <div className="grid grid-cols-4 gap-4 font-mono text-[9px] text-[#666666] font-bold uppercase mb-1">
-                    <span>OPTION SIZE</span>
+                    <span>OPTION</span>
                     <span>PRICE OVERRIDE</span>
                     <span>STOCK QTY</span>
                     <span>VARIANT SKU</span>
                   </div>
                   {variantsList.map((item, idx) => (
                     <div key={idx} className="grid grid-cols-4 gap-4 items-center">
-                      <span className="font-mono text-[12px] font-bold text-[#111111] border border-[rgba(0,0,0,0.06)] px-3 py-3.5 rounded-sm text-center uppercase bg-[#FAFAFA]">{item.size}</span>
+                      <span className="font-mono text-[11px] font-bold text-[#111111] border border-[rgba(0,0,0,0.06)] px-2 py-3 rounded-sm text-center uppercase bg-[#FAFAFA]">
+                        {[item.size, item.color].filter(Boolean).join(' - ') || 'DEFAULT'}
+                      </span>
                       <input
                         type="number"
                         placeholder="Default"

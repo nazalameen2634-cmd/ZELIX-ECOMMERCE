@@ -201,7 +201,7 @@ export default function AdminCustomers() {
       {/* Header Info */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             CLIENT DIRECTORY
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -211,9 +211,9 @@ export default function AdminCustomers() {
       </div>
 
       {/* Main Table Card */}
-      <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
+      <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
         {/* Actions header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[rgba(245,240,235,0.03)] pb-4 mb-6 gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[rgba(0,0,0,0.03)] pb-4 mb-6 gap-4">
           <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase">
             ACCOUNTS REGISTERED ({filteredAndSorted.length})
           </h3>
@@ -223,30 +223,30 @@ export default function AdminCustomers() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, email, phone..."
-              className="w-full text-[12px] bg-[#050507] border border-[rgba(245,240,235,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+              className="w-full text-[12px] bg-[#FAFAFA] border border-[rgba(0,0,0,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
             />
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#282420]" size={13} />
           </div>
         </div>
 
         <div className="overflow-x-auto w-full">
-          <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+          <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
             <thead>
-              <tr className="border-b border-[rgba(245,240,235,0.03)] text-[#282420] font-mono text-[10px] uppercase">
+              <tr className="border-b border-[rgba(0,0,0,0.03)] text-[#282420] font-mono text-[10px] uppercase">
                 <th className="pb-3 font-semibold">CUSTOMER</th>
                 <th className="pb-3 font-semibold">CONTACT INFO</th>
                 <th className="pb-3 font-semibold">ROLE</th>
-                <th className="pb-3 font-semibold cursor-pointer select-none hover:text-[#F5F0EB] transition-colors" onClick={() => handleSort('created_at')}>
+                <th className="pb-3 font-semibold cursor-pointer select-none hover:text-[#111111] transition-colors" onClick={() => handleSort('created_at')}>
                   <span className="flex items-center gap-1">
                     JOIN DATE <ArrowUpDown size={10} />
                   </span>
                 </th>
-                <th className="pb-3 font-semibold text-center cursor-pointer select-none hover:text-[#F5F0EB] transition-colors" onClick={() => handleSort('orders_count')}>
+                <th className="pb-3 font-semibold text-center cursor-pointer select-none hover:text-[#111111] transition-colors" onClick={() => handleSort('orders_count')}>
                   <span className="flex items-center justify-center gap-1">
                     ORDERS <ArrowUpDown size={10} />
                   </span>
                 </th>
-                <th className="pb-3 font-semibold text-right cursor-pointer select-none hover:text-[#F5F0EB] transition-colors" onClick={() => handleSort('total_spent')}>
+                <th className="pb-3 font-semibold text-right cursor-pointer select-none hover:text-[#111111] transition-colors" onClick={() => handleSort('total_spent')}>
                   <span className="flex items-center justify-end gap-1">
                     TOTAL SPENT <ArrowUpDown size={10} />
                   </span>
@@ -271,12 +271,12 @@ export default function AdminCustomers() {
                 filteredAndSorted.map((cust) => (
                   <tr
                     key={cust.id}
-                    className="border-b border-neutral-50 last:border-0 hover:bg-[#050507]/50 transition-colors"
+                    className="border-b border-neutral-50 last:border-0 hover:bg-[#FAFAFA]/50 transition-colors"
                   >
                     {/* User profile */}
                     <td className="py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center text-white border border-white/10 overflow-hidden shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-neutral-900 flex items-center justify-center text-[#111111] border border-white/10 overflow-hidden shrink-0">
                           {cust.avatar_url ? (
                             <img src={cust.avatar_url} alt={cust.full_name || 'User'} className="w-full h-full object-cover" />
                           ) : (
@@ -284,7 +284,7 @@ export default function AdminCustomers() {
                           )}
                         </div>
                         <div>
-                          <span className="font-bold text-[#F5F0EB] uppercase block">
+                          <span className="font-bold text-[#111111] uppercase block">
                             {cust.full_name || 'NO NAME ASSIGNED'}
                           </span>
                           <span className="text-[#282420] text-[10px] font-mono lowercase block">
@@ -312,8 +312,8 @@ export default function AdminCustomers() {
                         onClick={() => toggleRole(cust)}
                         className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold tracking-widest uppercase cursor-pointer border hover:opacity-85 transition-opacity ${
                           cust.role === 'admin'
-                            ? 'bg-neutral-950 text-white border-neutral-950'
-                            : 'bg-[#050507] text-[#4A4642] border-[rgba(245,240,235,0.06)]'
+                            ? 'bg-neutral-950 text-[#111111] border-neutral-950'
+                            : 'bg-[#FAFAFA] text-[#4A4642] border-[rgba(0,0,0,0.06)]'
                         }`}
                         title="Click to toggle privilege"
                       >
@@ -340,7 +340,7 @@ export default function AdminCustomers() {
                     </td>
 
                     {/* Total amount spent */}
-                    <td className="py-3.5 text-right font-mono font-bold text-[#F5F0EB]">
+                    <td className="py-3.5 text-right font-mono font-bold text-[#111111]">
                       <span className="flex items-center justify-end gap-1">
                         <CreditCard size={10} className="text-[#282420]" />
                         {formatCurrency(cust.total_spent || 0)}

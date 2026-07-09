@@ -125,7 +125,7 @@ export default function AdminReviewsPage() {
     <div className="flex flex-col gap-8 w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             REVIEW MANAGEMENT
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -134,7 +134,7 @@ export default function AdminReviewsPage() {
         </div>
       </div>
 
-      <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col gap-6">
+      <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col gap-6">
         {/* Search bar */}
         <div className="relative max-w-md w-full flex items-center">
           <Search className="absolute left-3.5 text-[#282420]" size={16} />
@@ -143,19 +143,19 @@ export default function AdminReviewsPage() {
             placeholder="SEARCH REVIEWS (PRODUCT, TITLE, USER)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-[rgba(245,240,235,0.06)] rounded-sm font-mono text-[11px] text-[#F5F0EB] bg-[#050507] outline-none focus:border-[#C9A96E] transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 border border-[rgba(0,0,0,0.06)] rounded-sm font-mono text-[11px] text-[#111111] bg-[#FAFAFA] outline-none focus:border-[#C9A96E] transition-colors"
           />
         </div>
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="animate-spin text-[#F5F0EB] w-8 h-8" />
+            <Loader2 className="animate-spin text-[#111111] w-8 h-8" />
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+            <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
               <thead>
-                <tr className="border-b border-[rgba(245,240,235,0.06)] text-[#282420] font-mono text-[10px] uppercase">
+                <tr className="border-b border-[rgba(0,0,0,0.06)] text-[#282420] font-mono text-[10px] uppercase">
                   <th className="pb-3 font-semibold w-[150px]">DATE</th>
                   <th className="pb-3 font-semibold">CUSTOMER</th>
                   <th className="pb-3 font-semibold">PRODUCT</th>
@@ -173,11 +173,11 @@ export default function AdminReviewsPage() {
                   </tr>
                 ) : (
                   filteredReviews.map((review) => (
-                    <tr key={review.id} className="border-b border-[rgba(245,240,235,0.03)] last:border-0 hover:bg-[#050507]/50 transition-colors">
+                    <tr key={review.id} className="border-b border-[rgba(0,0,0,0.03)] last:border-0 hover:bg-[#FAFAFA]/50 transition-colors">
                       <td className="py-4 font-mono text-[#6B6560]">
                         {new Date(review.created_at).toLocaleDateString()}
                       </td>
-                       <td className="py-4 font-mono text-[#F5F0EB] font-bold">
+                       <td className="py-4 font-mono text-[#111111] font-bold">
                         {review.reviewer_name?.toUpperCase() || review.profile?.full_name?.toUpperCase() || review.profile?.email || 'ANONYMOUS'}
                       </td>
                       <td className="py-4 font-mono text-[#C9A96E]">
@@ -189,7 +189,7 @@ export default function AdminReviewsPage() {
                             <Star key={i} size={10} className={i < review.rating ? 'fill-[#C9A96E]' : 'text-neutral-800 fill-transparent'} />
                           ))}
                         </div>
-                        <p className="font-bold uppercase text-[11px] mb-1 text-[#F5F0EB]">{review.title}</p>
+                        <p className="font-bold uppercase text-[11px] mb-1 text-[#111111]">{review.title}</p>
                         <p className="font-sans text-[12px] text-[#9A9490] line-clamp-2">{review.body}</p>
                       </td>
                       <td className="py-4 text-center">
@@ -201,7 +201,7 @@ export default function AdminReviewsPage() {
                           {review.is_verified ? (
                             <CheckCircle size={16} className="text-green-500" />
                           ) : (
-                            <XCircle size={16} className="text-neutral-600 hover:text-white" />
+                            <XCircle size={16} className="text-neutral-600 hover:text-[#111111]" />
                           )}
                         </button>
                       </td>

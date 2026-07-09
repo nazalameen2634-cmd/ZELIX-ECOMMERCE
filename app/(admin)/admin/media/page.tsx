@@ -236,9 +236,9 @@ export default function AdminMedia() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Header Info */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(245,240,235,0.06)] pb-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(0,0,0,0.06)] pb-5">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             MEDIA ASSET MANAGER
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -249,7 +249,7 @@ export default function AdminMedia() {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="py-2.5 px-4 bg-black text-white hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+          className="py-2.5 px-4 bg-black text-[#111111] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
         >
           {uploading ? (
             <>
@@ -277,7 +277,7 @@ export default function AdminMedia() {
           <div
             onDragOver={handleDragOver}
             onDrop={handleDrop}
-            className="w-full aspect-square border-2 border-dashed border-[rgba(245,240,235,0.06)] hover:border-neutral-400 bg-[#0F0F0F] rounded-sm flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-6"
+            className="w-full aspect-square border-2 border-dashed border-[rgba(0,0,0,0.06)] hover:border-neutral-400 bg-[#FFFFFF] rounded-sm flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-6"
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload size={24} className="text-neutral-300" />
@@ -292,7 +292,7 @@ export default function AdminMedia() {
           </div>
 
           {/* Filtering Sidebar */}
-          <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-4 mt-6">
+          <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-4 mt-6">
             <span className="font-mono text-[9px] font-bold tracking-widest text-[#282420] uppercase mb-3 block">
               FILTER FILE FORMAT
             </span>
@@ -308,8 +308,8 @@ export default function AdminMedia() {
                   onClick={() => setFilterType(item.val)}
                   className={`flex items-center gap-2 px-3 py-2 text-left font-mono text-[10px] tracking-wider uppercase rounded-sm border transition-all ${
                     filterType === item.val
-                      ? 'bg-[#121212] text-[#F5F0EB] border-[rgba(245,240,235,0.06)] font-bold'
-                      : 'border-transparent text-[#4A4642] hover:text-[#F5F0EB] hover:bg-[#050507]'
+                      ? 'bg-[#121212] text-[#111111] border-[rgba(0,0,0,0.06)] font-bold'
+                      : 'border-transparent text-[#4A4642] hover:text-[#111111] hover:bg-[#FAFAFA]'
                   }`}
                 >
                   {item.icon}
@@ -321,9 +321,9 @@ export default function AdminMedia() {
         </div>
 
         {/* Media Grid listing */}
-        <div className="lg:col-span-9 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
+        <div className="lg:col-span-9 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
           {/* Header query search */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[rgba(245,240,235,0.03)] pb-4 mb-6 gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-[rgba(0,0,0,0.03)] pb-4 mb-6 gap-4">
             <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase">
               MEDIA LIBRARY ({filteredMedia.length})
             </h3>
@@ -333,7 +333,7 @@ export default function AdminMedia() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search file name..."
-                className="w-full text-[12px] bg-[#050507] border border-[rgba(245,240,235,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                className="w-full text-[12px] bg-[#FAFAFA] border border-[rgba(0,0,0,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
               />
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#282420]" size={13} />
             </div>
@@ -342,7 +342,7 @@ export default function AdminMedia() {
           {/* Grid display */}
           {loading ? (
             <div className="flex justify-center items-center py-24">
-              <Loader2 className="animate-spin text-[#F5F0EB] w-8 h-8" />
+              <Loader2 className="animate-spin text-[#111111] w-8 h-8" />
             </div>
           ) : filteredMedia.length === 0 ? (
             <div className="text-center py-24 font-mono text-[#282420]">
@@ -354,9 +354,9 @@ export default function AdminMedia() {
                 const isImage = asset.mime_type.startsWith('image/');
                 
                 return (
-                  <div key={asset.id} className="group border border-[rgba(245,240,235,0.06)] rounded-sm overflow-hidden bg-[#050507] hover:shadow-sm transition-all flex flex-col">
+                  <div key={asset.id} className="group border border-[rgba(0,0,0,0.06)] rounded-sm overflow-hidden bg-[#FAFAFA] hover:shadow-sm transition-all flex flex-col">
                     {/* Media preview area */}
-                    <div className="relative aspect-video w-full bg-[#121212] flex items-center justify-center overflow-hidden border-b border-[rgba(245,240,235,0.06)]">
+                    <div className="relative aspect-video w-full bg-[#121212] flex items-center justify-center overflow-hidden border-b border-[rgba(0,0,0,0.06)]">
                       {isImage ? (
                         <img src={asset.url} alt={asset.filename} className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300" />
                       ) : (
@@ -372,7 +372,7 @@ export default function AdminMedia() {
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleCopyUrl(asset)}
-                          className="p-2 bg-[#0F0F0F] rounded-full text-[#F5F0EB] hover:bg-[#121212] transition-colors shadow-sm cursor-pointer"
+                          className="p-2 bg-[#FFFFFF] rounded-full text-[#111111] hover:bg-[#121212] transition-colors shadow-sm cursor-pointer"
                           title="Copy Link URL"
                         >
                           {copiedId === asset.id ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
@@ -381,14 +381,14 @@ export default function AdminMedia() {
                           href={asset.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 bg-[#0F0F0F] rounded-full text-[#F5F0EB] hover:bg-[#121212] transition-colors shadow-sm cursor-pointer"
+                          className="p-2 bg-[#FFFFFF] rounded-full text-[#111111] hover:bg-[#121212] transition-colors shadow-sm cursor-pointer"
                           title="Open in tab"
                         >
                           <ExternalLink size={14} />
                         </a>
                         <button
                           onClick={() => handleDelete(asset)}
-                          className="p-2 bg-[#0F0F0F] rounded-full text-red-600 hover:bg-red-50 transition-colors shadow-sm cursor-pointer"
+                          className="p-2 bg-[#FFFFFF] rounded-full text-red-600 hover:bg-red-50 transition-colors shadow-sm cursor-pointer"
                           title="Delete File"
                         >
                           <Trash2 size={14} />
@@ -397,8 +397,8 @@ export default function AdminMedia() {
                     </div>
 
                     {/* Meta information */}
-                    <div className="p-3.5 flex flex-col gap-1 bg-[#0F0F0F] flex-1">
-                      <span className="font-mono text-[10px] font-bold text-[#F5F0EB] truncate block uppercase" title={asset.filename}>
+                    <div className="p-3.5 flex flex-col gap-1 bg-[#FFFFFF] flex-1">
+                      <span className="font-mono text-[10px] font-bold text-[#111111] truncate block uppercase" title={asset.filename}>
                         {asset.filename}
                       </span>
                       <div className="flex justify-between items-center text-[9px] font-mono text-[#282420] tracking-wider">

@@ -288,7 +288,7 @@ export default function AdminCoupons() {
       {/* Header Info */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             COUPON MANAGEMENT
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -299,8 +299,8 @@ export default function AdminCoupons() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Form: Create / Edit Coupon */}
-        <div className="lg:col-span-4 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
-          <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-6 uppercase flex items-center gap-2">
+        <div className="lg:col-span-4 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
+          <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-6 uppercase flex items-center gap-2">
             <Tag size={12} /> {isEditing ? 'EDIT DISCOUNT CAMPAIGN' : 'ADD NEW DISCOUNT CAMPAIGN'}
           </h3>
 
@@ -314,7 +314,7 @@ export default function AdminCoupons() {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder="e.g. ZELIX25"
-                className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono uppercase"
+                className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono uppercase"
                 required
               />
             </div>
@@ -327,7 +327,7 @@ export default function AdminCoupons() {
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value as 'percentage' | 'fixed')}
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 >
                   <option value="percentage">PERCENTAGE</option>
                   <option value="fixed">FIXED VALUE</option>
@@ -345,7 +345,7 @@ export default function AdminCoupons() {
                     onChange={(e) => setValue(e.target.value)}
                     placeholder={type === 'percentage' ? '15' : '500'}
                     min="1"
-                    className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm pl-3 pr-8 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                    className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm pl-3 pr-8 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                     required
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#282420] font-mono text-[11px]">
@@ -366,7 +366,7 @@ export default function AdminCoupons() {
                   onChange={(e) => setMinOrderAmount(e.target.value)}
                   placeholder="0"
                   min="0"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
               </div>
 
@@ -380,7 +380,7 @@ export default function AdminCoupons() {
                   onChange={(e) => setUsageLimit(e.target.value)}
                   placeholder="Unlimited"
                   min="1"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
               </div>
             </div>
@@ -393,7 +393,7 @@ export default function AdminCoupons() {
                 type="datetime-local"
                 value={validFrom}
                 onChange={(e) => setValidFrom(e.target.value)}
-                className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 required
               />
             </div>
@@ -406,18 +406,18 @@ export default function AdminCoupons() {
                 type="datetime-local"
                 value={validTo}
                 onChange={(e) => setValidTo(e.target.value)}
-                className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 required
               />
             </div>
 
-            <div className="flex items-center gap-2 border-t border-[rgba(245,240,235,0.03)] pt-4">
+            <div className="flex items-center gap-2 border-t border-[rgba(0,0,0,0.03)] pt-4">
               <input
                 type="checkbox"
                 id="isActiveCheckbox"
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
-                className="w-4 h-4 rounded border-[rgba(245,240,235,0.1)] text-[#F5F0EB] focus:ring-black cursor-pointer"
+                className="w-4 h-4 rounded border-[rgba(245,240,235,0.1)] text-[#111111] focus:ring-black cursor-pointer"
               />
               <label htmlFor="isActiveCheckbox" className="text-[11px] font-mono font-bold tracking-widest text-[#6B6560] uppercase select-none cursor-pointer">
                 CAMPAIGN IS ACTIVE
@@ -429,14 +429,14 @@ export default function AdminCoupons() {
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="flex-1 py-3 px-4 border border-[rgba(245,240,235,0.06)] hover:border-black transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1 cursor-pointer"
+                  className="flex-1 py-3 px-4 border border-[rgba(0,0,0,0.06)] hover:border-black transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1 cursor-pointer"
                 >
                   <X size={14} /> CANCEL
                 </button>
               )}
               <button
                 type="submit"
-                className="flex-1 py-3 px-4 bg-black text-white hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex-1 py-3 px-4 bg-black text-[#111111] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Save size={14} /> {isEditing ? 'SAVE CHANGES' : 'CREATE COUPON'}
               </button>
@@ -445,8 +445,8 @@ export default function AdminCoupons() {
         </div>
 
         {/* Right List: Coupons Table */}
-        <div className="lg:col-span-8 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
-          <div className="flex justify-between items-center border-b border-[rgba(245,240,235,0.03)] pb-4 mb-6 gap-4">
+        <div className="lg:col-span-8 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
+          <div className="flex justify-between items-center border-b border-[rgba(0,0,0,0.03)] pb-4 mb-6 gap-4">
             <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase shrink-0">
               EXISTING CAMPAIGNS ({filteredCoupons.length})
             </h3>
@@ -456,16 +456,16 @@ export default function AdminCoupons() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search code..."
-                className="w-full text-[12px] bg-[#050507] border border-[rgba(245,240,235,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                className="w-full text-[12px] bg-[#FAFAFA] border border-[rgba(0,0,0,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
               />
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#282420]" size={13} />
             </div>
           </div>
 
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+            <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
               <thead>
-                <tr className="border-b border-[rgba(245,240,235,0.03)] text-[#282420] font-mono text-[10px] uppercase">
+                <tr className="border-b border-[rgba(0,0,0,0.03)] text-[#282420] font-mono text-[10px] uppercase">
                   <th className="pb-3 font-semibold">CODE</th>
                   <th className="pb-3 font-semibold">REDUCTION VALUE</th>
                   <th className="pb-3 font-semibold">MIN ORDER</th>
@@ -496,9 +496,9 @@ export default function AdminCoupons() {
                     return (
                       <tr
                         key={coupon.id}
-                        className="border-b border-neutral-50 last:border-0 hover:bg-[#050507]/50 transition-colors"
+                        className="border-b border-neutral-50 last:border-0 hover:bg-[#FAFAFA]/50 transition-colors"
                       >
-                        <td className="py-3.5 font-bold font-mono text-[#F5F0EB] uppercase tracking-wider">{coupon.code}</td>
+                        <td className="py-3.5 font-bold font-mono text-[#111111] uppercase tracking-wider">{coupon.code}</td>
                         <td className="py-3.5 font-mono text-[#D4CBBF]">
                           {coupon.type === 'percentage' ? `${coupon.value}% OFF` : `${formatCurrency(coupon.value)} OFF`}
                         </td>
@@ -529,7 +529,7 @@ export default function AdminCoupons() {
                           <div className="flex justify-end gap-2">
                             <button
                               onClick={() => handleEditClick(coupon)}
-                              className="p-1.5 text-[#4A4642] hover:text-[#F5F0EB] transition-colors rounded-md hover:bg-[#121212] cursor-pointer"
+                              className="p-1.5 text-[#4A4642] hover:text-[#111111] transition-colors rounded-md hover:bg-[#121212] cursor-pointer"
                               title="Edit Coupon"
                             >
                               <Edit2 size={13} />

@@ -221,7 +221,7 @@ export default function AdminDashboard() {
             ZELIX CONSOLE // DASHBOARD
           </div>
           <h1
-            className="font-sans font-extrabold uppercase text-[#F5F0EB] text-[32px] leading-none tracking-tight"
+            className="font-sans font-extrabold uppercase text-[#111111] text-[32px] leading-none tracking-tight"
           >
             Overview
           </h1>

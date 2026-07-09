@@ -682,7 +682,7 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Payment Details Card */}
-            <div className="border border-[rgba(0,0,0,0.06)] rounded-sm p-4 bg-[#0A0A0A]">
+            <div className="border border-[rgba(0,0,0,0.06)] rounded-sm p-4 bg-[#FFFFFF]">
               <h4 className="font-mono text-[9px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-2 mb-4 uppercase">
                 PAYMENT DETAILS
               </h4>
@@ -774,7 +774,7 @@ export default function AdminOrdersPage() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-black hover:bg-neutral-800 text-white font-mono text-[9px] font-bold tracking-widest px-4 h-12 self-start rounded-sm uppercase cursor-pointer"
+                  className="bg-black hover:bg-neutral-800 text-[#111111] font-mono text-[9px] font-bold tracking-widest px-4 h-12 self-start rounded-sm uppercase cursor-pointer"
                 >
                   SAVE
                 </button>
@@ -824,7 +824,7 @@ export default function AdminOrdersPage() {
                   />
                   <button
                     type="submit"
-                    className="self-end px-6 py-2.5 bg-black hover:bg-neutral-800 text-white font-mono text-[9px] font-bold tracking-widest rounded-full uppercase cursor-pointer"
+                    className="self-end px-6 py-2.5 bg-black hover:bg-neutral-800 text-[#111111] font-mono text-[9px] font-bold tracking-widest rounded-full uppercase cursor-pointer"
                   >
                     ADD LOG ENTRY
                   </button>
@@ -882,7 +882,7 @@ export default function AdminOrdersPage() {
               <div className="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-2">
                 {whatsappLogs.length > 0 ? (
                   whatsappLogs.map((log) => (
-                    <div key={log.id} className="border border-[rgba(0,0,0,0.06)] bg-[#09090A] p-3 text-[11px] font-mono">
+                    <div key={log.id} className="border border-[rgba(0,0,0,0.06)] bg-[#FAFAFA] p-3 text-[11px] font-mono">
                       <div className="flex justify-between items-center mb-1.5">
                         <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full uppercase ${
                           log.status === 'sent' ? 'bg-green-950/40 text-green-400 border border-green-900/50' : 'bg-red-950/40 text-red-400 border border-red-900/50'
@@ -896,7 +896,7 @@ export default function AdminOrdersPage() {
                       <div className="space-y-1 text-[#6B6560]">
                         <p><span className="text-[#282420]">TYPE:</span> <span className="uppercase text-[#A19B95]">{log.message_type.replace(/_/g, ' ')}</span></p>
                         <p><span className="text-[#282420]">TO:</span> <span className="text-[#A19B95]">{log.phone_number} ({log.recipient_type.toUpperCase()})</span></p>
-                        <div className="mt-2 p-2 bg-[#000] text-[#A19B95] whitespace-pre-wrap leading-relaxed text-[10px] border border-[rgba(0,0,0,0.03)]">
+                        <div className="mt-2 p-2 bg-[#FAFAFA] text-[#A19B95] whitespace-pre-wrap leading-relaxed text-[10px] border border-[rgba(0,0,0,0.03)]">
                           {log.message_body}
                         </div>
                         {log.error_message && (

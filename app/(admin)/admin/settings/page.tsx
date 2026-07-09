@@ -253,9 +253,9 @@ export default function AdminSettingsPage() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Header breadcrumbs */}
-      <div className="flex justify-between items-center border-b border-[rgba(245,240,235,0.06)] pb-5">
+      <div className="flex justify-between items-center border-b border-[rgba(0,0,0,0.06)] pb-5">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             SITE CUSTOMIZATION
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -265,7 +265,7 @@ export default function AdminSettingsPage() {
       </div>
 
       {/* Tabs navigation row */}
-      <div className="flex border-b border-[rgba(245,240,235,0.06)] gap-1.5 overflow-x-auto hide-scrollbar">
+      <div className="flex border-b border-[rgba(0,0,0,0.06)] gap-1.5 overflow-x-auto hide-scrollbar">
         {[
           { label: 'BRAND PROFILE', val: 'brand' as const, icon: <Settings size={14} /> },
           { label: 'ANNOUNCEMENT BAR', val: 'announcement' as const, icon: <Globe size={14} /> },
@@ -277,7 +277,7 @@ export default function AdminSettingsPage() {
             onClick={() => setActiveTab(item.val)}
             className={`px-5 py-3.5 font-mono text-[10px] font-bold tracking-wider uppercase border-b-2 transition-all cursor-pointer whitespace-nowrap ${
               activeTab === item.val
-                ? 'border-black text-[#F5F0EB]'
+                ? 'border-black text-[#111111]'
                 : 'border-transparent text-[#282420] hover:text-[#6B6560]'
             }`}
           >
@@ -290,15 +290,15 @@ export default function AdminSettingsPage() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center py-20 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm">
-          <Loader2 className="animate-spin text-[#F5F0EB] w-8 h-8" />
+        <div className="flex justify-center items-center py-20 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm">
+          <Loader2 className="animate-spin text-[#111111] w-8 h-8" />
         </div>
       ) : (
-        <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-8 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-8 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           {activeTab === 'brand' && (
             /* TAB 1: BRAND PROFILE */
             <form onSubmit={handleSaveBrandSettings} className="flex flex-col gap-6">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 uppercase">
                 BRAND CONFIGURATION SETTINGS
               </h3>
 
@@ -377,11 +377,11 @@ export default function AdminSettingsPage() {
           {activeTab === 'announcement' && (
             /* TAB 2: ANNOUNCEMENT BAR */
             <form onSubmit={handleSaveBrandSettings} className="flex flex-col gap-6">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 uppercase">
                 HEADER BANNER BAR PROPERTIES
               </h3>
 
-              <div className="flex flex-col gap-5 border border-[rgba(245,240,235,0.03)] p-6 bg-[#050507] rounded-sm">
+              <div className="flex flex-col gap-5 border border-[rgba(0,0,0,0.03)] p-6 bg-[#FAFAFA] rounded-sm">
                 <label className="flex items-center gap-3 font-mono text-[11px] font-bold tracking-wider text-[#A19B95] cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -421,13 +421,13 @@ export default function AdminSettingsPage() {
           {activeTab === 'carousel' && (
             /* TAB 3: CAROUSEL HERO SLIDES */
             <div className="flex flex-col gap-8">
-              <div className="flex justify-between items-center border-b border-[rgba(245,240,235,0.03)] pb-3">
+              <div className="flex justify-between items-center border-b border-[rgba(0,0,0,0.03)] pb-3">
                 <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase">
                   ACTIVE CAROUSEL HERO SLIDES ({heroSlides.length})
                 </h3>
                 <button
                   onClick={() => setIsAddingSlide(!isAddingSlide)}
-                  className="bg-black hover:bg-neutral-800 text-white font-mono text-[9px] font-bold tracking-widest px-4 py-2 rounded-full uppercase cursor-pointer"
+                  className="bg-black hover:bg-neutral-800 text-[#111111] font-mono text-[9px] font-bold tracking-widest px-4 py-2 rounded-full uppercase cursor-pointer"
                 >
                   {isAddingSlide ? 'CLOSE FORM' : 'ADD CAROUSEL SLIDE'}
                 </button>
@@ -435,7 +435,7 @@ export default function AdminSettingsPage() {
 
               {/* Add hero slide form */}
               {isAddingSlide && (
-                <form onSubmit={handleAddSlide} className="border border-[rgba(245,240,235,0.06)] bg-[#050507] p-6 rounded-sm flex flex-col gap-4">
+                <form onSubmit={handleAddSlide} className="border border-[rgba(0,0,0,0.06)] bg-[#FAFAFA] p-6 rounded-sm flex flex-col gap-4">
                   <h4 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase">
                     NEW CAROUSEL SLIDE DETAILS
                   </h4>
@@ -483,21 +483,21 @@ export default function AdminSettingsPage() {
               {/* Slides Grid table */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {heroSlides.map((slide, i) => (
-                  <div key={slide.id || i} className="border border-[rgba(245,240,235,0.06)] rounded-sm bg-[#050507] p-4 relative flex flex-col gap-4">
-                    <div className="w-full h-40 overflow-hidden rounded-sm border border-[rgba(245,240,235,0.03)] bg-black relative">
+                  <div key={slide.id || i} className="border border-[rgba(0,0,0,0.06)] rounded-sm bg-[#FAFAFA] p-4 relative flex flex-col gap-4">
+                    <div className="w-full h-40 overflow-hidden rounded-sm border border-[rgba(0,0,0,0.03)] bg-black relative">
                       <img src={slide.image_url} alt="slide preview" className="w-full h-full object-cover opacity-60" />
                       <button
                         onClick={() => handleDeleteSlide(slide.id)}
-                        className="absolute top-3 right-3 p-2 bg-[#0F0F0F] rounded-full text-red-600 hover:bg-[#121212] cursor-pointer shadow-lg"
+                        className="absolute top-3 right-3 p-2 bg-[#FFFFFF] rounded-full text-red-600 hover:bg-[#121212] cursor-pointer shadow-lg"
                       >
                         <Trash2 size={13} />
                       </button>
                     </div>
 
                     <div className="font-mono text-[10px] tracking-wide text-[#6B6560] uppercase flex flex-col gap-1.5">
-                      <p><strong className="text-[#F5F0EB]">HEADING:</strong> {slide.heading}</p>
-                      <p><strong className="text-[#F5F0EB]">SUB-TEXT:</strong> {slide.subheading}</p>
-                      <p><strong className="text-[#F5F0EB]">ACTION BTN:</strong> {slide.cta_text} // {slide.cta_link}</p>
+                      <p><strong className="text-[#111111]">HEADING:</strong> {slide.heading}</p>
+                      <p><strong className="text-[#111111]">SUB-TEXT:</strong> {slide.subheading}</p>
+                      <p><strong className="text-[#111111]">ACTION BTN:</strong> {slide.cta_text} // {slide.cta_link}</p>
                     </div>
                   </div>
                 ))}
@@ -508,7 +508,7 @@ export default function AdminSettingsPage() {
           {activeTab === 'seo' && (
             /* TAB 4: SEO & METADATA CONFIG */
             <form onSubmit={handleSaveSEOSettings} className="flex flex-col gap-6">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 uppercase">
                 GLOBAL SEARCH ENGINE OPTIMIZATIONS
               </h3>
 
@@ -519,13 +519,13 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSeoSettings((s) => ({ ...s, metaTemplate: e.target.value }))}
               />
 
-              <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm p-4 bg-[#0F0F0F]">
+              <div className="flex flex-col border border-[rgba(0,0,0,0.06)] rounded-sm p-4 bg-[#FFFFFF]">
                 <span className="font-mono text-[9px] text-[#282420] uppercase font-bold mb-2">DEFAULT META DESCRIPTION</span>
                 <textarea
                   rows={4}
                   value={seoSettings.defaultDescription}
                   onChange={(e) => setSeoSettings((s) => ({ ...s, defaultDescription: e.target.value }))}
-                  className="w-full bg-transparent font-sans text-[13px] text-[#F5F0EB] outline-none resize-none"
+                  className="w-full bg-transparent font-sans text-[13px] text-[#111111] outline-none resize-none"
                 />
               </div>
 
@@ -544,13 +544,13 @@ export default function AdminSettingsPage() {
                 />
               </div>
 
-              <div className="flex flex-col border border-[rgba(245,240,235,0.06)] rounded-sm p-4 bg-[#0F0F0F]">
+              <div className="flex flex-col border border-[rgba(0,0,0,0.06)] rounded-sm p-4 bg-[#FFFFFF]">
                 <span className="font-mono text-[9px] text-[#282420] uppercase font-bold mb-2">ROBOTS.TXT FILE GENERATOR</span>
                 <textarea
                   rows={4}
                   value={seoSettings.robotsTxt}
                   onChange={(e) => setSeoSettings((s) => ({ ...s, robotsTxt: e.target.value }))}
-                  className="w-full bg-transparent font-mono text-[12px] text-[#F5F0EB] outline-none resize-none"
+                  className="w-full bg-transparent font-mono text-[12px] text-[#111111] outline-none resize-none"
                 />
               </div>
 

@@ -273,9 +273,9 @@ export default function AdminSEO() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Header Info */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(245,240,235,0.06)] pb-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(0,0,0,0.06)] pb-5">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             SEO & META CONSOLE
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -284,11 +284,11 @@ export default function AdminSEO() {
         </div>
 
         {/* Tab triggers */}
-        <div className="flex bg-[#121212] p-0.5 rounded-sm border border-[rgba(245,240,235,0.06)]">
+        <div className="flex bg-[#121212] p-0.5 rounded-sm border border-[rgba(0,0,0,0.06)]">
           <button
             onClick={() => setActiveTab('global')}
             className={`px-4 py-2 font-mono text-[9px] font-bold tracking-wider uppercase transition-all rounded-sm cursor-pointer ${
-              activeTab === 'global' ? 'bg-[#0F0F0F] text-[#F5F0EB] shadow-sm' : 'text-[#4A4642] hover:text-[#F5F0EB]'
+              activeTab === 'global' ? 'bg-[#FFFFFF] text-[#111111] shadow-sm' : 'text-[#4A4642] hover:text-[#111111]'
             }`}
           >
             GLOBAL PARAMS
@@ -296,7 +296,7 @@ export default function AdminSEO() {
           <button
             onClick={() => setActiveTab('pages')}
             className={`px-4 py-2 font-mono text-[9px] font-bold tracking-wider uppercase transition-all rounded-sm cursor-pointer ${
-              activeTab === 'pages' ? 'bg-[#0F0F0F] text-[#F5F0EB] shadow-sm' : 'text-[#4A4642] hover:text-[#F5F0EB]'
+              activeTab === 'pages' ? 'bg-[#FFFFFF] text-[#111111] shadow-sm' : 'text-[#4A4642] hover:text-[#111111]'
             }`}
           >
             PAGE OVERRIDES
@@ -305,15 +305,15 @@ export default function AdminSEO() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center py-20 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm">
-          <Loader2 className="animate-spin text-[#F5F0EB] w-8 h-8" />
+        <div className="flex justify-center items-center py-20 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm">
+          <Loader2 className="animate-spin text-[#111111] w-8 h-8" />
         </div>
       ) : activeTab === 'global' ? (
         /* Tab 1: Global Configurations */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Form Fields */}
-          <form onSubmit={handleGlobalSubmit} className="lg:col-span-8 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col gap-5">
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 uppercase flex items-center gap-2">
+          <form onSubmit={handleGlobalSubmit} className="lg:col-span-8 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col gap-5">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 uppercase flex items-center gap-2">
               <Settings size={12} /> CORE GLOBAL SPECIFICATIONS
             </h3>
 
@@ -327,7 +327,7 @@ export default function AdminSEO() {
                   value={globalConfig.meta_title_template}
                   onChange={(e) => setGlobalConfig({ ...globalConfig, meta_title_template: e.target.value })}
                   placeholder="{Page Title} | {Site Name}"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                   required
                 />
                 <span className="text-[10px] font-mono text-[#282420] mt-1 block">
@@ -344,7 +344,7 @@ export default function AdminSEO() {
                   value={globalConfig.og_default_image_url || ''}
                   onChange={(e) => setGlobalConfig({ ...globalConfig, og_default_image_url: e.target.value })}
                   placeholder="https://zelix.shop/og-default.jpg"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
               </div>
             </div>
@@ -358,12 +358,12 @@ export default function AdminSEO() {
                 onChange={(e) => setGlobalConfig({ ...globalConfig, default_meta_description: e.target.value })}
                 placeholder="Fallback description tags..."
                 rows={3}
-                className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors"
+                className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors"
                 required
               />
             </div>
 
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mt-4 uppercase flex items-center gap-2">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mt-4 uppercase flex items-center gap-2">
               <Sparkles size={12} /> ANALYTICS & PIXEL CODES
             </h3>
 
@@ -377,7 +377,7 @@ export default function AdminSEO() {
                   value={globalConfig.ga_tracking_id || ''}
                   onChange={(e) => setGlobalConfig({ ...globalConfig, ga_tracking_id: e.target.value })}
                   placeholder="G-XXXXXXXXXX"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
               </div>
 
@@ -390,7 +390,7 @@ export default function AdminSEO() {
                   value={globalConfig.fb_pixel_id || ''}
                   onChange={(e) => setGlobalConfig({ ...globalConfig, fb_pixel_id: e.target.value })}
                   placeholder="1234567890..."
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
               </div>
             </div>
@@ -404,7 +404,7 @@ export default function AdminSEO() {
                 value={globalConfig.search_console_meta || ''}
                 onChange={(e) => setGlobalConfig({ ...globalConfig, search_console_meta: e.target.value })}
                 placeholder='<meta name="google-site-verification" content="..." />'
-                className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
               />
             </div>
 
@@ -417,7 +417,7 @@ export default function AdminSEO() {
                 onChange={(e) => setGlobalConfig({ ...globalConfig, robots_txt: e.target.value })}
                 placeholder="User-agent: *"
                 rows={4}
-                className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 required
               />
             </div>
@@ -425,7 +425,7 @@ export default function AdminSEO() {
             <button
               type="submit"
               disabled={saving}
-              className="py-3 px-6 bg-black text-white hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer ml-auto disabled:opacity-50"
+              className="py-3 px-6 bg-black text-[#111111] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer ml-auto disabled:opacity-50"
             >
               {saving ? (
                 <>
@@ -440,7 +440,7 @@ export default function AdminSEO() {
           </form>
 
           {/* Sidebar Preview */}
-          <div className="lg:col-span-4 bg-neutral-950 text-white rounded-sm p-6 flex flex-col gap-6">
+          <div className="lg:col-span-4 bg-neutral-950 text-[#111111] rounded-sm p-6 flex flex-col gap-6">
             <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-white/10 pb-3 uppercase flex items-center gap-2">
               <Globe size={12} /> GOOGLE SEARCH INDEX SIMULATION
             </h3>
@@ -479,8 +479,8 @@ export default function AdminSEO() {
         /* Tab 2: Page-specific Overrides */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Panel Form: CRUD individual page overrides */}
-          <div className="lg:col-span-4 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-6 uppercase flex items-center gap-2">
+          <div className="lg:col-span-4 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-6 uppercase flex items-center gap-2">
               <FileText size={12} /> {isEditingPage ? 'EDIT ROUTE METADATA' : 'ADD ROUTE METADATA'}
             </h3>
 
@@ -494,7 +494,7 @@ export default function AdminSEO() {
                   value={pageSlug}
                   onChange={(e) => setPageSlug(e.target.value)}
                   placeholder="e.g. /products/silent-hoodie"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                   required
                 />
                 <span className="text-[10px] font-mono text-[#282420] mt-1 block">
@@ -511,7 +511,7 @@ export default function AdminSEO() {
                   value={pageMetaTitle}
                   onChange={(e) => setPageMetaTitle(e.target.value)}
                   placeholder="Matrix Parka - Technical Shell"
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                   required
                 />
               </div>
@@ -525,7 +525,7 @@ export default function AdminSEO() {
                   onChange={(e) => setPageMetaDescription(e.target.value)}
                   placeholder="Custom page-specific search index description..."
                   rows={4}
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors"
                   required
                 />
               </div>
@@ -539,7 +539,7 @@ export default function AdminSEO() {
                   value={pageOgImage}
                   onChange={(e) => setPageOgImage(e.target.value)}
                   placeholder="https://..."
-                  className="w-full text-[13px] bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[13px] bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm px-3.5 py-2.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
               </div>
 
@@ -548,14 +548,14 @@ export default function AdminSEO() {
                   <button
                     type="button"
                     onClick={handleCancelPage}
-                    className="flex-1 py-3 px-4 border border-[rgba(245,240,235,0.06)] hover:border-black transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1 cursor-pointer"
+                    className="flex-1 py-3 px-4 border border-[rgba(0,0,0,0.06)] hover:border-black transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1 cursor-pointer"
                   >
                     <X size={14} /> CANCEL
                   </button>
                 )}
                 <button
                   type="submit"
-                  className="flex-1 py-3 px-4 bg-black text-white hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="flex-1 py-3 px-4 bg-black text-[#111111] hover:bg-neutral-900 transition-colors rounded-sm text-[11px] font-mono font-bold tracking-widest uppercase flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Save size={14} /> {isEditingPage ? 'SAVE CHANGES' : 'CREATE OVERRIDE'}
                 </button>
@@ -564,8 +564,8 @@ export default function AdminSEO() {
           </div>
 
           {/* Right Panel List: Existing page overrides */}
-          <div className="lg:col-span-8 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
-            <div className="flex justify-between items-center border-b border-[rgba(245,240,235,0.03)] pb-4 mb-6 gap-4">
+          <div className="lg:col-span-8 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
+            <div className="flex justify-between items-center border-b border-[rgba(0,0,0,0.03)] pb-4 mb-6 gap-4">
               <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] uppercase shrink-0">
                 ACTIVE PAGE METADATAS ({filteredPages.length})
               </h3>
@@ -575,16 +575,16 @@ export default function AdminSEO() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search slug..."
-                  className="w-full text-[12px] bg-[#050507] border border-[rgba(245,240,235,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
+                  className="w-full text-[12px] bg-[#FAFAFA] border border-[rgba(0,0,0,0.06)] rounded-sm pl-8 pr-3.5 py-1.5 outline-none focus:border-[#C9A96E] transition-colors font-mono"
                 />
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#282420]" size={13} />
               </div>
             </div>
 
             <div className="overflow-x-auto w-full">
-              <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+              <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
                 <thead>
-                  <tr className="border-b border-[rgba(245,240,235,0.03)] text-[#282420] font-mono text-[10px] uppercase">
+                  <tr className="border-b border-[rgba(0,0,0,0.03)] text-[#282420] font-mono text-[10px] uppercase">
                     <th className="pb-3 font-semibold w-[160px]">ROUTE</th>
                     <th className="pb-3 font-semibold">TITLE OVERRIDE</th>
                     <th className="pb-3 font-semibold">DESCRIPTION OVERRIDE</th>
@@ -602,7 +602,7 @@ export default function AdminSEO() {
                     filteredPages.map((page) => (
                       <tr
                         key={page.id}
-                        className="border-b border-neutral-50 last:border-0 hover:bg-[#050507]/50 transition-colors"
+                        className="border-b border-neutral-50 last:border-0 hover:bg-[#FAFAFA]/50 transition-colors"
                       >
                         <td className="py-3.5 font-bold font-mono text-[#D4CBBF]">{page.page_slug}</td>
                         <td className="py-3.5 font-bold uppercase">{page.meta_title}</td>
@@ -613,7 +613,7 @@ export default function AdminSEO() {
                           <div className="flex justify-end gap-2">
                             <button
                               onClick={() => handleEditPageClick(page)}
-                              className="p-1.5 text-[#4A4642] hover:text-[#F5F0EB] transition-colors rounded-md hover:bg-[#121212] cursor-pointer"
+                              className="p-1.5 text-[#4A4642] hover:text-[#111111] transition-colors rounded-md hover:bg-[#121212] cursor-pointer"
                               title="Edit Route"
                             >
                               <Edit2 size={13} />

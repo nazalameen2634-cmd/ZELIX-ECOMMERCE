@@ -189,9 +189,9 @@ export default function AdminAnalytics() {
   return (
     <div className="flex flex-col gap-8 w-full">
       {/* Header Info */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(245,240,235,0.06)] pb-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[rgba(0,0,0,0.06)] pb-5">
         <div>
-          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#F5F0EB] uppercase mt-2">
+          <h1 className="text-[28px] font-sans font-black tracking-tight text-[#111111] uppercase mt-2">
             ANALYTICS SYSTEM
           </h1>
           <p className="text-[12px] text-[#4A4642] font-mono tracking-wider uppercase mt-1">
@@ -199,11 +199,11 @@ export default function AdminAnalytics() {
           </p>
         </div>
 
-        <div className="flex bg-[#121212] p-0.5 rounded-sm border border-[rgba(245,240,235,0.06)]">
+        <div className="flex bg-[#121212] p-0.5 rounded-sm border border-[rgba(0,0,0,0.06)]">
           <button
             onClick={() => setTimeframe('weekly')}
             className={`px-4 py-2 font-mono text-[9px] font-bold tracking-wider uppercase transition-all rounded-sm cursor-pointer ${
-              timeframe === 'weekly' ? 'bg-[#0F0F0F] text-[#F5F0EB] shadow-sm' : 'text-[#4A4642] hover:text-[#F5F0EB]'
+              timeframe === 'weekly' ? 'bg-[#FFFFFF] text-[#111111] shadow-sm' : 'text-[#4A4642] hover:text-[#111111]'
             }`}
           >
             L7 DAYS
@@ -211,7 +211,7 @@ export default function AdminAnalytics() {
           <button
             onClick={() => setTimeframe('monthly')}
             className={`px-4 py-2 font-mono text-[9px] font-bold tracking-wider uppercase transition-all rounded-sm cursor-pointer ${
-              timeframe === 'monthly' ? 'bg-[#0F0F0F] text-[#F5F0EB] shadow-sm' : 'text-[#4A4642] hover:text-[#F5F0EB]'
+              timeframe === 'monthly' ? 'bg-[#FFFFFF] text-[#111111] shadow-sm' : 'text-[#4A4642] hover:text-[#111111]'
             }`}
           >
             L6 MONTHS
@@ -222,13 +222,13 @@ export default function AdminAnalytics() {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Metric 1 */}
-        <div className="bg-[#0F0F0F] p-6 border border-[rgba(245,240,235,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-[#FFFFFF] p-6 border border-[rgba(0,0,0,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-center text-[#282420]">
             <span className="font-mono text-[9px] font-bold tracking-widest uppercase">GROSS REVENUE</span>
             <DollarSign size={16} />
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <h2 className="text-[22px] font-black text-[#F5F0EB]">{formatCurrency(revenue)}</h2>
+            <h2 className="text-[22px] font-black text-[#111111]">{formatCurrency(revenue)}</h2>
             <span className="text-[10px] font-mono text-green-600 flex items-center font-bold">
               <TrendingUp size={10} className="mr-0.5" /> +12.4%
             </span>
@@ -236,13 +236,13 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Metric 2 */}
-        <div className="bg-[#0F0F0F] p-6 border border-[rgba(245,240,235,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-[#FFFFFF] p-6 border border-[rgba(0,0,0,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-center text-[#282420]">
             <span className="font-mono text-[9px] font-bold tracking-widest uppercase">COMPLETED TRANSACTIONS</span>
             <ShoppingCart size={16} />
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <h2 className="text-[22px] font-black text-[#F5F0EB]">{ordersCount}</h2>
+            <h2 className="text-[22px] font-black text-[#111111]">{ordersCount}</h2>
             <span className="text-[10px] font-mono text-green-600 flex items-center font-bold">
               <TrendingUp size={10} className="mr-0.5" /> +8.2%
             </span>
@@ -250,13 +250,13 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Metric 3 */}
-        <div className="bg-[#0F0F0F] p-6 border border-[rgba(245,240,235,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-[#FFFFFF] p-6 border border-[rgba(0,0,0,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-center text-[#282420]">
             <span className="font-mono text-[9px] font-bold tracking-widest uppercase">AVERAGE BASKET SIZE</span>
             <CreditCard size={16} />
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <h2 className="text-[22px] font-black text-[#F5F0EB]">{formatCurrency(averageValue)}</h2>
+            <h2 className="text-[22px] font-black text-[#111111]">{formatCurrency(averageValue)}</h2>
             <span className="text-[10px] font-mono text-green-600 flex items-center font-bold">
               <TrendingUp size={10} className="mr-0.5" /> +4.1%
             </span>
@@ -264,13 +264,13 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Metric 4 */}
-        <div className="bg-[#0F0F0F] p-6 border border-[rgba(245,240,235,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-[#FFFFFF] p-6 border border-[rgba(0,0,0,0.06)] rounded-sm flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex justify-between items-center text-[#282420]">
             <span className="font-mono text-[9px] font-bold tracking-widest uppercase">STORE CONVERSION RATE</span>
             <BarChart3 size={16} />
           </div>
           <div className="mt-4 flex items-baseline gap-2">
-            <h2 className="text-[22px] font-black text-[#F5F0EB]">{conversionRate}%</h2>
+            <h2 className="text-[22px] font-black text-[#111111]">{conversionRate}%</h2>
             <span className="text-[10px] font-mono text-red-500 flex items-center font-bold">
               <TrendingDown size={10} className="mr-0.5" /> -0.8%
             </span>
@@ -282,8 +282,8 @@ export default function AdminAnalytics() {
       {mounted && (
         <>
           {/* Main Area: Sales Trend Curve */}
-          <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col">
-            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-6 uppercase">
+          <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col">
+            <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-6 uppercase">
               SALES AND ORDER TIMELINE TREND
             </h3>
             <div className="h-[350px] w-full">
@@ -309,8 +309,8 @@ export default function AdminAnalytics() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Category breakdown (Bar) */}
-            <div className="lg:col-span-6 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-6 uppercase">
+            <div className="lg:col-span-6 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-6 uppercase">
                 REVENUE BY PRODUCT CATEGORY
               </h3>
               <div className="h-[280px] w-full">
@@ -329,8 +329,8 @@ export default function AdminAnalytics() {
             </div>
 
             {/* Order status breakdowns (Pie) */}
-            <div className="lg:col-span-6 bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6 flex flex-col">
-              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-6 uppercase">
+            <div className="lg:col-span-6 bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col">
+              <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-6 uppercase">
                 ORDER SETTLEMENT STATUS RATIO
               </h3>
               <div className="h-[280px] w-full flex flex-col sm:flex-row items-center justify-around gap-4">
@@ -362,7 +362,7 @@ export default function AdminAnalytics() {
                     <div key={index} className="flex items-center gap-2.5">
                       <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                       <div className="font-mono text-[10px] leading-tight">
-                        <span className="text-[#F5F0EB] font-bold block uppercase">{entry.name}</span>
+                        <span className="text-[#111111] font-bold block uppercase">{entry.name}</span>
                         <span className="text-[#282420] block">{entry.value} ORDERS</span>
                       </div>
                     </div>
@@ -375,14 +375,14 @@ export default function AdminAnalytics() {
       )}
 
       {/* Best Sellers table summary */}
-      <div className="bg-[#0F0F0F] border border-[rgba(245,240,235,0.06)] rounded-sm p-6">
-        <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(245,240,235,0.03)] pb-3 mb-6 uppercase">
+      <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6">
+        <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#282420] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-6 uppercase">
           TOP 5 CATALOG PRODUCT PERFORMANCE
         </h3>
         <div className="overflow-x-auto w-full">
-          <table className="w-full text-left border-collapse text-[12px] text-[#F5F0EB]">
+          <table className="w-full text-left border-collapse text-[12px] text-[#111111]">
             <thead>
-              <tr className="border-b border-[rgba(245,240,235,0.03)] text-[#282420] font-mono text-[10px] uppercase">
+              <tr className="border-b border-[rgba(0,0,0,0.03)] text-[#282420] font-mono text-[10px] uppercase">
                 <th className="pb-3 font-semibold">ITEM MODEL</th>
                 <th className="pb-3 font-semibold text-center">QUANTITY SHIPPED</th>
                 <th className="pb-3 font-semibold text-right">CUMULATIVE REVENUE</th>
@@ -392,11 +392,11 @@ export default function AdminAnalytics() {
               {bestSellers.map((item, index) => (
                 <tr
                   key={index}
-                  className="border-b border-neutral-50 last:border-0 hover:bg-[#050507]/50 transition-colors"
+                  className="border-b border-neutral-50 last:border-0 hover:bg-[#FAFAFA]/50 transition-colors"
                 >
-                  <td className="py-3.5 font-bold uppercase text-[#F5F0EB]">{item.name}</td>
+                  <td className="py-3.5 font-bold uppercase text-[#111111]">{item.name}</td>
                   <td className="py-3.5 text-center font-mono text-[#D4CBBF]">{item.qty} units</td>
-                  <td className="py-3.5 text-right font-mono font-bold text-[#F5F0EB]">{formatCurrency(item.revenue)}</td>
+                  <td className="py-3.5 text-right font-mono font-bold text-[#111111]">{formatCurrency(item.revenue)}</td>
                 </tr>
               ))}
             </tbody>
