@@ -163,6 +163,85 @@ export default function CheckoutPage() {
     handlePlaceOrder();
   };
 
+  const handleLivePayment = async (orderId: string, totalAmount: number) => {
+    try {
+      const res = await loadRazorpayScript();
+      if (!res) {
+        toast('Razorpay SDK failed to load. Are you online?', 'error');
+        setIsPlacingOrder(false);
+        return;
+      }
+
+      // 1. Create order on server
+      const orderResponse = await fetch('/api/checkout/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: totalAmount, receipt: orderId }),
+      });
+      const orderData = await orderResponse.json();
+
+      if (!orderResponse.ok) {
+        toast('Server error. Could not initialize payment gateway.', 'error');
+        setIsPlacingOrder(false);
+        return;
+      }
+
+      // 2. Open Razorpay Checkout Modal
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'Z E L I X',
+        description: `Order ${orderId}`,
+        order_id: orderData.id,
+        handler: async function (response: any) {
+          // 3. Verify Payment Signature
+          const verifyData = {
+            order_id: orderId,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+
+          const verifyRes = await fetch('/api/checkout/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(verifyData),
+          });
+
+          if (verifyRes.ok) {
+            toast('PAYMENT SUCCESSFUL. ORDER CONFIRMED.', 'success');
+            clearCart();
+            setIsPlacingOrder(false);
+            setCheckoutSuccessOrder({ order_number: orderId, total: totalAmount });
+          } else {
+            toast('PAYMENT VERIFICATION FAILED', 'error');
+            setIsPlacingOrder(false);
+          }
+        },
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: '#111111',
+        },
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.on('payment.failed', function (response: any) {
+        toast(`PAYMENT FAILED: ${response.error.description}`, 'error');
+        setIsPlacingOrder(false);
+      });
+      paymentObject.open();
+    } catch (err) {
+      toast('UNEXPECTED PAYMENT ERROR', 'error');
+      console.error(err);
+      setIsPlacingOrder(false);
+    }
+  };
+
   // Submit Order Details
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true);
@@ -242,16 +321,21 @@ export default function CheckoutPage() {
       }
 
 
-      // Finalize order directly (Cash on Delivery / Direct placement)
-      setTimeout(async () => {
-        toast('ORDER PLACED SUCCESSFULLY', 'success');
-        clearCart();
-        setIsPlacingOrder(false);
-        setCheckoutSuccessOrder({
-          order_number: data.order_number,
-          total: finalTotal
-        });
-      }, 500);
+      // If Razorpay is configured, trigger the payment gateway
+      if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+        handleLivePayment(data.order_number, finalTotal);
+      } else {
+        // Fallback: Finalize order directly (Cash on Delivery)
+        setTimeout(async () => {
+          toast('ORDER PLACED SUCCESSFULLY', 'success');
+          clearCart();
+          setIsPlacingOrder(false);
+          setCheckoutSuccessOrder({
+            order_number: data.order_number,
+            total: finalTotal
+          });
+        }, 500);
+      }
     } catch (err) {
       console.warn('Supabase offline. Placing order in memory mockup.');
       
