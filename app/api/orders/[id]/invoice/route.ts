@@ -387,10 +387,12 @@ export async function GET(
                 <td style="text-align: right">-₹${order.discount_amount}</td>
               </tr>
             ` : ''}
-            <tr>
-              <td>TAX (18% GST INCL)</td>
-              <td style="text-align: right">₹${order.tax_amount}</td>
-            </tr>
+            ${order.tax_amount > 0 ? `
+              <tr>
+                <td>TAX (18% GST INCL)</td>
+                <td style="text-align: right">₹${order.tax_amount}</td>
+              </tr>
+            ` : ''}
             <tr>
               <td>SHIPPING COST</td>
               <td style="text-align: right">₹${order.shipping_cost}</td>

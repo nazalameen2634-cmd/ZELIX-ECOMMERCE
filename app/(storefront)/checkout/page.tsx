@@ -85,7 +85,7 @@ export default function CheckoutPage() {
 
   // Calculate fees
   const baseShippingCost = 0; // Free delivery for all orders
-  const taxAmount = (subtotal - discountAmount) * 0.18;
+  const taxAmount = 0; // Tax removed
   const finalTotal = Math.max(0, subtotal - discountAmount + baseShippingCost + taxAmount);
 
   // Auto-fill address book if user is logged in
@@ -829,10 +829,6 @@ export default function CheckoutPage() {
                     <span className="font-semibold">-{formatCurrency(discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span>TAX FEE (18%)</span>
-                  <span className="text-white font-semibold">{formatCurrency(taxAmount)}</span>
-                </div>
               </div>
 
               {/* Total */}

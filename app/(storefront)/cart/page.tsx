@@ -25,8 +25,8 @@ export default function CartPage() {
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
   const shippingCost = subtotal > 5000 || subtotal === 0 ? 0 : 250;
-  const taxRate = 0.18; // 18% tax
-  const taxAmount = (subtotal - discountAmount) * taxRate;
+  const taxRate = 0; // Tax removed
+  const taxAmount = 0;
   const finalTotal = Math.max(0, subtotal - discountAmount + shippingCost + taxAmount);
 
   // Validate coupon code against Supabase database
@@ -298,10 +298,7 @@ export default function CartPage() {
                       <span className="font-semibold">-{formatCurrency(discountAmount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <span>ESTIMATED TAX (18%)</span>
-                    <span className="text-white font-semibold">{formatCurrency(taxAmount)}</span>
-                  </div>
+
                   <div className="flex justify-between">
                     <span>SHIPPING FEE</span>
                     <span className="text-white font-semibold">

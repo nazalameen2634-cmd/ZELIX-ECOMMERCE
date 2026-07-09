@@ -796,10 +796,12 @@ export default function AdminOrdersPage() {
                   <span>SHIPPING:</span>
                   <span className="text-[#111111] font-semibold">{formatCurrency(selectedOrder.shipping_cost)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>TAX FEE:</span>
-                  <span className="text-[#111111] font-semibold">{formatCurrency(selectedOrder.tax_amount)}</span>
-                </div>
+                {selectedOrder.tax_amount > 0 && (
+                  <div className="flex justify-between">
+                    <span>TAX FEE:</span>
+                    <span className="text-[#111111] font-semibold">{formatCurrency(selectedOrder.tax_amount)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between border-t border-[rgba(0,0,0,0.03)] pt-2 text-[13px] font-bold text-[#111111] mt-1">
                   <span>FINAL TOTAL:</span>
                   <span>{formatCurrency(selectedOrder.total)}</span>
@@ -971,10 +973,12 @@ export default function AdminOrdersPage() {
                       <span>-{formatCurrency(selectedOrder.discount_amount)}</span>
                     </div>
                   )}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span>TAX FEE (18%):</span>
-                    <span>{formatCurrency(selectedOrder.tax_amount)}</span>
-                  </div>
+                  {selectedOrder.tax_amount > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <span>TAX FEE (18%):</span>
+                      <span>{formatCurrency(selectedOrder.tax_amount)}</span>
+                    </div>
+                  )}
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                     <span>SHIPPING FEE:</span>
                     <span>{formatCurrency(selectedOrder.shipping_cost)}</span>

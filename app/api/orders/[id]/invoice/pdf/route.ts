@@ -172,10 +172,11 @@ export async function GET(
       doc.text(`-INR ${order.discount_amount}`, 165, y);
     }
 
-    y += 5;
-    doc.text('TAX (18% GST INCL)', 110, y);
-    doc.text(`INR ${order.tax_amount}`, 165, y);
-
+    if (order.tax_amount > 0) {
+      y += 5;
+      doc.text('TAX (18% GST INCL)', 110, y);
+      doc.text(`INR ${order.tax_amount}`, 165, y);
+    }
     y += 5;
     doc.text('SHIPPING COST', 110, y);
     doc.text(`INR ${order.shipping_cost}`, 165, y);

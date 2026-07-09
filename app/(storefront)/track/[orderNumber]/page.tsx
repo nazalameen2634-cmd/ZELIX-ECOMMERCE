@@ -254,10 +254,12 @@ export default async function TrackOrderPage({ params }: PageProps) {
               <span>SHIPPING COST</span>
               <span>₹{order.shipping_cost}</span>
             </div>
-            <div className="flex justify-between text-zinc-500">
-              <span>GST TAX (18% INCL)</span>
-              <span>₹{order.tax_amount}</span>
-            </div>
+            {order.tax_amount > 0 && (
+              <div className="flex justify-between text-zinc-500">
+                <span>GST TAX (18% INCL)</span>
+                <span>₹{order.tax_amount}</span>
+              </div>
+            )}
             <div className="flex justify-between text-sm font-bold text-white border-t border-zinc-800 pt-2 mt-2">
               <span className="text-[#C9A96E]">TOTAL</span>
               <span className="text-[#C9A96E]">₹{order.total}</span>
