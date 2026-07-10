@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, ShoppingBag } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ShoppingBag, Diamond, ShieldCheck, Gift, Undo2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { Product, HeroSlide } from '@/types';
 import ProductCard from '@/components/storefront/ProductCard';
