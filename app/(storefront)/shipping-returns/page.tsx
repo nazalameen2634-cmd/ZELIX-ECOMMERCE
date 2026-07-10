@@ -29,7 +29,7 @@ export default function ShippingReturnsPage() {
             <span style={{ color: '#C9A96E' }}><Truck size={24} /></span>
             <h3 className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#F5F0EB]">FREE EXPRESS DELIVERY</h3>
             <p className="text-[12px] leading-relaxed" style={{ color: '#8C827A' }}>
-              Complimentary express shipping across India on all jewelry orders over ₹5,000.
+              Complimentary express shipping across India on all orders.
             </p>
           </div>
           <div className="p-8 border flex flex-col gap-4" style={{ borderColor: 'rgba(245,240,235,0.05)', background: '#0b0b0f' }}>

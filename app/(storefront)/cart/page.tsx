@@ -24,7 +24,7 @@ export default function CartPage() {
   const [couponCode, setCouponCode] = useState(coupon?.code || '');
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
-  const shippingCost = subtotal > 5000 || subtotal === 0 ? 0 : 250;
+  const shippingCost = 0; // Free shipping for all orders
   const taxRate = 0; // Tax removed
   const taxAmount = 0;
   const finalTotal = Math.max(0, subtotal - discountAmount + shippingCost + taxAmount);
