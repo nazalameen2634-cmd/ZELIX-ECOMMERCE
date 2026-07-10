@@ -39,7 +39,7 @@ function FilterPanel({
     <div className="flex flex-col gap-8">
       {/* Sort */}
       <div>
-        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" style={{ color: '#9A9490' }}>
+        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" className="text-muted">
           SORT BY
         </h4>
         <div className="flex flex-col gap-2">
@@ -51,52 +51,49 @@ function FilterPanel({
             <button
               key={opt.value}
               onClick={() => onUpdateFilter('sort', opt.value)}
-              className="text-left font-mono text-[10px] tracking-[0.12em] py-1 transition-colors duration-200"
-              style={{ color: sortParam === opt.value ? '#C9A96E' : '#4A4642' }}
+              className={`text-left font-mono text-[10px] tracking-[0.12em] py-1 transition-colors duration-200 ${sortParam === opt.value ? "text-accent" : "text-muted hover:text-foreground"}`}
             >
               {opt.label}
-              {sortParam === opt.value && <span className="ml-2" style={{ color: '#C9A96E' }}>✦</span>}
+              {sortParam === opt.value && <span className="ml-2 text-accent">✦</span>}
             </button>
           ))}
         </div>
       </div>
 
       {/* Divider */}
-      <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
+      <div style={{ height: '1px', background: 'var(--color-border)' }} />
 
       {/* Categories */}
       <div>
-        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" style={{ color: '#9A9490' }}>
+        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" className="text-muted">
           CATEGORY
         </h4>
         <div className="flex flex-col gap-2">
           <button
             onClick={() => onUpdateFilter('category', null)}
-            className="text-left font-mono text-[10px] tracking-[0.12em] py-1 transition-colors"
-            style={{ color: !categoryParam ? '#C9A96E' : '#4A4642' }}
+            className={`text-left font-mono text-[10px] tracking-[0.12em] py-1 transition-colors ${!categoryParam ? "text-accent" : "text-muted hover:text-foreground"}`}
           >
             ALL PIECES
-            {!categoryParam && <span className="ml-2">✦</span>}
+            {!categoryParam && <span className="ml-2 text-accent">✦</span>}
           </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => { onUpdateFilter('category', cat.slug); onClose?.(); }}
-              className="text-left font-mono text-[10px] tracking-[0.12em] py-1 transition-colors"
-              style={{ color: categoryParam === cat.slug ? '#C9A96E' : '#4A4642' }}
+              className={`text-left font-mono text-[10px] tracking-[0.12em] py-1 transition-colors ${categoryParam === cat.slug ? "text-accent" : "text-muted hover:text-foreground"}`}
             >
               {cat.name}
-              {categoryParam === cat.slug && <span className="ml-2">✦</span>}
+              {categoryParam === cat.slug && <span className="ml-2 text-accent">✦</span>}
             </button>
           ))}
         </div>
       </div>
 
-      <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
+      <div style={{ height: '1px', background: 'var(--color-border)' }} />
 
       {/* Sizes */}
       <div>
-        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" style={{ color: '#9A9490' }}>
+        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" className="text-muted">
           SIZE
         </h4>
         <div className="grid grid-cols-4 gap-2">
@@ -107,8 +104,8 @@ function FilterPanel({
               className="py-2 font-mono text-[9px] font-bold rounded-[2px] transition-all duration-200 cursor-pointer"
               style={
                 sizeParam === sz
-                  ? { background: '#C9A96E', color: '#080808', border: '1px solid #C9A96E' }
-                  : { background: 'transparent', color: '#4A4642', border: '1px solid rgba(245,240,235,0.07)' }
+                  ? { background: 'var(--color-accent)', color: '#ffffff', border: '1px solid #C9A96E' }
+                  : { background: 'transparent', color: 'var(--color-muted)', border: '1px solid rgba(232,227,220,0.07)' }
               }
             >
               {sz}
@@ -117,11 +114,11 @@ function FilterPanel({
         </div>
       </div>
 
-      <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
+      <div style={{ height: '1px', background: 'var(--color-border)' }} />
 
       {/* Price */}
       <div>
-        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" style={{ color: '#9A9490' }}>
+        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" className="text-muted">
           MAX PRICE
         </h4>
         <input
@@ -129,11 +126,11 @@ function FilterPanel({
           value={priceMaxParam}
           onChange={(e) => onUpdateFilter('maxPrice', e.target.value)}
           className="w-full cursor-pointer"
-          style={{ accentColor: '#C9A96E' }}
+          style={{ accentColor: 'var(--color-accent)' }}
         />
         <div className="flex justify-between mt-2 font-mono text-[9px]" style={{ color: '#6B6560' }}>
           <span>₹0</span>
-          <span style={{ color: '#C9A96E' }}>{formatCurrency(priceMaxParam)}</span>
+          <span style={{ color: 'var(--color-accent)' }}>{formatCurrency(priceMaxParam)}</span>
         </div>
       </div>
 
@@ -141,9 +138,9 @@ function FilterPanel({
       <button
         onClick={onClearAll}
         className="font-mono text-[9px] font-bold tracking-[0.18em] pt-2 border-b pb-1 transition-colors duration-200 text-left"
-        style={{ color: '#4A4642', borderColor: 'rgba(245,240,235,0.08)' }}
+        style={{ color: 'var(--color-muted)', borderColor: 'rgba(232,227,220,0.08)' }}
         onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#F97066')}
-        onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#4A4642')}
+        onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--color-muted)')}
       >
         RESET ALL FILTERS
       </button>
@@ -245,16 +242,16 @@ function ProductsListContent() {
   const clearAll = () => router.push('/products');
 
   return (
-    <div style={{ background: '#080808', minHeight: '100vh' }}>
+    <div style={{ background: '#ffffff', minHeight: '100vh' }}>
 
       {/* ─── Editorial Header ─── */}
       <div
         className="relative overflow-hidden border-b"
-        style={{ borderColor: 'rgba(245,240,235,0.05)', paddingTop: '100px', paddingBottom: '60px' }}
+        style={{ borderColor: 'rgba(232,227,220,0.05)', paddingTop: '100px', paddingBottom: '60px' }}
       >
         {/* Ghost text */}
         <div
-          className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden font-sans font-black tracking-tighter text-[rgba(245,240,235,0.02)]"
+          className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden font-sans font-black tracking-tighter text-[rgba(232,227,220,0.02)]"
           style={{
             fontSize: 'clamp(100px, 20vw, 260px)',
             whiteSpace: 'nowrap',
@@ -276,13 +273,13 @@ function ProductsListContent() {
             The Storefront.
           </h1>
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[10px] tracking-[0.18em]" style={{ color: '#4A4642' }}>
+            <span className="font-mono text-[10px] tracking-[0.18em]" style={{ color: 'var(--color-muted)' }}>
               {products.length} PIECES AVAILABLE
             </span>
             {categoryParam && (
               <>
                 <span style={{ color: '#282420' }}>·</span>
-                <span className="font-mono text-[9px] tracking-[0.15em] px-2.5 py-1 rounded-[1px]" style={{ color: '#C9A96E', background: 'rgba(201,169,110,0.08)', border: '1px solid rgba(201,169,110,0.2)' }}>
+                <span className="font-mono text-[9px] tracking-[0.15em] px-2.5 py-1 rounded-[1px]" style={{ color: 'var(--color-accent)', background: 'rgba(217,154,154,0.08)', border: '1px solid rgba(217,154,154,0.2)' }}>
                   {categoryParam.toUpperCase()}
                 </span>
               </>
@@ -301,7 +298,7 @@ function ProductsListContent() {
             <button
               onClick={() => setIsMobileFiltersOpen(true)}
               className="lg:hidden flex items-center gap-2 font-mono text-[9px] font-bold tracking-[0.16em] px-4 py-2.5 rounded-[2px] cursor-pointer transition-all"
-              style={{ border: '1px solid rgba(245,240,235,0.08)', color: '#9A9490' }}
+              style={{ border: '1px solid rgba(232,227,220,0.08)', color: '#9A9490' }}
             >
               <SlidersHorizontal size={11} /> FILTERS
             </button>
@@ -317,10 +314,10 @@ function ProductsListContent() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[9px] font-bold tracking-[0.14em] rounded-[2px]"
-                style={{ color: '#C9A96E', background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.2)' }}
+                style={{ color: 'var(--color-accent)', background: 'rgba(217,154,154,0.06)', border: '1px solid rgba(217,154,154,0.2)' }}
               >
                 {chip.label}
-                <button onClick={() => updateFilter(chip.key, null)} style={{ color: 'rgba(201,169,110,0.5)' }}>
+                <button onClick={() => updateFilter(chip.key, null)} style={{ color: 'rgba(217,154,154,0.5)' }}>
                   <X size={9} />
                 </button>
               </motion.span>
@@ -355,13 +352,13 @@ function ProductsListContent() {
                 ))}
               </div>
             ) : products.length === 0 ? (
-              <div className="py-32 flex flex-col items-center gap-5 border rounded-[2px]" style={{ borderColor: 'rgba(245,240,235,0.05)' }}>
-                <span className="font-sans text-[60px] text-[rgba(245,240,235,0.04)] leading-none font-bold">∅</span>
-                <p className="font-mono text-[10px] tracking-[0.2em]" style={{ color: '#4A4642' }}>NO PIECES MATCH YOUR FILTERS</p>
+              <div className="py-32 flex flex-col items-center gap-5 border rounded-[2px]" style={{ borderColor: 'rgba(232,227,220,0.05)' }}>
+                <span className="font-sans text-[60px] text-[rgba(232,227,220,0.04)] leading-none font-bold">∅</span>
+                <p className="font-mono text-[10px] tracking-[0.2em]" style={{ color: 'var(--color-muted)' }}>NO PIECES MATCH YOUR FILTERS</p>
                 <button
                   onClick={clearAll}
                   className="font-mono text-[9px] font-bold tracking-[0.18em] border-b pb-0.5 transition-colors"
-                  style={{ color: '#C9A96E', borderColor: 'rgba(201,169,110,0.4)' }}
+                  style={{ color: 'var(--color-accent)', borderColor: 'rgba(217,154,154,0.4)' }}
                 >
                   RESET ALL
                 </button>
@@ -390,14 +387,14 @@ function ProductsListContent() {
 
             {/* Load more */}
             {hasMore && !loading && (
-              <div className="flex justify-center mt-16 border-t pt-12" style={{ borderColor: 'rgba(245,240,235,0.05)' }}>
+              <div className="flex justify-center mt-16 border-t pt-12" style={{ borderColor: 'rgba(232,227,220,0.05)' }}>
                 <button
                   onClick={() => { setLoadingMore(true); const next = page + 1; setPage(next); fetchProducts(next, false); }}
                   disabled={loadingMore}
                   className="flex items-center gap-3 font-mono text-[10px] font-bold tracking-[0.2em] px-10 py-4 rounded-[2px] cursor-pointer transition-all duration-300 disabled:opacity-40"
-                  style={{ border: '1px solid rgba(245,240,235,0.12)', color: '#9A9490' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = '#C9A96E'; (e.currentTarget as HTMLElement).style.color = '#C9A96E'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(245,240,235,0.12)'; (e.currentTarget as HTMLElement).style.color = '#9A9490'; }}
+                  style={{ border: '1px solid rgba(232,227,220,0.12)', color: '#9A9490' }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-accent)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-accent)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(232,227,220,0.12)'; (e.currentTarget as HTMLElement).style.color = '#9A9490'; }}
                 >
                   {loadingMore ? (
                     <><span className="animate-spin inline-block w-3 h-3 border border-current border-t-transparent rounded-full" /> LOADING...</>
@@ -424,11 +421,11 @@ function ProductsListContent() {
               initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 220 }}
               className="fixed bottom-0 inset-x-0 z-[110] rounded-t-[8px] overflow-y-auto max-h-[88vh] hide-scrollbar"
-              style={{ background: '#0D0D0D', border: '1px solid rgba(245,240,235,0.07)', borderBottom: 'none' }}
+              style={{ background: '#0D0D0D', border: '1px solid rgba(232,227,220,0.07)', borderBottom: 'none' }}
             >
-              <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: 'rgba(245,240,235,0.06)' }}>
+              <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: 'rgba(232,227,220,0.06)' }}>
                 <div className="section-label">FILTERS</div>
-                <button onClick={() => setIsMobileFiltersOpen(false)} style={{ color: '#4A4642' }}>
+                <button onClick={() => setIsMobileFiltersOpen(false)} style={{ color: 'var(--color-muted)' }}>
                   <X size={18} />
                 </button>
               </div>
@@ -442,7 +439,7 @@ function ProductsListContent() {
                 <button
                   onClick={() => setIsMobileFiltersOpen(false)}
                   className="w-full mt-8 py-4 font-mono text-[10px] font-bold tracking-[0.2em] rounded-[2px] cursor-pointer transition-all"
-                  style={{ background: '#C9A96E', color: '#080808' }}
+                  style={{ background: 'var(--color-accent)', color: '#ffffff' }}
                 >
                   APPLY FILTERS
                 </button>
@@ -456,7 +453,7 @@ function ProductsListContent() {
       <Modal isOpen={!!quickViewProduct} onClose={() => setQuickViewProduct(null)} title="" maxWidth="lg">
         {quickViewProduct && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="w-full overflow-hidden rounded-[2px] border" style={{ aspectRatio: '3/4', background: '#111', borderColor: 'rgba(245,240,235,0.06)' }}>
+            <div className="w-full overflow-hidden rounded-[2px] border" style={{ aspectRatio: '3/4', background: '#111', borderColor: 'rgba(232,227,220,0.06)' }}>
               <img ref={qvImageRef} src={quickViewProduct.og_image_url || '/placeholder.jpg'} alt={quickViewProduct.title} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col justify-between py-2">
@@ -465,7 +462,7 @@ function ProductsListContent() {
                 <h3 className="font-sans font-extrabold uppercase tracking-tight text-[24px] text-[#F5F0EB] mb-3 leading-none">
                   {quickViewProduct.title}
                 </h3>
-                <div className="font-mono text-[16px] font-bold mb-6" style={{ color: '#C9A96E' }}>
+                <div className="font-mono text-[16px] font-bold mb-6" style={{ color: 'var(--color-accent)' }}>
                   {formatCurrency(quickViewProduct.sale_price ?? quickViewProduct.price)}
                 </div>
                 <p className="text-[13px] leading-relaxed mb-8" style={{ color: '#6B6560', fontFamily: 'Geist, Inter, sans-serif' }}>
@@ -479,7 +476,7 @@ function ProductsListContent() {
                         key={sz}
                         onClick={() => setSelectedSize(sz)}
                         className="px-4 py-2 font-mono text-[9px] font-bold rounded-[2px] cursor-pointer transition-all"
-                        style={selectedSize === sz ? { background: '#C9A96E', color: '#080808', border: '1px solid #C9A96E' } : { border: '1px solid rgba(245,240,235,0.1)', color: '#6B6560' }}
+                        style={selectedSize === sz ? { background: 'var(--color-accent)', color: '#ffffff', border: '1px solid #C9A96E' } : { border: '1px solid rgba(232,227,220,0.1)', color: '#6B6560' }}
                       >
                         {sz}
                       </button>
@@ -490,9 +487,9 @@ function ProductsListContent() {
               <button
                 onClick={() => { addItem(quickViewProduct, 1, selectedSize, undefined, null, qvImageRef.current); setQuickViewProduct(null); }}
                 className="w-full py-4 flex items-center justify-center gap-2.5 font-mono text-[10px] font-bold tracking-[0.18em] rounded-[2px] cursor-pointer transition-all"
-                style={{ background: '#C9A96E', color: '#080808' }}
+                style={{ background: 'var(--color-accent)', color: '#ffffff' }}
                 onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = '#E8CFA0')}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = '#C9A96E')}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = 'var(--color-accent)')}
               >
                 <ShoppingBag size={13} /> ADD TO BAG
               </button>
@@ -507,14 +504,14 @@ function ProductsListContent() {
 export default function ProductsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#080808' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#ffffff' }}>
         <div className="flex flex-col items-center gap-4">
           <div
-            className="font-sans text-[#C9A96E] text-[32px] font-black tracking-[0.4em]"
+            className="font-sans text-accent text-[32px] font-black tracking-[0.4em]"
           >
             ZELIX
           </div>
-          <div className="w-4 h-4 rounded-full animate-spin border border-[#C9A96E] border-t-transparent" />
+          <div className="w-4 h-4 rounded-full animate-spin border border-accent border-t-transparent" />
         </div>
       </div>
     }>
