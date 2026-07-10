@@ -316,10 +316,10 @@ function ProductsListContent() {
           {/* Product Grid */}
           <div className="flex-1 w-full relative">
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-12">
-                {Array(6).fill(null).map((_, i) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-12">
+                {Array(8).fill(null).map((_, i) => (
                   <div key={i} className="flex flex-col gap-4">
-                    <div className="w-full rounded-[2px] shimmer-bg" style={{ aspectRatio: '3/4' }} />
+                    <div className="w-full rounded-2xl shimmer-bg" style={{ aspectRatio: '1/1' }} />
                     <div className="h-4 w-3/4 shimmer-bg rounded-[2px]" />
                     <div className="h-3 w-1/4 shimmer-bg rounded-[2px]" />
                   </div>
@@ -340,7 +340,7 @@ function ProductsListContent() {
             ) : (
               <motion.div
                 layout
-                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-12"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-5 gap-y-12"
               >
                 <AnimatePresence mode="popLayout">
                   {products.map((product, i) => (
@@ -427,7 +427,7 @@ function ProductsListContent() {
       <Modal isOpen={!!quickViewProduct} onClose={() => setQuickViewProduct(null)} title="" maxWidth="lg">
         {quickViewProduct && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="w-full overflow-hidden rounded-[2px] border" style={{ aspectRatio: '3/4', background: '#111', borderColor: 'rgba(232,227,220,0.06)' }}>
+            <div className="w-full overflow-hidden rounded-2xl border" style={{ aspectRatio: '1/1', background: '#111', borderColor: 'rgba(232,227,220,0.06)' }}>
               <img ref={qvImageRef} src={quickViewProduct.og_image_url || '/placeholder.jpg'} alt={quickViewProduct.title} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col justify-between py-2">
