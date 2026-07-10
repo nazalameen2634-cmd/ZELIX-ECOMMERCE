@@ -177,6 +177,8 @@ export default function AdminOrdersPage() {
   const [tempFulfillmentStatus, setTempFulfillmentStatus] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
+  const [paymentFilter, setPaymentFilter] = useState<'ALL' | 'PENDING' | 'PAID'>('ALL');
+  
   // WhatsApp communication & order history status logs
   const [statusHistory, setStatusHistory] = useState<any[]>([]);
   const [whatsappLogs, setWhatsappLogs] = useState<any[]>([]);
@@ -454,11 +456,12 @@ export default function AdminOrdersPage() {
   };
 
   const filteredOrders = orders.filter((o) => {
-    const matchSearch =
+    const matchesSearch =
       o.order_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
       o.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchStatus = statusFilter ? o.fulfillment_status === statusFilter : true;
-    return matchSearch && matchStatus;
+    const matchesStatus = statusFilter === '' || o.fulfillment_status === statusFilter;
+    const matchesPayment = paymentFilter === 'ALL' || o.payment_status.toLowerCase() === paymentFilter.toLowerCase();
+    return matchesSearch && matchesStatus && matchesPayment;
   });
 
   return (
@@ -483,33 +486,56 @@ export default function AdminOrdersPage() {
 
       {/* Filters & Orders List */}
       <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm p-6 flex flex-col gap-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-          <div className="relative max-w-md w-full flex items-center">
-            <Search className="absolute left-3.5 text-[#282420]" size={16} />
-            <input
-              type="text"
-              placeholder="SEARCH ORDERS (REF OR EMAIL)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-[rgba(0,0,0,0.06)] rounded-sm font-mono text-[11px] text-[#111111] outline-none focus:border-neutral-400"
-            />
+        {/* Controls */}
+        <div className="flex flex-col gap-4 mb-6">
+          {/* Payment Tabs */}
+          <div className="flex items-center gap-4 border-b border-[rgba(0,0,0,0.06)] pb-2 overflow-x-auto hide-scrollbar">
+            <button
+              onClick={() => setPaymentFilter('ALL')}
+              className={`font-mono text-[11px] font-bold uppercase pb-2 px-1 border-b-2 transition-colors shrink-0 ${paymentFilter === 'ALL' ? 'border-black text-black' : 'border-transparent text-[#6B6560] hover:text-black'}`}
+            >
+              ALL
+            </button>
+            <button
+              onClick={() => setPaymentFilter('PENDING')}
+              className={`font-mono text-[11px] font-bold uppercase pb-2 px-1 border-b-2 transition-colors shrink-0 ${paymentFilter === 'PENDING' ? 'border-yellow-600 text-yellow-700' : 'border-transparent text-[#6B6560] hover:text-black'}`}
+            >
+              PENDING PAYMENT
+            </button>
+            <button
+              onClick={() => setPaymentFilter('PAID')}
+              className={`font-mono text-[11px] font-bold uppercase pb-2 px-1 border-b-2 transition-colors shrink-0 ${paymentFilter === 'PAID' ? 'border-green-600 text-green-700' : 'border-transparent text-[#6B6560] hover:text-black'}`}
+            >
+              PAYMENT DONE
+            </button>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[9px] text-[#282420] font-bold uppercase">FILTER STATE:</span>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="border border-[rgba(0,0,0,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer"
-            >
-              <option value="">ALL ORDERS</option>
-              <option value="pending">PENDING</option>
-              <option value="processing">PROCESSING</option>
-              <option value="shipped">SHIPPED</option>
-              <option value="delivered">DELIVERED</option>
-              <option value="cancelled">CANCELLED</option>
-            </select>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6560]" size={14} />
+              <input
+                type="text"
+                placeholder="SEARCH ORDERS (REF OR EMAIL)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] rounded-sm pl-9 pr-4 py-2 text-[11px] text-[#111111] font-mono outline-none focus:border-neutral-300"
+              />
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="font-mono text-[9px] text-[#282420] font-bold uppercase">FULFILLMENT:</span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border border-[rgba(0,0,0,0.06)] rounded-sm px-4 py-2 font-mono text-[10px] font-bold uppercase cursor-pointer bg-white"
+              >
+                <option value="">ALL STATUS</option>
+                <option value="pending">PENDING</option>
+                <option value="processing">PROCESSING</option>
+                <option value="shipped">SHIPPED</option>
+                <option value="delivered">DELIVERED</option>
+                <option value="cancelled">CANCELLED</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -759,34 +785,28 @@ export default function AdminOrdersPage() {
             {/* Financial Summary */}
             <div className="border-t border-[rgba(0,0,0,0.03)] pt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               {/* Left Column: Shipment tracking form setter */}
-              <form onSubmit={handleSaveTracking} className="flex-1 flex gap-2 w-full">
-                <div className="flex-1">
-                  <Input theme="light"
-                    label="TRACKING ID"
-                    required
-                    value={trackingNumber}
-                    onChange={(e) => setTrackingNumber(e.target.value)}
-                  />
-                </div>
-                <div className="w-[140px]">
-                  <Input theme="light"
-                    label="CARRIER"
-                    required
-                    value={trackingCarrier}
-                    onChange={(e) => setTrackingCarrier(e.target.value)}
-                  />
-                </div>
-                <div className="w-[160px]">
-                  <Input theme="light"
-                    label="EST. DELIVERY"
-                    placeholder="e.g. 15 July"
-                    value={estimatedDelivery}
-                    onChange={(e) => setEstimatedDelivery(e.target.value)}
-                  />
-                </div>
+              <form onSubmit={handleSaveTracking} className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end mb-6 md:mb-0 pr-0 md:pr-4">
+                <Input theme="light"
+                  label="TRACKING ID"
+                  required
+                  value={trackingNumber}
+                  onChange={(e) => setTrackingNumber(e.target.value)}
+                />
+                <Input theme="light"
+                  label="CARRIER"
+                  required
+                  value={trackingCarrier}
+                  onChange={(e) => setTrackingCarrier(e.target.value)}
+                />
+                <Input theme="light"
+                  label="EST. DELIVERY"
+                  placeholder="e.g. 15 July"
+                  value={estimatedDelivery}
+                  onChange={(e) => setEstimatedDelivery(e.target.value)}
+                />
                 <button
                   type="submit"
-                  className="bg-black hover:bg-neutral-800 text-[#FFFFFF] font-mono text-[9px] font-bold tracking-widest px-4 h-12 self-start rounded-sm uppercase cursor-pointer"
+                  className="bg-black hover:bg-neutral-800 text-[#FFFFFF] font-mono text-[9px] font-bold tracking-widest w-full h-12 rounded-sm uppercase cursor-pointer"
                 >
                   SAVE
                 </button>

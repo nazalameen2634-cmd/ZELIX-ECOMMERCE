@@ -122,6 +122,40 @@ export async function POST(request: Request) {
       }
     }
 
+    // ── 4.5. Reduce Stock ───────────────────────────────────────────────
+    if (order_items && Array.isArray(order_items) && order_items.length > 0) {
+      for (const item of order_items) {
+        // Decrease main product stock
+        if (item.product_id) {
+          const { data: prod } = await supabaseAdmin
+            .from('products')
+            .select('stock_quantity')
+            .eq('id', item.product_id)
+            .single();
+          if (prod) {
+            await supabaseAdmin
+              .from('products')
+              .update({ stock_quantity: Math.max(0, prod.stock_quantity - item.quantity) })
+              .eq('id', item.product_id);
+          }
+        }
+        // Decrease variant stock if applicable
+        if (item.variant_id) {
+          const { data: variant } = await supabaseAdmin
+            .from('product_variants')
+            .select('stock_quantity')
+            .eq('id', item.variant_id)
+            .single();
+          if (variant) {
+            await supabaseAdmin
+              .from('product_variants')
+              .update({ stock_quantity: Math.max(0, variant.stock_quantity - item.quantity) })
+              .eq('id', item.variant_id);
+          }
+        }
+      }
+    }
+
     // ── 5. Log to order timeline ────────────────────────────────────────────
     await supabaseAdmin.from('order_timeline').insert([
       {
