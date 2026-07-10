@@ -340,9 +340,9 @@ function ProductsListContent() {
           </aside>
 
           {/* Product Grid */}
-          <div className="flex-1">
+          <div className="flex-1 w-full relative">
             {loading ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-12">
                 {Array(6).fill(null).map((_, i) => (
                   <div key={i} className="flex flex-col gap-4">
                     <div className="w-full rounded-[2px] shimmer-bg" style={{ aspectRatio: '3/4' }} />
@@ -366,7 +366,7 @@ function ProductsListContent() {
             ) : (
               <motion.div
                 layout
-                className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-12"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-5 gap-y-12"
               >
                 <AnimatePresence mode="popLayout">
                   {products.map((product, i) => (
