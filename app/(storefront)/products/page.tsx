@@ -91,23 +91,6 @@ function FilterPanel({
 
 
 
-      {/* Price */}
-      <div>
-        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" className="text-muted">
-          MAX PRICE
-        </h4>
-        <input
-          type="range" min="0" max="50000" step="1000"
-          value={priceMaxParam}
-          onChange={(e) => onUpdateFilter('maxPrice', e.target.value)}
-          className="w-full cursor-pointer"
-          style={{ accentColor: 'var(--color-accent)' }}
-        />
-        <div className="flex justify-between mt-2 font-mono text-[9px]" style={{ color: '#6B6560' }}>
-          <span>₹0</span>
-          <span style={{ color: 'var(--color-accent)' }}>{formatCurrency(priceMaxParam)}</span>
-        </div>
-      </div>
 
       {/* Reset */}
       <button
