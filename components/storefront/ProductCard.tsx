@@ -63,7 +63,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           animate={{ rotateX: tilt.x, rotateY: tilt.y }}
           transition={{ type: 'spring', stiffness: 200, damping: 25, mass: 0.8 }}
           className="relative w-full overflow-hidden rounded-2xl"
-          style={{ aspectRatio: '1/1', background: '#111111', border: '1px solid rgba(245,240,235,0.05)' }}
+          style={{ aspectRatio: '3/4', background: '#111111', border: '1px solid rgba(245,240,235,0.05)' }}
         >
           {/* Status Badges */}
           <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
