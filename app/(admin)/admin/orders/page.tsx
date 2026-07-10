@@ -190,7 +190,7 @@ export default function AdminOrdersPage() {
     async function loadOrders() {
       setLoading(true);
       try {
-        const res = await fetch('/api/admin/orders');
+        const res = await fetch('/api/admin/orders?t=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to load orders');
         const data = await res.json();
         setOrders((data.orders as unknown as Order[]) || []);
