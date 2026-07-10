@@ -134,7 +134,8 @@ export default function AdminProductsPage() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore]           = useState(true);
+  const [uploadingIndex, setUploadingIndex] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -446,15 +447,20 @@ export default function AdminProductsPage() {
       if (!res.ok) throw new Error('Upload failed');
       
       const data = await res.json();
-      setFormFields((f) => ({ ...f, image: data.url }));
+      setFormFields((f) => {
+        const newImages = [...f.images];
+        newImages[uploadingIndex] = data.url;
+        return { ...f, images: newImages, image: newImages[0] };
+      });
       toast('PRODUCT PHOTO UPLOADED TO product-images BUCKET', 'success');
     } catch (err) {
       console.warn('Upload failed, falling back to mock image', err);
       // Simulate image uploading fallback
-      setFormFields((f) => ({
-        ...f,
-        image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
-      }));
+      setFormFields((f) => {
+        const newImages = [...f.images];
+        newImages[uploadingIndex] = 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop';
+        return { ...f, images: newImages, image: newImages[0] };
+      });
       toast('UPLOAD FAILED. MOCK IMAGE INSERTED.', 'error');
     }
   };
@@ -482,15 +488,20 @@ export default function AdminProductsPage() {
       if (!res.ok) throw new Error('Upload failed');
       
       const data = await res.json();
-      setFormFields((f) => ({ ...f, image: data.url }));
+      setFormFields((f) => {
+        const newImages = [...f.images];
+        newImages[uploadingIndex] = data.url;
+        return { ...f, images: newImages, image: newImages[0] };
+      });
       toast('PRODUCT PHOTO UPLOADED TO product-images BUCKET', 'success');
     } catch (err) {
       console.warn('Upload failed, falling back to mock image', err);
       // Simulate image uploading fallback
-      setFormFields((f) => ({
-        ...f,
-        image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop',
-      }));
+      setFormFields((f) => {
+        const newImages = [...f.images];
+        newImages[uploadingIndex] = 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?q=80&w=600&auto=format&fit=crop';
+        return { ...f, images: newImages, image: newImages[0] };
+      });
       toast('UPLOAD FAILED. MOCK IMAGE INSERTED.', 'error');
     }
   };
@@ -863,32 +874,41 @@ export default function AdminProductsPage() {
             {/* Media Upload card */}
             <div className="bg-[#FFFFFF] border border-[rgba(0,0,0,0.06)] p-6 rounded-sm shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
               <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mb-4 uppercase">
-                MEDIA LIBRARY
+                MEDIA LIBRARY (UP TO 5 IMAGES)
               </h3>
               
-              {/* Drag/Drop Mock slot */}
-              <div
-                onDragOver={handleDragOver}
-                onDrop={handleDropUpload}
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full aspect-[3/4] border-2 border-dashed border-[rgba(0,0,0,0.06)] hover:border-neutral-400 rounded-sm bg-[#FAFAFA] flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-4"
-              >
-                {formFields.image ? (
-                  <img src={formFields.image} alt="preview" className="w-full h-full object-cover rounded-sm" />
-                ) : (
-                  <>
-                    <Upload className="text-neutral-300 w-10 h-10" />
-                    <div>
-                      <span className="font-mono text-[9px] font-bold tracking-widest uppercase text-[#6B6560] block">
-                        DRAG & DROP OR CLICK TO UPLOAD
-                      </span>
-                      <span className="text-[10px] font-sans text-[#666666] mt-1 block">
-                        Upload to product-images Storage bucket
-                      </span>
-                    </div>
-                  </>
-                )}
+              {/* Image Slots Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {[0, 1, 2, 3, 4].map((index) => (
+                  <div
+                    key={index}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => {
+                      setUploadingIndex(index);
+                      handleDropUpload(e);
+                    }}
+                    onClick={() => {
+                      setUploadingIndex(index);
+                      fileInputRef.current?.click();
+                    }}
+                    className={`w-full aspect-[3/4] border-2 border-dashed border-[rgba(0,0,0,0.06)] hover:border-neutral-400 rounded-sm bg-[#FAFAFA] flex flex-col justify-center items-center gap-3 text-center cursor-pointer transition-colors p-2 ${index === 0 ? 'border-accent border-solid' : ''}`}
+                  >
+                    {formFields.images[index] ? (
+                      <img src={formFields.images[index]} alt={`preview ${index}`} className="w-full h-full object-cover rounded-sm" />
+                    ) : (
+                      <>
+                        <Upload className="text-neutral-300 w-6 h-6" />
+                        <div>
+                          <span className="font-mono text-[8px] font-bold tracking-widest uppercase text-[#6B6560] block">
+                            {index === 0 ? 'MAIN IMAGE' : `IMAGE ${index + 1}`}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
               </div>
+
               <input
                 type="file"
                 ref={fileInputRef}
@@ -900,9 +920,13 @@ export default function AdminProductsPage() {
               {/* Text URL backup */}
               <div className="mt-4">
                 <Input theme="light"
-                  label="OR INSERT IMAGE URL"
-                  value={formFields.image}
-                  onChange={(e) => setFormFields((f) => ({ ...f, image: e.target.value }))}
+                  label={`OR INSERT IMAGE URL FOR ${uploadingIndex === 0 ? 'MAIN IMAGE' : `IMAGE ${uploadingIndex + 1}`}`}
+                  value={formFields.images[uploadingIndex] || ''}
+                  onChange={(e) => setFormFields((f) => {
+                    const newImages = [...f.images];
+                    newImages[uploadingIndex] = e.target.value;
+                    return { ...f, images: newImages, image: newImages[0] };
+                  })}
                 />
               </div>
             </div>
