@@ -302,74 +302,7 @@ export default function ProductDetails({
               )}
             </div>
 
-            {/* Variant Selectors: Colors */}
-            <div className="flex flex-col gap-3 mb-6">
-              <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
-                {(() => {
-                  const match = selectedColor.match(/(.+?)\s*\((#[0-9a-fA-F]+)\)/);
-                  return match ? match[1].trim() : selectedColor;
-                })()}
-              </span>
-              <div className="flex items-center gap-3">
-                {colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`relative w-8 h-8 rounded-full border flex items-center justify-center cursor-pointer transition-all ${
-                      selectedColor === color
-                        ? 'border-accent scale-110 shadow-[0_0_10px_rgba(255,255,255,0.15)]'
-                        : 'border-border opacity-70 hover:opacity-100 hover:scale-105'
-                    }`}
-                  >
-                    <span
-                      style={{
-                        backgroundColor:
-                          color === 'BLACK' ? '#111111' : color === 'TACTICAL GREY' ? '#555555' : '#EFEFEE',
-                      }}
-                      className="w-6 h-6 rounded-full block"
-                    />
-                    {selectedColor === color && (
-                      <Check size={12} className={color === 'OFF-WHITE' ? 'text-white absolute' : 'text-foreground absolute'} />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
 
-            {/* Variant Selectors: Sizing */}
-            <div className="flex flex-col gap-3 mb-8">
-              <div className="flex justify-between items-center">
-                <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
-                  {selectedSize}
-                </span>
-                <Link
-                  href="#size-guide"
-                  className="font-sans text-[9px] text-muted hover:text-foreground tracking-wider uppercase underline underline-offset-4"
-                >
-                  SIZE CHART
-                </Link>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {sizes.map((size) => {
-                  const isOutOfStock = product.stock_quantity === 0 && product.track_inventory && !product.allow_backorders;
-                  return (
-                    <button
-                      key={size}
-                      disabled={isOutOfStock}
-                      onClick={() => setSelectedSize(size)}
-                      className={`border px-5 py-3 font-sans text-[11px] font-bold rounded-sm transition-all cursor-pointer select-none ${
-                        isOutOfStock
-                          ? 'border-border text-muted/50 cursor-not-allowed line-through'
-                          : selectedSize === size ? 'bg-accent text-white border-accent'
-                          : 'border-border text-muted hover:border-accent hover:text-foreground'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
             {/* Quantity Selector & Add to Cart button */}
             <div className="flex flex-col gap-4 border-b border-border pb-8 mb-8">

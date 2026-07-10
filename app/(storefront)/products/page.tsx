@@ -442,21 +442,6 @@ function ProductsListContent() {
                 <p className="text-[13px] leading-relaxed mb-8 text-muted font-sans">
                   {quickViewProduct.description}
                 </p>
-                <div className="flex flex-col gap-3 mb-8">
-                  <span className="font-mono text-[9px] font-bold tracking-[0.18em] text-muted">SELECT SIZE</span>
-                  <div className="flex flex-wrap gap-2">
-                    {['S', 'M', 'L', 'XL'].map((sz) => (
-                      <button
-                        key={sz}
-                        onClick={() => setSelectedSize(sz)}
-                        className="px-4 py-2 font-mono text-[9px] font-bold rounded-[2px] cursor-pointer transition-all"
-                        style={selectedSize === sz ? { background: 'var(--color-accent)', color: '#ffffff', border: '1px solid #C9A96E' } : { border: '1px solid rgba(232,227,220,0.1)', color: '#6B6560' }}
-                      >
-                        {sz}
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
               <button
                 onClick={() => { addItem(quickViewProduct, 1, selectedSize, undefined, null, qvImageRef.current); setQuickViewProduct(null); }}
