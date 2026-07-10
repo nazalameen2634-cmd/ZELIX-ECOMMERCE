@@ -32,7 +32,7 @@ export default function ProductDetails({
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('BLACK');
   const [quantity, setQuantity] = useState(1);
-  const [zoomStyle, setZoomStyle] = useState({ display: 'none', backgroundPosition: '0% 0%' });
+  
   // Review Form States
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [newRating, setNewRating] = useState(5);
@@ -53,8 +53,20 @@ export default function ProductDetails({
   const productImages = dbImages.length > 0 ? dbImages : [product.og_image_url || '/placeholder.jpg'];
 
   // Colors and sizes configuration from options
-  const colors = ['BLACK', 'TACTICAL GREY', 'OFF-WHITE'];
-  const sizes = product.options?.find((o) => o.name.toLowerCase() === 'size')?.values?.map((v) => v.value) || ['S', 'M', 'L', 'XL'];
+  const uniqueColors = new Set<string>();
+  const uniqueSizes = new Set<string>();
+  if (product.variants) {
+    product.variants.forEach(v => {
+      if (v.option_values && Array.isArray(v.option_values)) {
+        v.option_values.forEach((ov: any) => {
+          if (ov.option_name === 'Color') uniqueColors.add(ov.value);
+          if (ov.option_name === 'Size') uniqueSizes.add(ov.value);
+        });
+      }
+    });
+  }
+  const colors = Array.from(uniqueColors);
+  const sizes = Array.from(uniqueSizes).length > 0 ? Array.from(uniqueSizes) : ['S', 'M', 'L', 'XL'];
 
   // Accordion toggle
   const toggleAccordion = (section: 'description' | 'specs' | 'shipping') => {
@@ -62,19 +74,7 @@ export default function ProductDetails({
   };
 
   // Magnifying Glass Hover Zoom (Desktop)
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = ((e.pageX - left - window.scrollX) / width) * 100;
-    const y = ((e.pageY - top - window.scrollY) / height) * 100;
-    setZoomStyle({
-      display: 'block',
-      backgroundPosition: `${x}% ${y}%`,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setZoomStyle({ display: 'none', backgroundPosition: '0% 0%' });
-  };
+  
 
   // Add to Cart
   const handleAddToCart = () => {
@@ -223,18 +223,7 @@ export default function ProductDetails({
                 />
               </AnimatePresence>
 
-              {/* Magnifying glass overlay box */}
-              <div
-                style={{
-                  ...zoomStyle,
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundImage: `url(${productImages[activeImageIdx]})`,
-                  backgroundSize: '200%',
-                  pointerEvents: 'none',
-                }}
-                className="hidden md:block transition-[background-position] duration-75"
-              />
+              
             </div>
 
             {/* Thumbnail Strip */}
@@ -317,7 +306,10 @@ export default function ProductDetails({
             {/* Variant Selectors: Colors */}
             <div className="flex flex-col gap-3 mb-6">
               <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
-                SWATCH // COLOR: {selectedColor}
+                SWATCH // COLOR: {(() => {
+                  const match = selectedColor.match(/(.+?)\s*\((#[0-9a-fA-F]+)\)/);
+                  return match ? match[1].trim() : selectedColor;
+                })()}
               </span>
               <div className="flex items-center gap-3">
                 {colors.map((color) => (
@@ -369,8 +361,7 @@ export default function ProductDetails({
                       className={`border px-5 py-3 font-sans text-[11px] font-bold rounded-sm transition-all cursor-pointer select-none ${
                         isOutOfStock
                           ? 'border-border text-muted/50 cursor-not-allowed line-through'
-                          : selectedSize === size
-                          ? 'bg-white text-white border-accent'
+                          : selectedSize === size ? 'bg-accent text-white border-accent'
                           : 'border-border text-muted hover:border-accent hover:text-foreground'
                       }`}
                     >

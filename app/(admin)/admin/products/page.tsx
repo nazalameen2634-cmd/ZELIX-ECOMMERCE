@@ -1,4 +1,30 @@
-'use client';
+<h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 uppercase mt-8">
+              PRODUCT MEDIA (UP TO 5)
+            </h3>
+            <div className="flex flex-col gap-4">
+              {[0, 1, 2, 3, 4].map(idx => (
+                <div key={idx} className="flex gap-4 items-center">
+                  <div className="flex-1">
+                    <label className="block font-mono text-[10px] tracking-widest font-bold text-[#444444] mb-2 uppercase">IMAGE URL {idx + 1}</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-2 border border-[rgba(0,0,0,0.06)] rounded-sm font-mono text-[11px] text-[#111111] bg-[#FAFAFA] outline-none focus:border-neutral-400 focus:bg-white"
+                      placeholder="https://..."
+                      value={formFields.images[idx] || ''}
+                      onChange={(e) => {
+                        const newImages = [...formFields.images];
+                        newImages[idx] = e.target.value;
+                        setFormFields(f => ({ ...f, images: newImages, image: newImages[0] }));
+                      }}
+                    />
+                  </div>
+                  {formFields.images[idx] && (
+                    <img src={formFields.images[idx]} alt="preview" className="w-12 h-12 object-cover border border-[rgba(0,0,0,0.06)] rounded-sm" />
+                  )}
+                </div>
+              ))}
+            </div>
+            'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit, Trash2, Search, ArrowLeft, Loader2, Image as ImageIcon, Upload, Save, HelpCircle } from 'lucide-react';
@@ -158,6 +184,7 @@ export default function AdminProductsPage() {
     allowBackorders: false,
     status: 'active' as 'active' | 'draft',
     image: '',
+    images: ['', '', '', '', ''],
     tags: '',
     hasSizes: true,
     hasColors: false,
@@ -205,7 +232,7 @@ export default function AdminProductsPage() {
       try {
         const { data: prods } = await supabase
           .from('products')
-          .select('*, categories(*)')
+          .select('*, categories(*), product_images(*), product_variants(*)')
           .order('created_at', { ascending: false });
         if (prods) setProducts(prods as Product[]);
 
@@ -231,8 +258,59 @@ export default function AdminProductsPage() {
     }
   }, [formFields.title, view]);
 
-  const handleEdit = (product: Product) => {
+  const handleEdit = (product: Product | any) => {
     setEditingProductId(product.id);
+    
+    // Sort images by sort_order
+    let loadedImages = ['', '', '', '', ''];
+    const pImages = product.product_images || product.images;
+    if (pImages && pImages.length > 0) {
+      const sorted = [...pImages].sort((a: any, b: any) => a.sort_order - b.sort_order);
+      for (let i = 0; i < 5; i++) {
+        loadedImages[i] = sorted[i] ? sorted[i].image_url : '';
+      }
+    } else {
+      loadedImages[0] = product.og_image_url || '';
+    }
+
+    // Process variants
+    let hasSizes = false;
+    let hasColors = false;
+    let sizesSet = new Set<string>();
+    let colorsSet = new Set<string>();
+    let vList: any[] = [];
+    const pVariants = product.product_variants || product.variants;
+    if (pVariants && pVariants.length > 0) {
+      pVariants.forEach((v: any) => {
+        let size = '';
+        let color = '';
+        if (v.option_values && Array.isArray(v.option_values)) {
+          v.option_values.forEach((ov: any) => {
+            if (ov.option_name === 'Size') {
+              size = ov.value;
+              sizesSet.add(size);
+              hasSizes = true;
+            }
+            if (ov.option_name === 'Color') {
+              color = ov.value;
+              colorsSet.add(color);
+              hasColors = true;
+            }
+          });
+        }
+        vList.push({
+          size,
+          color,
+          priceOverride: v.price ? v.price.toString() : '',
+          stock: v.stock_quantity.toString(),
+          sku: v.sku
+        });
+      });
+    }
+
+    setAvailableSizes(Array.from(sizesSet).join(', ') || 'S, M, L, XL');
+    setAvailableColors(Array.from(colorsSet).join(', ') || 'MATTE BLACK (#121212), BONE WHITE (#F5F0EB)');
+
     setFormFields({
       title: product.title,
       slug: product.slug,
@@ -246,11 +324,13 @@ export default function AdminProductsPage() {
       trackInventory: product.track_inventory,
       allowBackorders: product.allow_backorders,
       status: product.status,
-      image: product.og_image_url || '',
+      image: loadedImages[0],
+      images: loadedImages,
       tags: product.tags?.join(', ') || '',
-      hasSizes: true, // Assuming true for edited products or parse from existing
-      hasColors: false,
+      hasSizes,
+      hasColors,
     });
+    setVariantsList(vList);
     setView('edit');
   };
 
@@ -284,7 +364,19 @@ export default function AdminProductsPage() {
       track_inventory: formFields.trackInventory,
       allow_backorders: formFields.allowBackorders,
       status: formFields.status,
-      og_image_url: formFields.image || 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600',
+      og_image_url: formFields.images[0] || formFields.image || 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=600',
+      images: formFields.images,
+      variants: variantsList.map(v => {
+        const option_values = [];
+        if (v.size) option_values.push({ option_name: 'Size', value: v.size });
+        if (v.color) option_values.push({ option_name: 'Color', value: v.color });
+        return {
+          sku: v.sku || `${formFields.sku}-${(v.size || 'OS').toUpperCase().replace(/\s+/g, '')}`,
+          price: v.priceOverride ? parseFloat(v.priceOverride) : null,
+          stock_quantity: parseInt(v.stock),
+          option_values,
+        };
+      }),
       tags: formFields.tags.split(',').map((t) => t.trim().toUpperCase()).filter(Boolean),
     };
 
@@ -316,34 +408,6 @@ export default function AdminProductsPage() {
         
         const { data: newProd } = await res.json();
 
-        // Insert variants if any via API
-        if (newProd && (formFields.hasSizes || formFields.hasColors) && variantsList.length > 0) {
-          const variantsRows = variantsList.map((v) => {
-            const option_values = [];
-            if (v.size) option_values.push({ option_name: 'Size', value: v.size });
-            if (v.color) option_values.push({ option_name: 'Color', value: v.color });
-            
-            return {
-              product_id: newProd.id,
-              sku: v.sku || `${formFields.sku}-${(v.size || 'OS').toUpperCase()}`,
-              price: v.priceOverride ? parseFloat(v.priceOverride) : null,
-              stock_quantity: parseInt(v.stock),
-              option_values,
-            };
-          });
-          
-          await fetch('/api/admin/products/variants', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(variantsRows),
-          });
-        } else if (newProd) {
-          // If no size variations, you might insert a default generic variant here
-          // depending on db schema requirement for variants, 
-          // or just leave it empty if the product itself holds the stock.
-        }
-
-
         toast('PRODUCT RELEASES PUBLISHED IN CATALOG', 'success');
       }
 
@@ -372,6 +436,7 @@ export default function AdminProductsPage() {
       allowBackorders: false,
       status: 'active',
       image: '',
+      images: ['', '', '', '', ''],
       tags: '',
       hasSizes: true,
       hasColors: false,
@@ -709,11 +774,10 @@ export default function AdminProductsPage() {
                   ENABLE COLOR VARIATIONS
                 </label>
                 {formFields.hasColors && (
-                  <Input theme="light" 
-                    label="AVAILABLE COLORS (COMMA SEPARATED)" 
-                    value={availableColors}
-                    onChange={(e) => setAvailableColors(e.target.value)}
-                  />
+                  <Input theme="light" label="AVAILABLE COLORS (COMMA SEPARATED)" value={availableColors} onChange={(e) => setAvailableColors(e.target.value)} />
+              <p className="text-[9px] text-[#666666] mt-1 font-mono uppercase tracking-widest">
+                Format: Name (#hex), Name (#hex). Example: Matte Black (#121212)
+              </p>
                 )}
               </div>
             </div>
