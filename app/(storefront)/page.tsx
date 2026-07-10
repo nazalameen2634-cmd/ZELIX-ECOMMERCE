@@ -889,32 +889,7 @@ export default function HomePage() {
 
       
 
-      {/* ═══════════════════════════════════
-          6. NEWSLETTER STRIP
-      ═══════════════════════════════════ */}
-      <section className="py-24 bg-background">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-6">
-            Join the inner circle
-          </h2>
-          <p className="font-sans text-muted mb-10">
-            Subscribe to receive updates on new arrivals, exclusive access, and personalized offers.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-4 justify-center">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 max-w-sm px-6 py-4 bg-white border border-border rounded-full font-sans text-sm outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
-            />
-            <button
-              type="submit"
-              className="px-8 py-4 bg-accent text-white font-sans font-medium text-sm rounded-full hover:bg-accent-hover transition-colors shadow-sm whitespace-nowrap"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+
     </div>
   );
 }

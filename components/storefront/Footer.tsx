@@ -84,33 +84,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Right: Newsletter */}
-          <div className="w-full lg:max-w-md">
-            <div className="font-sans text-sm font-medium tracking-widest uppercase mb-4 text-foreground">
-              Join the Inner Circle
-            </div>
-            <p className="font-sans text-sm leading-relaxed mb-6 text-muted">
-              Receive updates on new collections and exclusive access to private events.
-            </p>
-            <form onSubmit={handleSubscribe} className="flex items-end gap-3 border-b border-border pb-3 group">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email Address"
-                disabled={isSubmitting}
-                className="flex-1 bg-transparent font-sans text-sm outline-none placeholder-muted/80 disabled:opacity-50 text-foreground"
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex items-center gap-2 font-sans text-xs font-semibold tracking-widest uppercase cursor-pointer transition-colors duration-300 disabled:opacity-40 text-muted hover:text-accent"
-              >
-                {isSubmitting ? '...' : <><span>Subscribe</span><ArrowRight size={14} /></>}
-              </button>
-            </form>
-          </div>
+
         </div>
       </div>
 
