@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ShoppingBag, Search, User, Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
@@ -59,18 +58,12 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
           </button>
         </div>
 
-        {/* Brand wordmark / Logo (Center on mobile, Left on desktop) */}
+        {/* Brand wordmark (Center on mobile, Left on desktop) */}
         <div className="flex-1 flex justify-center lg:justify-start">
-          <Link href="/" className="select-none group/logo flex items-center h-10 md:h-12">
-            {/* The user will place logo.png in the public folder */}
-            <Image 
-              src="/logo.png" 
-              alt="Zelix Gems" 
-              width={120} 
-              height={48} 
-              className="object-contain h-full w-auto transition-transform duration-500 group-hover/logo:scale-[1.02]"
-              priority
-            />
+          <Link href="/" className="select-none group/logo">
+            <span className="block font-serif text-[20px] md:text-[24px] lg:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase">
+              ZELIX
+            </span>
           </Link>
         </div>
 
