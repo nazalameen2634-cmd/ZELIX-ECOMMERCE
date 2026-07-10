@@ -205,8 +205,7 @@ export default function ProductDetails({
           <div className="lg:col-span-5 flex flex-col gap-6">
             {/* Main Image Viewport with Hover Zoom */}
             <div
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
+              
               className="relative w-full aspect-[3/4] overflow-hidden bg-card border border-border rounded-sm cursor-zoom-in"
             >
               <AnimatePresence mode="wait">
@@ -229,7 +228,7 @@ export default function ProductDetails({
             {/* Thumbnail Strip */}
             {productImages.length > 1 && (
               <div className="flex gap-3 overflow-x-auto hide-scrollbar">
-                {productImages.map((img, idx) => (
+                {productImages.map((img: string, idx: number) => (
                   <button
                     key={idx}
                     onClick={() => {

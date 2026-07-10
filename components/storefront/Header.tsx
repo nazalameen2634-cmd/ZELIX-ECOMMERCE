@@ -101,7 +101,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                     onMouseEnter={() => setActiveDropdown(link.href)}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    {link.sub.map((sub) => (
+                    {link.sub.map((sub: any) => (
                       <Link
                         key={sub.href}
                         href={sub.href}
