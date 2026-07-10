@@ -244,40 +244,6 @@ export default function ProductDetails({
                 </motion.div>
               </div>
 
-              {/* Technical Specifications table */}
-              <div className="border-b border-border py-4 last:border-0">
-                <button
-                  onClick={() => toggleAccordion('specs')}
-                  className="w-full flex justify-between items-center text-left cursor-pointer"
-                >
-                  <span className="font-sans text-[11px] font-bold tracking-widest uppercase text-foreground">
-                    TECHNICAL DATA
-                  </span>
-                  {accordions.specs ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                </button>
-                <motion.div
-                  initial={false}
-                  animate={{ height: accordions.specs ? 'auto' : 0 }}
-                  className="overflow-hidden text-[12px] font-sans tracking-wider text-muted mt-3"
-                >
-                  <table className="w-full text-left border-collapse">
-                    <tbody>
-                      <tr className="border-b border-border">
-                        <td className="py-2.5 text-muted font-bold">FABRIC WEIGHT</td>
-                        <td className="py-2.5 text-foreground text-right">500GSM / FRENCH TERRY</td>
-                      </tr>
-                      <tr className="border-b border-border">
-                        <td className="py-2.5 text-muted font-bold">COMPOSITION</td>
-                        <td className="py-2.5 text-foreground text-right">100% ORGANIC COTTON</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 text-muted font-bold">ORIGIN</td>
-                        <td className="py-2.5 text-foreground text-right">INDIA DESIGN LABS</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </motion.div>
-              </div>
 
               {/* Shipping & Returns */}
               <div className="border-b border-border py-4 last:border-0">
