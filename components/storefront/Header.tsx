@@ -14,19 +14,13 @@ interface HeaderProps {
 }
 
 const NAV_LINKS = [
-  {
-    label: 'SHOP',
-    href: '/products',
-    sub: [
-      { label: 'NEW ARRIVALS', href: '/products?sort=newest' },
-      { label: 'OUTERWEAR',   href: '/products?category=outerwear' },
-      { label: 'APPAREL',     href: '/products?category=apparel' },
-      { label: 'FOOTWEAR',    href: '/products?category=footwear' },
-      { label: 'ACCESSORIES', href: '/products?category=accessories' },
-    ],
-  },
-  { label: 'ABOUT',   href: '/about',   sub: [] },
-  { label: 'CONTACT', href: '/contact', sub: [] },
+  { label: 'NEW IN', href: '/products?category=new-arrivals', sub: [] },
+  { label: 'RINGS', href: '/products?category=rings', sub: [] },
+  { label: 'NECKLACES', href: '/products?category=necklaces', sub: [] },
+  { label: 'EARRINGS', href: '/products?category=earrings', sub: [] },
+  { label: 'BRACELETS', href: '/products?category=bracelets', sub: [] },
+  { label: 'COLLECTIONS', href: '/products?category=collections', sub: [] },
+  { label: 'ABOUT', href: '/about', sub: [] },
 ];
 
 export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
@@ -57,8 +51,17 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
         }`}
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        {/* Left — Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-10 flex-1">
+        {/* Left — Brand wordmark */}
+        <div className="flex-1 flex justify-start">
+          <Link href="/" className="select-none group/logo">
+            <span className="block font-serif text-[24px] md:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase">
+              ZELIX
+            </span>
+          </Link>
+        </div>
+
+        {/* Center — Desktop Nav */}
+        <nav className="hidden lg:flex items-center justify-center gap-8 flex-[2]">
           {NAV_LINKS.map((link) => (
             <div
               key={link.href}
@@ -119,15 +122,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
           </button>
         </div>
 
-        {/* Center — Brand wordmark */}
-        <Link
-          href="/"
-          className="text-center select-none group/logo"
-        >
-          <span className="block font-serif text-[24px] md:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase ml-[0.2em]">
-            ZELIX
-          </span>
-        </Link>
+        
 
         {/* Right — Icon Actions */}
         <div className="flex items-center gap-7 flex-1 justify-end">

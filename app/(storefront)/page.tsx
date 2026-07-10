@@ -716,35 +716,78 @@ export default function HomePage() {
       {/* ═══════════════════════════════════
           2. HERO SECTION
       ═══════════════════════════════════ */}
-      <section ref={heroRef} className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-black/10 z-10" />
-        <div className="absolute inset-0">
-          <img
+      <section ref={heroRef} className="relative w-full h-[90vh] min-h-[600px] flex items-center bg-[#FDFBF7]">
+        {/* Background Image placed to the right */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FDFBF7] via-[#FDFBF7]/90 to-transparent z-10 w-[70%]" />
+          <img 
+            src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1800&auto=format&fit=crop" 
             alt="Hero Background"
-            className="object-cover object-center w-full h-full scale-105 blur-sm mix-blend-luminosity opacity-60"
-            src="/products/cargo.png"
+            className="w-full h-full object-cover object-right-bottom scale-[1.02]"
           />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20 flex flex-col items-center mt-20">
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-serif text-foreground uppercase tracking-tight mb-6">
-            Timeless Elegance
-          </h1>
-          <p className="text-lg sm:text-xl text-foreground/80 max-w-2xl mb-10 leading-relaxed font-sans font-light">
-            Discover our curated collection of luxury fashion and accessories. Designed for those who appreciate understated beauty.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Link
-              href="/products"
-              className="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-sans font-medium text-sm rounded-full hover:bg-accent-hover transition-colors shadow-sm hover:shadow hover:-translate-y-[1px]"
-            >
-              Shop Collection
-            </Link>
-            <Link
-              href="/products?category=new-arrivals"
-              className="inline-flex items-center justify-center px-10 py-4 bg-white text-foreground font-sans font-medium text-sm border border-border rounded-full hover:bg-gray-50 transition-colors shadow-sm"
-            >
-              New Arrivals
-            </Link>
+
+        {/* Content */}
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-16 relative z-20 w-full flex justify-between items-center mt-12">
+          <div className="max-w-2xl flex flex-col items-start text-left">
+            <span className="text-[#D99A9A] font-sans font-bold tracking-[0.15em] text-[10px] sm:text-xs uppercase mb-6">
+              TIMELESS BEAUTY. MADE TO SHINE.
+            </span>
+            <h1 className="text-5xl sm:text-7xl lg:text-[85px] font-serif text-[#212121] leading-[1.05] tracking-tight mb-8">
+              Fine Jewellery,<br />Forever Yours.
+            </h1>
+            <div className="w-12 h-[1px] bg-[#D99A9A] mb-8" />
+            <p className="text-base sm:text-[15px] text-[#666666] max-w-md mb-10 leading-relaxed font-sans font-medium">
+              Exquisite designs crafted with precision,<br />made for every moment that matters.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+              <Link
+                href="/products"
+                className="inline-flex items-center justify-center px-8 py-4 bg-[#D99A9A] text-white font-sans font-semibold text-xs tracking-wider hover:bg-[#C98A8A] transition-colors shadow-sm"
+              >
+                EXPLORE COLLECTION
+              </Link>
+              <Link
+                href="/products?category=new-arrivals"
+                className="inline-flex items-center text-[#212121] font-sans font-semibold text-xs tracking-wider hover:text-[#D99A9A] transition-colors gap-3 border-b border-[#212121] hover:border-[#D99A9A] pb-1 uppercase"
+              >
+                VIEW NEW ARRIVALS <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+          
+          {/* Right side carousel indicator */}
+          <div className="hidden lg:flex flex-col items-center gap-4 text-[10px] font-sans font-semibold tracking-widest text-[#212121]/50 mr-8">
+            <span className="text-[#212121]">01</span>
+            <div className="h-16 w-[1px] bg-[#212121]/20 relative">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#D99A9A]" />
+            </div>
+            <span>02</span>
+            <span>03</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════
+          2.5 TRUST PILLARS
+      ═══════════════════════════════════ */}
+      <section className="py-10 bg-[#FDFBF7] border-b border-[#E8E3DC]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { title: 'PREMIUM QUALITY', body: 'Crafted with the finest materials', icon: <Diamond size={26} className="text-[#212121]" strokeWidth={1.2} /> },
+              { title: 'LIFETIME WARRANTY', body: 'We stand by our promise', icon: <ShieldCheck size={26} className="text-[#212121]" strokeWidth={1.2} /> },
+              { title: 'ELEGANT PACKAGING', body: 'Perfect for every occasion', icon: <Gift size={26} className="text-[#212121]" strokeWidth={1.2} /> },
+              { title: 'EASY RETURNS', body: 'Hassle-free 7 day returns', icon: <Undo2 size={26} className="text-[#212121]" strokeWidth={1.2} /> },
+            ].map((pillar, i) => (
+              <div key={i} className="flex items-center gap-5 lg:justify-center border-b sm:border-b-0 lg:border-r border-[#E8E3DC] pb-6 sm:pb-0 last:border-0 pr-4">
+                <div className="shrink-0">{pillar.icon}</div>
+                <div className="flex flex-col">
+                  <h4 className="font-sans font-bold text-[10px] tracking-widest text-[#212121] uppercase mb-1">{pillar.title}</h4>
+                  <p className="font-sans text-[11px] font-medium text-[#666666]">{pillar.body}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -844,26 +887,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════
-          5. TRUST PILLARS
-      ═══════════════════════════════════ */}
-      <section className="py-24 bg-card border-b border-border">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24 text-center">
-            {[
-              { title: 'Premium Quality', body: 'Crafted with the finest materials and meticulous attention to detail.' },
-              { title: 'Sustainable', body: 'Ethically sourced and produced with minimal environmental impact.' },
-              { title: 'Global Shipping', body: 'Complimentary shipping worldwide on all orders over ₹10,000.' },
-            ].map((pillar, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="w-2 h-2 bg-accent rounded-full mb-6"></div>
-                <h4 className="font-serif text-xl text-foreground mb-4">{pillar.title}</h4>
-                <p className="font-sans text-muted leading-relaxed">{pillar.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* ═══════════════════════════════════
           6. NEWSLETTER STRIP
