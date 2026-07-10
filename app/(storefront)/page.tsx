@@ -721,7 +721,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-[#FDFBF7] via-[#FDFBF7]/90 to-transparent z-10 w-[70%]" />
           <img 
-            src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1800&auto=format&fit=crop" 
+            src="/hero-jewelry.png" 
             alt="Hero Background"
             className="w-full h-full object-cover object-right-bottom scale-[1.02]"
           />
