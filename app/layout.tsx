@@ -20,48 +20,69 @@ const inter = Inter({
   weight: ['400', '500', '600', '700'],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'ZELIX | Post-Modern Technical Wear',
-    template: '%s | ZELIX'
-  },
-  description: 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.',
-  metadataBase: new URL('https://www.zelix.shop'),
-  keywords: ['ZELIX', 'Streetwear', 'Technical Wear', 'Activewear', 'Fashion', 'Apparel'],
-  authors: [{ name: 'ZELIX' }],
-  creator: 'ZELIX',
-  publisher: 'ZELIX',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  openGraph: {
-    title: 'ZELIX | Post-Modern Technical Wear',
-    description: 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.',
-    url: 'https://www.zelix.shop',
-    siteName: 'ZELIX',
-    images: [
-      {
-        url: '/og-image.jpg', // You can add a default OG image later
-        width: 1200,
-        height: 630,
-        alt: 'ZELIX - Post-Modern Technical Wear',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ZELIX | Post-Modern Technical Wear',
-    description: 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.',
-    images: ['/og-image.jpg'], // Update with actual image if needed
-  },
-  verification: {
-    google: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE', // User can replace this with actual code
-  },
-};
+import { createClient } from '@supabase/supabase-js';
+
+export async function generateMetadata(): Promise<Metadata> {
+  let title = 'ZELIX | Post-Modern Technical Wear';
+  let description = 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.';
+  let ogImage = '/og-image.jpg';
+  let verificationCode = '';
+
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const { data } = await supabase.from('seo_settings').select('*').eq('id', 1).single();
+      if (data) {
+        if (data.meta_title_template) {
+          title = data.meta_title_template.replace('{Site Name}', 'ZELIX').replace('{Page Title} | ', '');
+        }
+        if (data.default_meta_description) description = data.default_meta_description;
+        if (data.og_default_image_url) ogImage = data.og_default_image_url;
+        if (data.search_console_meta) {
+          // extract the content attribute if it's a full meta tag, or just use it directly
+          const match = data.search_console_meta.match(/content="([^"]+)"/);
+          verificationCode = match ? match[1] : data.search_console_meta;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to fetch SEO settings');
+  }
+
+  return {
+    title: {
+      default: title,
+      template: '%s | ZELIX'
+    },
+    description: description,
+    metadataBase: new URL('https://www.zelix.shop'),
+    keywords: ['ZELIX', 'Streetwear', 'Technical Wear', 'Activewear', 'Fashion', 'Apparel'],
+    authors: [{ name: 'ZELIX' }],
+    creator: 'ZELIX',
+    publisher: 'ZELIX',
+    formatDetection: { email: false, address: false, telephone: false },
+    openGraph: {
+      title: title,
+      description: description,
+      url: 'https://www.zelix.shop',
+      siteName: 'ZELIX',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      images: [ogImage],
+    },
+    verification: {
+      google: verificationCode || undefined,
+    },
+  };
+}
 
 export default function RootLayout({
   children,
