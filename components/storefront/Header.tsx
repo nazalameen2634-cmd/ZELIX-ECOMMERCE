@@ -60,12 +60,10 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
 
         {/* Brand wordmark (Center on mobile, Left on desktop) */}
         <div className="flex-1 flex justify-center lg:justify-start">
-          <Link href="/" className="select-none group/logo flex items-center justify-center lg:justify-start">
-            <img 
-              src="/header-logo.png" 
-              alt="ZELIX Logo" 
-              className="h-[32px] md:h-[40px] lg:h-[48px] w-auto object-contain transition-transform duration-500 group-hover/logo:scale-105" 
-            />
+          <Link href="/" className="select-none group/logo">
+            <span className="block font-serif text-[20px] md:text-[24px] lg:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase">
+              ZELIX
+            </span>
           </Link>
         </div>
 
