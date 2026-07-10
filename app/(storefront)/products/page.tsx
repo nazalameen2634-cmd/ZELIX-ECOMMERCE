@@ -432,18 +432,18 @@ function ProductsListContent() {
             </div>
             <div className="flex flex-col justify-between py-2">
               <div>
-                <div className="section-label mb-4">{quickViewProduct.sku}</div>
-                <h3 className="font-sans font-extrabold uppercase tracking-tight text-[24px] text-[#F5F0EB] mb-3 leading-none">
+                <div className="section-label mb-4 text-muted">{quickViewProduct.sku}</div>
+                <h3 className="font-sans font-extrabold uppercase tracking-tight text-[24px] text-foreground mb-3 leading-none">
                   {quickViewProduct.title}
                 </h3>
-                <div className="font-mono text-[16px] font-bold mb-6" style={{ color: 'var(--color-accent)' }}>
+                <div className="font-mono text-[16px] font-bold mb-6 text-accent">
                   {formatCurrency(quickViewProduct.sale_price ?? quickViewProduct.price)}
                 </div>
-                <p className="text-[13px] leading-relaxed mb-8" style={{ color: '#6B6560', fontFamily: 'Geist, Inter, sans-serif' }}>
+                <p className="text-[13px] leading-relaxed mb-8 text-muted font-sans">
                   {quickViewProduct.description}
                 </p>
                 <div className="flex flex-col gap-3 mb-8">
-                  <span className="font-mono text-[9px] font-bold tracking-[0.18em]" style={{ color: '#6B6560' }}>SELECT SIZE</span>
+                  <span className="font-mono text-[9px] font-bold tracking-[0.18em] text-muted">SELECT SIZE</span>
                   <div className="flex flex-wrap gap-2">
                     {['S', 'M', 'L', 'XL'].map((sz) => (
                       <button

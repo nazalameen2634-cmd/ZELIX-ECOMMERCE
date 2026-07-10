@@ -152,11 +152,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="mt-5 flex justify-between items-start gap-3">
           <div className="flex flex-col gap-1.5 min-w-0">
             <h3
-              className="font-sans font-bold text-[13px] uppercase tracking-wider leading-tight truncate text-[#F5F0EB] group-hover:text-[#C9A96E] transition-colors duration-300"
+              className="font-sans font-bold text-[13px] uppercase tracking-wider leading-tight truncate text-foreground group-hover:text-accent transition-colors duration-300"
             >
               {product.title}
             </h3>
-            <span className="font-mono text-[8px] tracking-[0.18em]" style={{ color: '#4A4642' }}>
+            <span className="font-mono text-[8px] tracking-[0.18em] text-muted">
               {product.sku}
             </span>
           </div>
@@ -165,15 +165,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex flex-col items-end shrink-0">
             {hasSale ? (
               <>
-                <span className="font-mono text-[13px] font-bold" style={{ color: '#EF4444' }}>
+                <span className="font-mono text-[13px] font-bold text-error">
                   {formatCurrency(product.sale_price!)}
                 </span>
-                <span className="font-mono text-[10px] line-through" style={{ color: '#4A4642' }}>
+                <span className="font-mono text-[10px] line-through text-muted">
                   {formatCurrency(product.price)}
                 </span>
               </>
             ) : (
-              <span className="font-mono text-[13px] font-bold transition-colors duration-300" style={{ color: isHovered ? '#C9A96E' : '#D4CBBF' }}>
+              <span className="font-mono text-[13px] font-bold transition-colors duration-300 text-foreground group-hover:text-accent">
                 {formatCurrency(product.price)}
               </span>
             )}
