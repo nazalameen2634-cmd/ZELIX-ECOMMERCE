@@ -10,7 +10,6 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-  theme?: 'light' | 'dark';
 }
 
 export default function Modal({
@@ -19,7 +18,6 @@ export default function Modal({
   title,
   children,
   maxWidth = 'md',
-  theme = 'dark',
 }: ModalProps) {
   // Prevent background scroll when modal is open
   useEffect(() => {
@@ -49,10 +47,10 @@ export default function Modal({
           {/* Backdrop Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
+            animate={{ opacity: 0.4 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           />
 
           {/* Modal Container */}
@@ -61,12 +59,12 @@ export default function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className={`relative w-full ${maxWidthClasses[maxWidth]} ${theme === 'light' ? 'bg-[#FFFFFF] border-[rgba(0,0,0,0.06)] shadow-lg' : 'bg-neutral-950 border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]'} border rounded-sm z-10 overflow-hidden flex flex-col`}
+            className={`relative w-full ${maxWidthClasses[maxWidth]} bg-card border border-border shadow-xl rounded-3xl z-10 overflow-hidden flex flex-col`}
           >
             {/* Header */}
-            <div className={`flex items-center justify-between px-6 py-5 border-b ${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]' : 'border-white/5'}`}>
+            <div className={`flex items-center justify-between px-8 py-6 border-b border-border`}>
               {title ? (
-                <h3 className={`font-mono text-[11px] font-extrabold uppercase tracking-widest ${theme === 'light' ? 'text-[#111111]' : 'text-neutral-300'}`}>
+                <h3 className={`font-serif text-2xl font-semibold text-foreground`}>
                   {title}
                 </h3>
               ) : (
@@ -74,14 +72,14 @@ export default function Modal({
               )}
               <button
                 onClick={onClose}
-                className={`${theme === 'light' ? 'text-neutral-500 hover:text-black' : 'text-neutral-400 hover:text-white'} transition-colors cursor-pointer`}
+                className={`text-muted hover:text-foreground transition-colors cursor-pointer bg-white/50 p-2 rounded-full hover:bg-black/5`}
               >
-                <X size={16} />
+                <X size={20} />
               </button>
             </div>
 
             {/* Content Body */}
-            <div className="flex-1 px-6 py-6 overflow-y-auto max-h-[80vh] hide-scrollbar">
+            <div className="flex-1 px-8 py-8 overflow-y-auto max-h-[80vh] hide-scrollbar">
               {children}
             </div>
           </motion.div>

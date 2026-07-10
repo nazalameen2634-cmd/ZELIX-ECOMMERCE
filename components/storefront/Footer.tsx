@@ -7,31 +7,31 @@ import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
 
 const SUPPORT_LINKS = [
-  { label: 'SHIPPING & RETURNS', href: '/shipping-returns' },
-  { label: 'CONTACT SUPPORT',    href: '/contact' },
-  { label: 'SIZE GUIDE',         href: '/size-guide' },
+  { label: 'Shipping & Returns', href: '/shipping-returns' },
+  { label: 'Contact Support',    href: '/contact' },
+  { label: 'Size Guide',         href: '/size-guide' },
   { label: 'FAQ',                href: '/faq' },
 ];
 const LEGAL_LINKS = [
-  { label: 'PRIVACY POLICY',  href: '/privacy-policy' },
-  { label: 'TERMS OF SERVICE', href: '/terms-of-service' },
-  { label: 'ACCESSIBILITY',   href: '/accessibility' },
+  { label: 'Privacy Policy',  href: '/privacy-policy' },
+  { label: 'Terms of Service', href: '/terms-of-service' },
+  { label: 'Accessibility',   href: '/accessibility' },
 ];
 const SOCIAL_LINKS = [
   {
-    label: 'INSTAGRAM',
+    label: 'Instagram',
     href: 'https://instagram.com',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
       </svg>
     ),
   },
   {
-    label: 'X / TWITTER',
+    label: 'Twitter',
     href: 'https://x.com',
     icon: (
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 4l11.733 16h4.267l-11.733-16z"/><path d="M4 20l6.768-6.768m2.46-2.46l6.772-6.772"/>
       </svg>
     ),
@@ -52,16 +52,16 @@ export default function Footer() {
       const { error } = await supabase.from('subscribers').insert([{ email }]);
       if (error) {
         if (error.code === '23505') {
-          toast('ALREADY SUBSCRIBED TO THE INNER CIRCLE', 'info');
+          toast('ALREADY SUBSCRIBED', 'info');
         } else {
           toast('SUBSCRIPTION FAILED. PLEASE TRY AGAIN.', 'error');
         }
       } else {
-        toast('WELCOME TO THE ZELIX INNER CIRCLE', 'success');
+        toast('WELCOME TO ZELIX', 'success');
         setEmail('');
       }
     } catch {
-      toast('WELCOME TO THE ZELIX INNER CIRCLE (PREVIEW)', 'success');
+      toast('WELCOME TO ZELIX (PREVIEW)', 'success');
       setEmail('');
     } finally {
       setIsSubmitting(false);
@@ -69,47 +69,45 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ background: '#060606', borderTop: '1px solid rgba(245,240,235,0.05)' }} className="w-full mt-auto">
+    <footer className="w-full mt-auto bg-background border-t border-border">
 
       {/* ─── Brand hero strip ─── */}
-      <div className="container-custom py-20 border-b" style={{ borderColor: 'rgba(245,240,235,0.05)' }}>
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-20 border-b border-border">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-12">
           {/* Left: Wordmark + tagline */}
-          <div className="flex flex-col gap-5">
-            <div
-              className="font-sans font-black tracking-widest text-[#F5F0EB] text-[40px] uppercase mb-1"
-            >
+          <div className="flex flex-col gap-4">
+            <div className="font-serif font-bold text-foreground text-4xl uppercase tracking-widest">
               ZELIX
             </div>
-            <p className="font-mono text-[9px] tracking-[0.2em] max-w-xs" style={{ color: '#4A4642' }}>
-              POST-MODERN TECHNICAL WEAR.<br />DESIGNED IN INDIA.
+            <p className="font-sans text-sm tracking-wide text-muted max-w-xs">
+              ELEVATING THE EVERYDAY.<br />DESIGNED WITH PURPOSE.
             </p>
           </div>
 
           {/* Right: Newsletter */}
-          <div className="w-full lg:max-w-sm">
-            <div className="section-label mb-5">PRIVATE INNER CIRCLE</div>
-            <p className="font-mono text-[10px] tracking-[0.14em] leading-relaxed mb-6" style={{ color: '#6B6560' }}>
-              Early release access, private sales, and rare archive drops — reserved for subscribers.
+          <div className="w-full lg:max-w-md">
+            <div className="font-sans text-sm font-medium tracking-widest uppercase mb-4 text-foreground">
+              Join the Inner Circle
+            </div>
+            <p className="font-sans text-sm leading-relaxed mb-6 text-muted">
+              Receive updates on new collections and exclusive access to private events.
             </p>
-            <form onSubmit={handleSubscribe} className="flex items-end gap-3 border-b pb-3" style={{ borderColor: 'rgba(245,240,235,0.14)' }}>
+            <form onSubmit={handleSubscribe} className="flex items-end gap-3 border-b border-border pb-3 group">
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ENTER YOUR EMAIL"
+                placeholder="Email Address"
                 disabled={isSubmitting}
-                className="flex-1 bg-transparent font-mono text-[10px] tracking-[0.15em] outline-none placeholder-[#4A4642] disabled:opacity-50"
-                style={{ color: '#F5F0EB' }}
+                className="flex-1 bg-transparent font-sans text-sm outline-none placeholder-muted/80 disabled:opacity-50 text-foreground"
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-1.5 font-mono text-[9px] font-bold tracking-[0.2em] cursor-pointer transition-colors duration-300 disabled:opacity-40"
-                style={{ color: '#C9A96E' }}
+                className="flex items-center gap-2 font-sans text-xs font-semibold tracking-widest uppercase cursor-pointer transition-colors duration-300 disabled:opacity-40 text-muted hover:text-accent"
               >
-                {isSubmitting ? '...' : <><span>JOIN</span><ArrowRight size={10} /></>}
+                {isSubmitting ? '...' : <><span>Subscribe</span><ArrowRight size={14} /></>}
               </button>
             </form>
           </div>
@@ -117,23 +115,20 @@ export default function Footer() {
       </div>
 
       {/* ─── Links grid ─── */}
-      <div className="container-custom py-16 border-b" style={{ borderColor: 'rgba(245,240,235,0.05)' }}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-16 border-b border-border">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
 
           {/* Shop */}
           <div>
-            <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-6" style={{ color: '#F5F0EB' }}>
-              SHOP
+            <h4 className="font-sans text-xs font-semibold tracking-widest uppercase mb-6 text-foreground">
+              Shop
             </h4>
-            <ul className="flex flex-col gap-3.5">
-              {['NEW ARRIVALS', 'OUTERWEAR', 'APPAREL', 'FOOTWEAR', 'ACCESSORIES'].map((item) => (
+            <ul className="flex flex-col gap-4">
+              {['New Arrivals', 'Outerwear', 'Apparel', 'Footwear', 'Accessories'].map((item) => (
                 <li key={item}>
                   <Link
                     href={`/products?category=${item.toLowerCase().replace(' ', '-')}`}
-                    className="font-mono text-[10px] tracking-[0.12em] transition-colors duration-200"
-                    style={{ color: '#4A4642' }}
-                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#C9A96E')}
-                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#4A4642')}
+                    className="font-sans text-sm text-muted hover:text-accent transition-colors duration-200"
                   >
                     {item}
                   </Link>
@@ -144,18 +139,15 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-6" style={{ color: '#F5F0EB' }}>
-              SUPPORT
+            <h4 className="font-sans text-xs font-semibold tracking-widest uppercase mb-6 text-foreground">
+              Support
             </h4>
-            <ul className="flex flex-col gap-3.5">
+            <ul className="flex flex-col gap-4">
               {SUPPORT_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="font-mono text-[10px] tracking-[0.12em] transition-colors duration-200"
-                    style={{ color: '#4A4642' }}
-                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#C9A96E')}
-                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#4A4642')}
+                    className="font-sans text-sm text-muted hover:text-accent transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -166,18 +158,15 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-6" style={{ color: '#F5F0EB' }}>
-              LEGAL
+            <h4 className="font-sans text-xs font-semibold tracking-widest uppercase mb-6 text-foreground">
+              Legal
             </h4>
-            <ul className="flex flex-col gap-3.5">
+            <ul className="flex flex-col gap-4">
               {LEGAL_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="font-mono text-[10px] tracking-[0.12em] transition-colors duration-200"
-                    style={{ color: '#4A4642' }}
-                    onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#C9A96E')}
-                    onMouseLeave={(e) => ((e.target as HTMLElement).style.color = '#4A4642')}
+                    className="font-sans text-sm text-muted hover:text-accent transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -188,20 +177,17 @@ export default function Footer() {
 
           {/* Follow */}
           <div>
-            <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-6" style={{ color: '#F5F0EB' }}>
-              FOLLOW
+            <h4 className="font-sans text-xs font-semibold tracking-widest uppercase mb-6 text-foreground">
+              Follow
             </h4>
-            <ul className="flex flex-col gap-3.5">
+            <ul className="flex flex-col gap-4">
               {SOCIAL_LINKS.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.12em] transition-colors duration-200"
-                    style={{ color: '#4A4642' }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#C9A96E')}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = '#4A4642')}
+                    className="flex items-center gap-3 font-sans text-sm text-muted hover:text-accent transition-colors duration-200"
                   >
                     {link.icon} {link.label}
                   </a>
@@ -213,14 +199,14 @@ export default function Footer() {
       </div>
 
       {/* ─── Bottom bar ─── */}
-      <div className="container-custom py-8">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-mono text-[8px] tracking-[0.18em]" style={{ color: '#282420' }}>
+          <span className="font-sans text-xs tracking-widest uppercase text-muted">
             © 2026 ZELIX. ALL RIGHTS RESERVED.
           </span>
-          <span className="font-mono text-[8px] tracking-[0.14em]" style={{ color: '#282420' }}>
-              DESIGNED IN INDIA
-            </span>
+          <span className="font-sans text-xs tracking-widest uppercase text-muted">
+            Global Design
+          </span>
         </div>
       </div>
     </footer>

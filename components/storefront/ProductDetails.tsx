@@ -189,13 +189,13 @@ export default function ProductDetails({
   });
 
   return (
-    <div className="bg-black py-8 md:py-16">
+    <div className="bg-background py-8 md:py-16">
       <div className="container-custom">
         {/* Breadcrumbs */}
-        <div className="text-[10px] font-mono font-bold tracking-widest text-neutral-500 uppercase mb-6 md:mb-12">
-          <Link href="/" className="hover:text-white transition-colors">HOME</Link>{" // "}
-          <Link href="/products" className="hover:text-white transition-colors">PRODUCTS</Link>{" // "}
-          <span className="text-white">{product.title}</span>
+        <div className="text-[10px] font-sans font-bold tracking-widest text-muted uppercase mb-6 md:mb-12">
+          <Link href="/" className="hover:text-foreground transition-colors">HOME</Link>{" // "}
+          <Link href="/products" className="hover:text-foreground transition-colors">PRODUCTS</Link>{" // "}
+          <span className="text-foreground">{product.title}</span>
         </div>
 
         {/* Primary Page Grid */}
@@ -207,7 +207,7 @@ export default function ProductDetails({
             <div
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative w-full aspect-[3/4] overflow-hidden bg-neutral-950 border border-white/5 rounded-sm cursor-zoom-in"
+              className="relative w-full aspect-[3/4] overflow-hidden bg-card border border-border rounded-sm cursor-zoom-in"
             >
               <AnimatePresence mode="wait">
                 <motion.img
@@ -253,8 +253,8 @@ export default function ProductDetails({
                         }, 150);
                       }
                     }}
-                    className={`relative w-20 aspect-[3/4] shrink-0 overflow-hidden border rounded-sm transition-all bg-neutral-950 ${
-                      activeImageIdx === idx ? 'border-white' : 'border-white/5 opacity-55 hover:opacity-100'
+                    className={`relative w-20 aspect-[3/4] shrink-0 overflow-hidden border rounded-sm transition-all bg-card ${
+                      activeImageIdx === idx ? 'border-accent' : 'border-border opacity-55 hover:opacity-100'
                     }`}
                   >
                     <img src={img} alt={`thumbnail ${idx}`} className="w-full h-full object-cover" />
@@ -267,30 +267,30 @@ export default function ProductDetails({
           {/* Right Column: Information Panel */}
           <div className="lg:col-span-7 flex flex-col">
             {/* Title & SKU */}
-            <div className="mb-6 border-b border-white/5 pb-6">
-              <span className="font-mono text-[9px] tracking-[0.25em] text-neutral-500 uppercase block mb-1">
+            <div className="mb-6 border-b border-border pb-6">
+              <span className="font-sans text-[9px] tracking-[0.25em] text-muted uppercase block mb-1">
                 ZELIX SYNDICATE // INVENTORY ID: {product.sku}
               </span>
-              <h1 className="text-[28px] md:text-[40px] font-sans font-black tracking-tight text-white uppercase leading-none">
+              <h1 className="text-[28px] md:text-[40px] font-serif font-bold tracking-tight text-foreground uppercase leading-none">
                 {product.title}
               </h1>
             </div>
 
             {/* Reviews Quick Rating */}
             {reviews.length > 0 && (
-              <div className="flex items-center gap-2 mb-6 border-b border-white/5 pb-6">
-                <div className="flex text-[#C9A96E]">
+              <div className="flex items-center gap-2 mb-6 border-b border-border pb-6">
+                <div className="flex text-accent">
                   {Array(5)
                     .fill(0)
                     .map((_, i) => (
                       <Star
                         key={i}
                         size={12}
-                        className={i < Math.round(Number(avgRating)) ? 'fill-[#C9A96E] text-[#C9A96E]' : 'text-neutral-700'}
+                        className={i < Math.round(Number(avgRating)) ? 'fill-accent text-accent' : 'text-muted/50'}
                       />
                     ))}
                 </div>
-                <span className="font-mono text-[10px] tracking-wider font-bold text-neutral-400">
+                <span className="font-sans text-[10px] tracking-wider font-bold text-muted">
                   {avgRating}
                 </span>
               </div>
@@ -300,15 +300,15 @@ export default function ProductDetails({
             <div className="mb-8">
               {product.sale_price !== null && product.sale_price !== undefined ? (
                 <div className="flex items-baseline gap-3">
-                  <span className="text-[26px] font-mono font-bold text-red-500">
+                  <span className="text-[26px] font-sans font-bold text-red-500">
                     {formatCurrency(product.sale_price)}
                   </span>
-                  <span className="text-[16px] font-mono text-neutral-500 line-through">
+                  <span className="text-[16px] font-sans text-muted line-through">
                     {formatCurrency(product.price)}
                   </span>
                 </div>
               ) : (
-                <span className="text-[26px] font-mono font-bold text-[#C9A96E]">
+                <span className="text-[26px] font-sans font-bold text-accent">
                   {formatCurrency(product.price)}
                 </span>
               )}
@@ -316,7 +316,7 @@ export default function ProductDetails({
 
             {/* Variant Selectors: Colors */}
             <div className="flex flex-col gap-3 mb-6">
-              <span className="font-mono text-[10px] font-bold tracking-widest text-neutral-400 uppercase">
+              <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
                 SWATCH // COLOR: {selectedColor}
               </span>
               <div className="flex items-center gap-3">
@@ -326,8 +326,8 @@ export default function ProductDetails({
                     onClick={() => setSelectedColor(color)}
                     className={`relative w-8 h-8 rounded-full border flex items-center justify-center cursor-pointer transition-all ${
                       selectedColor === color
-                        ? 'border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.15)]'
-                        : 'border-white/10 opacity-70 hover:opacity-100 hover:scale-105'
+                        ? 'border-accent scale-110 shadow-[0_0_10px_rgba(255,255,255,0.15)]'
+                        : 'border-border opacity-70 hover:opacity-100 hover:scale-105'
                     }`}
                   >
                     <span
@@ -338,7 +338,7 @@ export default function ProductDetails({
                       className="w-6 h-6 rounded-full block"
                     />
                     {selectedColor === color && (
-                      <Check size={12} className={color === 'OFF-WHITE' ? 'text-black absolute' : 'text-white absolute'} />
+                      <Check size={12} className={color === 'OFF-WHITE' ? 'text-white absolute' : 'text-foreground absolute'} />
                     )}
                   </button>
                 ))}
@@ -348,12 +348,12 @@ export default function ProductDetails({
             {/* Variant Selectors: Sizing */}
             <div className="flex flex-col gap-3 mb-8">
               <div className="flex justify-between items-center">
-                <span className="font-mono text-[10px] font-bold tracking-widest text-neutral-400 uppercase">
+                <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
                   SIZE: {selectedSize}
                 </span>
                 <Link
                   href="#size-guide"
-                  className="font-mono text-[9px] text-neutral-500 hover:text-white tracking-wider uppercase underline underline-offset-4"
+                  className="font-sans text-[9px] text-muted hover:text-foreground tracking-wider uppercase underline underline-offset-4"
                 >
                   SIZE CHART
                 </Link>
@@ -366,12 +366,12 @@ export default function ProductDetails({
                       key={size}
                       disabled={isOutOfStock}
                       onClick={() => setSelectedSize(size)}
-                      className={`border px-5 py-3 font-mono text-[11px] font-bold rounded-sm transition-all cursor-pointer select-none ${
+                      className={`border px-5 py-3 font-sans text-[11px] font-bold rounded-sm transition-all cursor-pointer select-none ${
                         isOutOfStock
-                          ? 'border-white/5 text-neutral-700 cursor-not-allowed line-through'
+                          ? 'border-border text-muted/50 cursor-not-allowed line-through'
                           : selectedSize === size
-                          ? 'bg-white text-black border-white'
-                          : 'border-white/10 text-neutral-400 hover:border-white/30 hover:text-white'
+                          ? 'bg-white text-white border-accent'
+                          : 'border-border text-muted hover:border-accent hover:text-foreground'
                       }`}
                     >
                       {size}
@@ -382,23 +382,23 @@ export default function ProductDetails({
             </div>
 
             {/* Quantity Selector & Add to Cart button */}
-            <div className="flex flex-col gap-4 border-b border-white/5 pb-8 mb-8">
+            <div className="flex flex-col gap-4 border-b border-border pb-8 mb-8">
               <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
                 {/* Quantity */}
-                <div className="flex items-center justify-between border border-white/10 rounded-full px-6 py-3.5 bg-neutral-950 sm:w-auto w-full">
+                <div className="flex items-center justify-between border border-border rounded-full px-6 py-3.5 bg-card sm:w-auto w-full">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     disabled={quantity <= 1}
-                    className="text-neutral-400 hover:text-white disabled:opacity-30 transition-colors cursor-pointer px-2"
+                    className="text-muted hover:text-foreground disabled:opacity-30 transition-colors cursor-pointer px-2"
                   >
                     <Minus size={12} />
                   </button>
-                  <span className="font-mono text-[11px] font-bold text-white min-w-[20px] text-center">
+                  <span className="font-sans text-[11px] font-bold text-foreground min-w-[20px] text-center">
                     {quantity}
                   </span>
                   <button
                     onClick={() => setQuantity((q) => Math.min(product.stock_quantity || 99, q + 1))}
-                    className="text-neutral-400 hover:text-white transition-colors cursor-pointer px-2"
+                    className="text-muted hover:text-foreground transition-colors cursor-pointer px-2"
                   >
                     <Plus size={12} />
                   </button>
@@ -408,7 +408,7 @@ export default function ProductDetails({
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock_quantity === 0 && product.track_inventory && !product.allow_backorders}
-                  className="flex-1 py-4 bg-[#C9A96E] text-black font-mono text-[11px] font-bold tracking-[0.2em] rounded-full flex items-center justify-center gap-2 hover:bg-[#E8CFA0] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-[0_4px_20px_rgba(201,169,110,0.15)] disabled:bg-neutral-900 disabled:text-neutral-600 disabled:cursor-not-allowed disabled:scale-100"
+                  className="flex-1 py-4 bg-accent text-white font-sans text-[11px] font-bold tracking-[0.2em] rounded-full flex items-center justify-center gap-2 hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-sm disabled:bg-muted/30 disabled:text-neutral-600 disabled:cursor-not-allowed disabled:scale-100"
                 >
                   <ShoppingBag size={12} />
                   {product.stock_quantity === 0 && product.track_inventory && !product.allow_backorders
@@ -419,15 +419,15 @@ export default function ProductDetails({
             </div>
 
             {/* Accodion lists */}
-            <div className="flex flex-col border-b border-white/5">
+            <div className="flex flex-col border-b border-border">
               
               {/* Description */}
-              <div className="border-b border-white/5 py-4 last:border-0">
+              <div className="border-b border-border py-4 last:border-0">
                 <button
                   onClick={() => toggleAccordion('description')}
                   className="w-full flex justify-between items-center text-left cursor-pointer"
                 >
-                  <span className="font-mono text-[11px] font-bold tracking-widest uppercase text-white">
+                  <span className="font-sans text-[11px] font-bold tracking-widest uppercase text-foreground">
                     SPECIFICATIONS & MATERIALS
                   </span>
                   {accordions.description ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -435,22 +435,22 @@ export default function ProductDetails({
                 <motion.div
                   initial={false}
                   animate={{ height: accordions.description ? 'auto' : 0 }}
-                  className="overflow-hidden font-sans text-[13px] leading-relaxed text-neutral-400 mt-3"
+                  className="overflow-hidden font-sans text-[13px] leading-relaxed text-muted mt-3"
                 >
                   <p className="pb-2">{product.description}</p>
-                  <p className="pt-2 text-[11px] font-mono text-neutral-500 uppercase">
+                  <p className="pt-2 text-[11px] font-sans text-muted uppercase">
                     Reactive dyed // Pre-shrunk // Double needle stitch structure.
                   </p>
                 </motion.div>
               </div>
 
               {/* Technical Specifications table */}
-              <div className="border-b border-white/5 py-4 last:border-0">
+              <div className="border-b border-border py-4 last:border-0">
                 <button
                   onClick={() => toggleAccordion('specs')}
                   className="w-full flex justify-between items-center text-left cursor-pointer"
                 >
-                  <span className="font-mono text-[11px] font-bold tracking-widest uppercase text-white">
+                  <span className="font-sans text-[11px] font-bold tracking-widest uppercase text-foreground">
                     TECHNICAL DATA
                   </span>
                   {accordions.specs ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -458,21 +458,21 @@ export default function ProductDetails({
                 <motion.div
                   initial={false}
                   animate={{ height: accordions.specs ? 'auto' : 0 }}
-                  className="overflow-hidden text-[12px] font-mono tracking-wider text-neutral-400 mt-3"
+                  className="overflow-hidden text-[12px] font-sans tracking-wider text-muted mt-3"
                 >
                   <table className="w-full text-left border-collapse">
                     <tbody>
-                      <tr className="border-b border-white/5">
-                        <td className="py-2.5 text-neutral-500 font-bold">FABRIC WEIGHT</td>
-                        <td className="py-2.5 text-white text-right">500GSM / FRENCH TERRY</td>
+                      <tr className="border-b border-border">
+                        <td className="py-2.5 text-muted font-bold">FABRIC WEIGHT</td>
+                        <td className="py-2.5 text-foreground text-right">500GSM / FRENCH TERRY</td>
                       </tr>
-                      <tr className="border-b border-white/5">
-                        <td className="py-2.5 text-neutral-500 font-bold">COMPOSITION</td>
-                        <td className="py-2.5 text-white text-right">100% ORGANIC COTTON</td>
+                      <tr className="border-b border-border">
+                        <td className="py-2.5 text-muted font-bold">COMPOSITION</td>
+                        <td className="py-2.5 text-foreground text-right">100% ORGANIC COTTON</td>
                       </tr>
                       <tr>
-                        <td className="py-2.5 text-neutral-500 font-bold">ORIGIN</td>
-                        <td className="py-2.5 text-white text-right">INDIA DESIGN LABS</td>
+                        <td className="py-2.5 text-muted font-bold">ORIGIN</td>
+                        <td className="py-2.5 text-foreground text-right">INDIA DESIGN LABS</td>
                       </tr>
                     </tbody>
                   </table>
@@ -480,12 +480,12 @@ export default function ProductDetails({
               </div>
 
               {/* Shipping & Returns */}
-              <div className="border-b border-white/5 py-4 last:border-0">
+              <div className="border-b border-border py-4 last:border-0">
                 <button
                   onClick={() => toggleAccordion('shipping')}
                   className="w-full flex justify-between items-center text-left cursor-pointer"
                 >
-                  <span className="font-mono text-[11px] font-bold tracking-widest uppercase text-white">
+                  <span className="font-sans text-[11px] font-bold tracking-widest uppercase text-foreground">
                     SHIPPING & RETURNS
                   </span>
                   {accordions.shipping ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -493,7 +493,7 @@ export default function ProductDetails({
                 <motion.div
                   initial={false}
                   animate={{ height: accordions.shipping ? 'auto' : 0 }}
-                  className="overflow-hidden font-sans text-[13px] leading-relaxed text-neutral-400 mt-3"
+                  className="overflow-hidden font-sans text-[13px] leading-relaxed text-muted mt-3"
                 >
                   <p>
                     All items are shipped via express carrier within 48 hours of drop order.
@@ -504,12 +504,12 @@ export default function ProductDetails({
 
               {/* Additional Information */}
               {product.additional_info && (
-                <div className="border-b border-white/5 py-4 last:border-0">
+                <div className="border-b border-border py-4 last:border-0">
                   <button
                     onClick={() => toggleAccordion('shipping')} // reusing toggle or adding new
                     className="w-full flex justify-between items-center text-left cursor-pointer"
                   >
-                    <span className="font-mono text-[11px] font-bold tracking-widest uppercase text-white">
+                    <span className="font-sans text-[11px] font-bold tracking-widest uppercase text-foreground">
                       ADDITIONAL INFORMATION
                     </span>
                     <ChevronDown size={14} className="opacity-50" />
@@ -517,7 +517,7 @@ export default function ProductDetails({
                   <motion.div
                     initial={{ height: 'auto' }}
                     animate={{ height: 'auto' }}
-                    className="font-sans text-[13px] leading-relaxed text-neutral-400 mt-3"
+                    className="font-sans text-[13px] leading-relaxed text-muted mt-3"
                   >
                     <div dangerouslySetInnerHTML={{ __html: product.additional_info }} />
                   </motion.div>
@@ -529,8 +529,8 @@ export default function ProductDetails({
         </div>
 
         {/* Customer Reviews Section */}
-        <section className="border-t border-white/5 pt-20 mb-24">
-          <h2 className="font-mono text-[11px] font-black tracking-widest uppercase text-white mb-12">
+        <section className="border-t border-border pt-20 mb-24">
+          <h2 className="font-serif text-[11px] font-bold tracking-widest uppercase text-foreground mb-12">
             CUSTOMER REVIEWS
           </h2>
 
@@ -538,23 +538,23 @@ export default function ProductDetails({
             
             {/* Left: Star Breakdown Bar Chart */}
             <div className="lg:col-span-4 flex flex-col gap-6">
-              <div className="bg-neutral-950 border border-white/5 rounded-sm p-6">
-                <span className="font-mono text-[10px] tracking-widest text-neutral-500 uppercase">
+              <div className="bg-card border border-border rounded-sm p-6">
+                <span className="font-sans text-[10px] tracking-widest text-muted uppercase">
                   AVERAGE RATINGS
                 </span>
                 <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-[36px] font-black text-white">{avgRating}</span>
-                  <span className="text-[14px] text-neutral-500">/ 5.0</span>
+                  <span className="text-[36px] font-bold text-foreground">{avgRating}</span>
+                  <span className="text-[14px] text-muted">/ 5.0</span>
                 </div>
 
-                <div className="flex text-white mt-2">
+                <div className="flex text-foreground mt-2">
                   {Array(5)
                     .fill(0)
                     .map((_, i) => (
                       <Star
                         key={i}
                         size={14}
-                        className={i < Math.round(Number(avgRating)) ? 'fill-white text-white' : 'text-neutral-700'}
+                        className={i < Math.round(Number(avgRating)) ? 'fill-accent text-foreground' : 'text-muted/50'}
                       />
                     ))}
                 </div>
@@ -562,12 +562,12 @@ export default function ProductDetails({
                 {/* Star lists */}
                 <div className="flex flex-col gap-2 mt-8">
                   {starsBreakdown.map(({ stars, count, percentage }) => (
-                    <div key={stars} className="flex items-center gap-4 text-[10px] font-mono">
-                      <span className="text-neutral-500 font-bold">{stars}★</span>
-                      <div className="flex-1 h-1.5 bg-neutral-900 rounded-full overflow-hidden">
+                    <div key={stars} className="flex items-center gap-4 text-[10px] font-sans">
+                      <span className="text-muted font-bold">{stars}★</span>
+                      <div className="flex-1 h-1.5 bg-muted/30 rounded-full overflow-hidden">
                         <div style={{ width: `${percentage}%` }} className="h-full bg-white" />
                       </div>
-                      <span className="text-neutral-500 text-right min-w-[15px]">{count}</span>
+                      <span className="text-muted text-right min-w-[15px]">{count}</span>
                     </div>
                   ))}
                 </div>
@@ -578,29 +578,29 @@ export default function ProductDetails({
             <div className="lg:col-span-8 flex flex-col gap-10">
               
               {/* Form Submission */}
-              <div className="border border-white/5 bg-neutral-950 p-6 rounded-sm">
-                <h3 className="font-mono text-[11px] font-extrabold tracking-widest text-white uppercase mb-6">
+              <div className="border border-border bg-card p-6 rounded-sm">
+                <h3 className="font-serif text-[11px] font-extrabold tracking-widest text-foreground uppercase mb-6">
                   {user ? 'SUBMIT A VERIFIED REVIEW' : 'SUBMIT A REVIEW (GUEST)'}
                 </h3>
                 <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
                   
                   {/* Guest Name input */}
                   {!user && (
-                    <div className="border border-white/10 rounded-sm bg-neutral-900">
+                    <div className="border border-border rounded-sm bg-muted/30">
                       <input
                         type="text"
                         required
                         value={guestName}
                         onChange={(e) => setGuestName(e.target.value)}
                         placeholder="YOUR NAME / ALIAS (REQUIRED)"
-                        className="w-full px-4 py-3 bg-transparent text-[11px] font-mono tracking-widest text-white uppercase placeholder-neutral-600 outline-none"
+                        className="w-full px-4 py-3 bg-transparent text-[11px] font-sans tracking-widest text-foreground uppercase placeholder-neutral-600 outline-none"
                       />
                     </div>
                   )}
 
                   {/* Star Rating select */}
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-[10px] text-neutral-500 uppercase">
+                    <span className="font-sans text-[10px] text-muted uppercase">
                       YOUR RATING:
                     </span>
                     <div className="flex gap-1.5">
@@ -609,25 +609,25 @@ export default function ProductDetails({
                           key={star}
                           type="button"
                           onClick={() => setNewRating(star)}
-                          className="cursor-pointer text-neutral-500 hover:text-white"
+                          className="cursor-pointer text-muted hover:text-foreground"
                         >
                           <Star
                             size={16}
-                            className={star <= newRating ? 'fill-white text-white' : 'text-neutral-800'}
+                            className={star <= newRating ? 'fill-accent text-foreground' : 'text-neutral-800'}
                           />
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  <div className="border border-white/10 rounded-sm bg-neutral-900">
+                  <div className="border border-border rounded-sm bg-muted/30">
                     <input
                       type="text"
                       required
                       value={newReviewTitle}
                       onChange={(e) => setNewReviewTitle(e.target.value)}
                       placeholder="REVIEW HEADLINE (E.G. EXCELLENT COAT)"
-                      className="w-full px-4 py-3 bg-transparent text-[11px] font-mono tracking-widest text-white uppercase placeholder-neutral-600 outline-none border-b border-white/5"
+                      className="w-full px-4 py-3 bg-transparent text-[11px] font-sans tracking-widest text-foreground uppercase placeholder-neutral-600 outline-none border-b border-border"
                     />
                     <textarea
                       required
@@ -635,14 +635,14 @@ export default function ProductDetails({
                       value={newReviewBody}
                       onChange={(e) => setNewReviewBody(e.target.value)}
                       placeholder="Write details about comfort, size, and material..."
-                      className="w-full px-4 py-3 bg-transparent text-[13px] text-white placeholder-neutral-500 outline-none resize-none"
+                      className="w-full px-4 py-3 bg-transparent text-[13px] text-foreground placeholder-neutral-500 outline-none resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmittingReview}
-                    className="self-end px-6 py-3 bg-white text-black font-mono text-[10px] font-bold tracking-widest rounded-full uppercase hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+                    className="self-end px-6 py-3 bg-white text-white font-sans text-[10px] font-bold tracking-widest rounded-full uppercase hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     {isSubmittingReview ? 'SUBMITTING...' : 'PUBLISH REVIEW'}
                   </button>
@@ -652,49 +652,49 @@ export default function ProductDetails({
               {/* Reviews Cards List */}
               <div className="flex flex-col gap-6">
                 {reviews.length === 0 ? (
-                  <p className="text-[12px] font-mono text-neutral-700 tracking-wider">
+                  <p className="text-[12px] font-sans text-muted/50 tracking-wider">
                     NO REVIEWS POSTED YET. BE THE FIRST TO SUBMIT.
                   </p>
                 ) : (
                   reviews.map((review) => (
                     <div
                       key={review.id}
-                      className="border-b border-white/5 pb-6 last:border-b-0"
+                      className="border-b border-border pb-6 last:border-b-0"
                     >
                       <div className="flex justify-between items-start gap-4 mb-2">
                         <div>
-                          <h4 className="text-[12px] font-bold text-white tracking-wide uppercase">
+                          <h4 className="text-[12px] font-bold text-foreground tracking-wide uppercase">
                             {review.title || 'VERIFIED FEEDBACK'}
                           </h4>
-                          <div className="flex text-white mt-1 gap-1">
+                          <div className="flex text-foreground mt-1 gap-1">
                             {Array(5)
                               .fill(0)
                               .map((_, i) => (
                                 <Star
                                   key={i}
                                   size={10}
-                                  className={i < review.rating ? 'fill-white text-white' : 'text-neutral-800'}
+                                  className={i < review.rating ? 'fill-accent text-foreground' : 'text-neutral-800'}
                                 />
                               ))}
                           </div>
                         </div>
 
                         <div className="text-right">
-                          <span className="text-[10px] font-mono font-bold text-neutral-300 block">
+                          <span className="text-[10px] font-sans font-bold text-foreground/80 block">
                             {review.reviewer_name?.toUpperCase() || review.profile?.full_name?.toUpperCase() || 'ANONYMOUS'}
                           </span>
-                          <span className="text-[9px] font-mono text-neutral-500 block mt-0.5">
+                          <span className="text-[9px] font-sans text-muted block mt-0.5">
                             {new Date(review.created_at || '').toLocaleDateString()}
                           </span>
                         </div>
                       </div>
 
-                      <p className="text-[13px] leading-relaxed text-neutral-400 font-sans mt-3">
+                      <p className="text-[13px] leading-relaxed text-muted font-sans mt-3">
                         {review.body}
                       </p>
 
                       {review.is_verified && (
-                        <span className="inline-block mt-3 text-[9px] font-mono text-green-500 font-semibold tracking-wider">
+                        <span className="inline-block mt-3 text-[9px] font-sans text-green-500 font-semibold tracking-wider">
                           ✓ VERIFIED PURCHASE
                         </span>
                       )}
@@ -709,9 +709,9 @@ export default function ProductDetails({
 
         {/* Related Products Carousel */}
         {relatedProducts.length > 0 && (
-          <section className="border-t border-white/5 pt-20">
+          <section className="border-t border-border pt-20">
             <div className="flex justify-between items-end mb-12">
-              <h2 className="font-mono text-[11px] font-black tracking-widest uppercase text-white">
+              <h2 className="font-serif text-[11px] font-bold tracking-widest uppercase text-foreground">
                 RELATED PRODUCTS
               </h2>
             </div>

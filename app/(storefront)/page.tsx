@@ -696,16 +696,16 @@ export default function HomePage() {
   const displayProducts = dbProducts.length > 0 ? dbProducts : JEWELLERY_PRODUCTS;
 
   return (
-    <div className="flex flex-col w-full min-h-screen" style={{ background: '#080808' }}>
+    <div className="flex flex-col w-full min-h-screen bg-background text-foreground">
 
       {/* ═══════════════════════════════════
           1. ANNOUNCEMENT BAR
       ═══════════════════════════════════ */}
       {announcement.active && (
-        <div className="border-b overflow-hidden select-none flex items-center" style={{ background: '#C9A96E', borderColor: 'rgba(245,240,235,0.1)', height: '36px' }}>
+        <div className="border-b border-border bg-accent text-white flex items-center overflow-hidden select-none h-10">
           <div className="flex animate-marquee-fast">
-            {Array(10).fill(announcement.text || 'ZELIX JEWELLERY — HANDCRAFTED LUXURY // FREE SHIPPING ABOVE ₹5,000 // CERTIFIED DIAMONDS & HALLMARKED GOLD').map((t, i) => (
-              <span key={i} className="shrink-0 mx-12 font-mono font-bold tracking-[0.18em] text-[9px] uppercase" style={{ color: '#080808' }}>
+            {Array(10).fill(announcement.text || 'ZELIX LUXURY — HANDCRAFTED ELEGANCE // FREE SHIPPING ABOVE ₹5,000 // COMPLIMENTARY GIFT WRAPPING').map((t, i) => (
+              <span key={i} className="shrink-0 mx-12 font-sans font-medium tracking-widest text-xs uppercase">
                 {t}
               </span>
             ))}
@@ -716,324 +716,179 @@ export default function HomePage() {
       {/* ═══════════════════════════════════
           2. HERO SECTION
       ═══════════════════════════════════ */}
-      <section ref={heroRef} className="relative h-[85vh] flex items-center justify-center overflow-hidden border-b border-border">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-background z-10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02)_0%,transparent_70%)]" />
-        <div className="absolute inset-0 opacity-30">
+      <section ref={heroRef} className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-black/10 z-10" />
+        <div className="absolute inset-0">
           <img
-            alt="Hero Background — jewellery"
-            className="object-cover object-center w-full h-full scale-105 blur-sm"
-            src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1800&auto=format&fit=crop"
+            alt="Hero Background"
+            className="object-cover object-center w-full h-full"
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1800&auto=format&fit=crop"
           />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20 flex flex-col items-center">
-          <span className="inline-block border border-accent/40 text-accent text-[10px] font-mono font-bold uppercase tracking-[0.25em] px-3.5 py-1.5 rounded-full mb-6 bg-accent/5 animate-pulse-glow">
-            Luxury Jewellery // Handcrafted Collection
-          </span>
-          <h1 className="text-5xl sm:text-7xl lg:text-9xl font-black tracking-tighter text-white uppercase select-none mb-6">
-            ZELIX<span className="text-zinc-600 font-light font-mono">//</span>GEMS
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20 flex flex-col items-center mt-20">
+          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-serif text-foreground uppercase tracking-tight mb-6">
+            Timeless Elegance
           </h1>
-          <p className="text-sm sm:text-lg text-muted-foreground uppercase tracking-widest max-w-xl mb-10 leading-relaxed font-light">
-            Certified diamonds, hallmarked gold &amp; ethically sourced gemstones. Crafted for those who define elegance.
+          <p className="text-lg sm:text-xl text-foreground/80 max-w-2xl mb-10 leading-relaxed font-sans font-light">
+            Discover our curated collection of luxury fashion and accessories. Designed for those who appreciate understated beauty.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <Link
               href="/products"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors rounded"
+              className="inline-flex items-center justify-center px-10 py-4 bg-accent text-white font-sans font-medium text-sm rounded-full hover:bg-accent-hover transition-colors shadow-sm hover:shadow hover:-translate-y-[1px]"
             >
-              Shop Collections
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              Shop Collection
             </Link>
             <Link
-              href="/products?category=bridal"
-              className="inline-flex items-center justify-center px-8 py-4 glass text-white font-bold text-xs uppercase tracking-widest hover:bg-white/5 transition-all rounded"
+              href="/products?category=new-arrivals"
+              className="inline-flex items-center justify-center px-10 py-4 bg-white text-foreground font-sans font-medium text-sm border border-border rounded-full hover:bg-gray-50 transition-colors shadow-sm"
             >
-              Bridal Collection
+              New Arrivals
             </Link>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════
-          3. THE COLLECTION — 5 PER ROW
+          3. THE COLLECTION
       ═══════════════════════════════════ */}
-      <section className="py-20 sm:py-32 border-b" style={{ background: '#0d0d11', borderColor: 'rgba(245,240,235,0.05)' }}>
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={staggerContainer}
-            className="flex flex-col items-center text-center mb-16"
-          >
-            <motion.div variants={fadeUpItem} className="text-xs font-mono font-bold uppercase tracking-[0.25em] mb-3" style={{ color: '#C9A96E' }}>
-              CURATED FINE JEWELLERY
-            </motion.div>
-            <motion.h2
-              variants={fadeUpItem}
-              className="text-[36px] md:text-[56px] font-sans font-extrabold uppercase tracking-tight leading-[0.9] text-[#F5F0EB]"
-            >
-              The Collection
-            </motion.h2>
-          </motion.div>
+      <section className="py-24 sm:py-32 bg-background">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="flex flex-col items-center text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground mb-4">
+              Curated Selection
+            </h2>
+            <div className="w-16 h-px bg-accent"></div>
+          </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-40px' }}
-            variants={staggerContainer}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 xl:gap-6"
-          >
-            {displayProducts.slice(0, 10).map((product) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-12">
+            {displayProducts.slice(0, 8).map((product) => {
               const mainImage = product.images?.[0]?.image_url || product.og_image_url || '/placeholder.jpg';
               const hasSale = product.sale_price !== null && product.sale_price !== undefined;
               return (
-                <motion.div key={product.id} variants={fadeUpItem}>
-                  <div
-                    className="group relative aspect-[3/4] overflow-hidden flex flex-col justify-end p-6 border transition-all duration-300 cursor-pointer rounded-[2px]"
-                    style={{ borderColor: 'rgba(245,240,235,0.05)' }}
-                  >
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="absolute inset-0 z-0 block"
-                    >
-                      {/* Dark Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent z-10" />
+                <div key={product.id} className="group relative flex flex-col cursor-pointer">
+                  <Link href={`/products/${product.slug}`} className="block relative aspect-[3/4] overflow-hidden rounded-2xl bg-card border border-border mb-4">
+                    <img
+                      alt={product.title}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700 ease-out"
+                      src={mainImage}
+                    />
+                  </Link>
 
-                      {/* Background Image with Zoom & Color Effect */}
-                      <div className="absolute inset-0 bg-zinc-950 scale-100 group-hover:scale-105 transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
-                        <img
-                          alt={product.title}
-                          className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                          src={mainImage}
-                        />
-                      </div>
-                    </Link>
-
-                    {/* Content overlay */}
-                    <div className="relative z-10 text-left pointer-events-none pr-8">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-[#F5F0EB] mb-1.5 group-hover:text-[#C9A96E] transition-colors font-sans leading-tight">
+                  <div className="flex flex-col">
+                    <Link href={`/products/${product.slug}`}>
+                      <h3 className="text-lg font-serif text-foreground group-hover:text-accent transition-colors leading-tight mb-1">
                         {product.title}
                       </h3>
-                      <div className="flex items-baseline gap-2 font-mono">
-                        {hasSale ? (
-                          <>
-                            <span className="text-[11px] font-bold text-[#EF4444]">
-                              ₹{product.sale_price?.toLocaleString('en-IN')}
-                            </span>
-                            <span className="text-[9px] line-through text-[#6B6560]">
-                              ₹{product.price.toLocaleString('en-IN')}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="text-[11px] font-bold text-[#C9A96E]">
+                    </Link>
+                    <div className="flex items-baseline gap-3 font-sans">
+                      {hasSale ? (
+                        <>
+                          <span className="text-sm font-medium text-error">
+                            ₹{product.sale_price?.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-sm line-through text-muted">
                             ₹{product.price.toLocaleString('en-IN')}
                           </span>
-                        )}
-                      </div>
+                        </>
+                      ) : (
+                        <span className="text-sm font-medium text-foreground">
+                          ₹{product.price.toLocaleString('en-IN')}
+                        </span>
+                      )}
                     </div>
-
-                    {/* Quick Add Button */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const defaultSize = product.options?.find((o: any) => o.name.toLowerCase() === 'size')?.values?.[0]?.value || 'OS';
-                        addItem(product, 1, defaultSize);
-                      }}
-                      className="absolute bottom-5 right-5 z-20 p-2.5 bg-[#C9A96E] hover:bg-[#E8CFA0] text-[#080808] rounded-full transition-all duration-300 shadow-md cursor-pointer flex items-center justify-center hover:scale-105 active:scale-95"
-                      title="Add to Cart"
-                    >
-                      <ShoppingBag size={12} />
-                    </button>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
 
-          <div className="flex justify-center mt-16">
+          <div className="flex justify-center mt-20">
             <Link
               href="/products"
-              className="group inline-flex items-center gap-3 font-mono text-[10px] font-bold tracking-[0.22em] uppercase px-8 py-4 border transition-all duration-300"
-              style={{ borderColor: 'rgba(245,240,235,0.1)', color: '#F5F0EB' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#C9A96E';
-                e.currentTarget.style.color = '#C9A96E';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(245,240,235,0.1)';
-                e.currentTarget.style.color = '#F5F0EB';
-              }}
+              className="inline-flex items-center gap-3 font-sans text-sm font-medium border-b border-foreground pb-1 hover:text-accent hover:border-accent transition-colors"
             >
-              EXPLORE ALL PIECES
-              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+              Explore All Pieces
+              <ArrowRight size={16} />
             </Link>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════
-          4. EDITORIAL FEATURE BANNER
+          4. EDITORIAL FEATURE
       ═══════════════════════════════════ */}
-      <section className="relative border-b overflow-hidden" style={{ height: '70vh', minHeight: '460px', borderColor: 'rgba(245,240,235,0.04)' }}>
+      <section className="relative h-[70vh] min-h-[500px]">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?q=80&w=1800&auto=format&fit=crop)',
-            filter: 'brightness(0.28) saturate(0.6)',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1800&auto=format&fit=crop)',
           }}
         />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.5) 60%, rgba(8,8,8,0.3) 100%)' }} />
-        <div className="relative z-10 h-full flex items-center container-custom">
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.div variants={fadeUpItem} className="section-label mb-8">
-              BRIDAL COLLECTION · EXCLUSIVE ACCESS
-            </motion.div>
-            <motion.h2
-              variants={fadeUpItem}
-              className="font-sans font-extrabold uppercase tracking-tight leading-[0.9] mb-10 max-w-2xl text-[#F5F0EB]"
-              style={{ fontSize: 'clamp(36px, 6vw, 80px)' }}
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative z-10 h-full flex flex-col justify-center max-w-[1440px] mx-auto px-6 lg:px-12 text-white">
+          <div className="max-w-xl">
+            <div className="text-sm font-sans font-medium tracking-widest uppercase mb-6 opacity-90">
+              The Essentials Collection
+            </div>
+            <h2 className="text-5xl md:text-7xl font-serif mb-10 leading-tight">
+              Elevate your everyday.
+            </h2>
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center px-10 py-4 bg-white text-foreground font-sans font-medium text-sm rounded-full hover:bg-gray-50 transition-colors shadow-sm"
             >
-              Jewellery that tells your story.
-            </motion.h2>
-            <motion.div variants={fadeUpItem}>
-              <Link
-                href="/products"
-                className="group inline-flex items-center gap-3 font-mono text-[10px] font-bold tracking-[0.22em] uppercase px-8 py-4 border transition-all duration-500"
-                style={{ borderColor: '#C9A96E', color: '#C9A96E' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#C9A96E'; (e.currentTarget as HTMLElement).style.color = '#080808'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = '#C9A96E'; }}
-              >
-                EXPLORE THE FULL COLLECTION
-                <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-          </motion.div>
+              Discover the Collection
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════
           5. TRUST PILLARS
       ═══════════════════════════════════ */}
-      <section className="py-20 border-b" style={{ background: '#060606', borderColor: 'rgba(245,240,235,0.04)' }}>
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x" style={{ borderColor: 'rgba(245,240,235,0.06)' }}>
+      <section className="py-24 bg-card border-b border-border">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24 text-center">
             {[
-              { icon: '◇', title: 'CERTIFIED DIAMONDS',  body: 'Every diamond comes with a GIA or IGI certification, guaranteeing authenticity and quality.' },
-              { icon: '⟴', title: 'HALLMARKED GOLD',     body: 'All gold jewellery is BIS hallmarked 916 (22K) or 750 (18K) with government assurance.' },
-              { icon: '↺', title: 'LIFETIME WARRANTY',   body: 'Free polishing, re-sizing and cleaning for life. Your investment, protected forever.' },
+              { title: 'Premium Quality', body: 'Crafted with the finest materials and meticulous attention to detail.' },
+              { title: 'Sustainable', body: 'Ethically sourced and produced with minimal environmental impact.' },
+              { title: 'Global Shipping', body: 'Complimentary shipping worldwide on all orders over ₹10,000.' },
             ].map((pillar, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="flex flex-col items-center text-center px-12 py-10 gap-5"
-              >
-                <span className="text-[28px]" style={{ color: '#C9A96E' }}>{pillar.icon}</span>
-                <h4 className="font-mono text-[10px] font-bold tracking-[0.22em]" style={{ color: '#F5F0EB' }}>{pillar.title}</h4>
-                <p className="text-[12px] leading-relaxed" style={{ color: '#6B6560', fontFamily: 'Geist, Inter, sans-serif' }}>{pillar.body}</p>
-              </motion.div>
+              <div key={i} className="flex flex-col items-center">
+                <div className="w-2 h-2 bg-accent rounded-full mb-6"></div>
+                <h4 className="font-serif text-xl text-foreground mb-4">{pillar.title}</h4>
+                <p className="font-sans text-muted leading-relaxed">{pillar.body}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════
-          6. TESTIMONIALS
+          6. NEWSLETTER STRIP
       ═══════════════════════════════════ */}
-      <section className="py-32 border-b" style={{ background: '#080808', borderColor: 'rgba(245,240,235,0.04)' }}>
-        <div className="container-narrow">
-          <div className="section-label mb-12">VERIFIED COMMUNITY</div>
-          <div className="relative min-h-[260px] flex flex-col justify-between">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTestimonial}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -24 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className="font-sans leading-none mb-4 text-[120px] text-[rgba(201,169,110,0.15)] font-black" style={{ lineHeight: 0.7 }}>
-                  &quot;
-                </div>
-                <p className="font-sans font-medium leading-relaxed mb-10 max-w-3xl text-[#D4CBBF]" style={{ fontSize: 'clamp(18px, 2.5vw, 28px)' }}>
-                  {TESTIMONIALS[activeTestimonial].quote.replace(/^"|"$/g, '')}
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-[1px]" style={{ background: '#C9A96E' }} />
-                  <span className="font-mono text-[10px] font-bold tracking-[0.2em]" style={{ color: '#C9A96E' }}>
-                    {TESTIMONIALS[activeTestimonial].name}
-                  </span>
-                  <span className="font-mono text-[9px] tracking-widest" style={{ color: '#4A4642' }}>
-                    {"// "}{TESTIMONIALS[activeTestimonial].location}
-                  </span>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-            <div className="flex gap-3 mt-12">
-              {TESTIMONIALS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveTestimonial(i)}
-                  className="cursor-pointer transition-all duration-300 rounded-full"
-                  style={{
-                    width: i === activeTestimonial ? '24px' : '6px',
-                    height: '6px',
-                    background: i === activeTestimonial ? '#C9A96E' : 'rgba(245,240,235,0.12)',
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════
-          7. ORDER TRACKING
-      ═══════════════════════════════════ */}
-      <OrderTrackingSection />
-
-      {/* ═══════════════════════════════════
-          8. NEWSLETTER STRIP
-      ═══════════════════════════════════ */}
-      <section className="py-24" style={{ background: '#060606' }}>
-        <div className="container-narrow flex flex-col lg:flex-row items-center justify-between gap-10">
-          <div>
-            <div className="section-label mb-5">PRIVATE CIRCLE</div>
-            <h2
-              className="text-[32px] md:text-[44px] font-sans font-extrabold uppercase tracking-tight leading-[0.9] text-[#F5F0EB]"
+      <section className="py-24 bg-background">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-6">
+            Join the inner circle
+          </h2>
+          <p className="font-sans text-muted mb-10">
+            Subscribe to receive updates on new arrivals, exclusive access, and personalized offers.
+          </p>
+          <form className="flex flex-col sm:flex-row gap-4 justify-center">
+            <input
+              type="email"
+              placeholder="Your email address"
+              className="flex-1 max-w-sm px-6 py-4 bg-white border border-border rounded-full font-sans text-sm outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+            />
+            <button
+              type="submit"
+              className="px-8 py-4 bg-accent text-white font-sans font-medium text-sm rounded-full hover:bg-accent-hover transition-colors shadow-sm whitespace-nowrap"
             >
-              First access.<br />Always.
-            </h2>
-          </div>
-          <div className="w-full lg:w-auto lg:min-w-[400px]">
-            <p className="font-mono text-[10px] tracking-[0.15em] mb-6" style={{ color: '#6B6560' }}>
-              JOIN THE ZELIX INNER CIRCLE FOR EARLY DROPS, PRIVATE SALES AND RARE RELEASES.
-            </p>
-            <form className="flex items-end gap-0 border-b" style={{ borderColor: 'rgba(245,240,235,0.2)' }}>
-              <input
-                type="email"
-                placeholder="YOUR EMAIL ADDRESS"
-                className="flex-1 py-3 bg-transparent font-mono text-[10px] tracking-[0.15em] outline-none"
-                style={{ color: '#F5F0EB' }}
-              />
-              <button
-                type="submit"
-                className="flex items-center gap-2 font-mono text-[9px] font-bold tracking-[0.2em] pb-3 transition-colors duration-300"
-                style={{ color: '#C9A96E' }}
-              >
-                SUBSCRIBE <ArrowRight size={10} />
-              </button>
-            </form>
-          </div>
+              Subscribe
+            </button>
+          </form>
         </div>
       </section>
     </div>

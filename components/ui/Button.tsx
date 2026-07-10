@@ -25,23 +25,23 @@ export default function Button({
 }: ButtonProps) {
   // Styles configuration
   const baseStyle =
-    'relative inline-flex items-center justify-center font-mono font-bold uppercase tracking-wider transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 rounded-sm cursor-pointer select-none';
+    'relative inline-flex items-center justify-center font-sans font-medium transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent rounded-[14px] cursor-pointer select-none';
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      'bg-[#C9A96E] text-black hover:bg-[#E8CFA0] border border-transparent shadow-[0_4px_16px_rgba(201,169,110,0.15)]',
+      'bg-accent text-white hover:bg-accent-hover shadow-sm hover:shadow-md hover:-translate-y-[1px]',
     secondary:
-      'bg-neutral-900 text-white hover:bg-neutral-800 border border-neutral-800',
+      'bg-white text-foreground hover:bg-gray-50 border border-border',
     outline:
-      'bg-transparent text-white border border-white/10 hover:border-white/30 hover:bg-white/5',
-    ghost: 'bg-transparent text-neutral-400 hover:text-white hover:bg-white/5',
-    destructive: 'bg-red-600 text-white hover:bg-red-700 border border-transparent',
+      'bg-transparent text-foreground border border-border hover:border-foreground/30 hover:bg-black/5',
+    ghost: 'bg-transparent text-muted hover:text-foreground hover:bg-black/5',
+    destructive: 'bg-error text-white hover:bg-error/90 border border-transparent',
   };
 
   const sizes: Record<ButtonSize, string> = {
-    sm: 'text-[9px] px-4 py-2 gap-1.5',
-    md: 'text-[11px] px-6 py-3.5 gap-2',
-    lg: 'text-[12px] px-8 py-4.5 gap-2.5',
+    sm: 'text-sm px-4 py-2 gap-1.5',
+    md: 'text-base px-[28px] py-[14px] gap-2',
+    lg: 'text-lg px-8 py-4 gap-2.5',
   };
 
   const currentVariant = variants[variant];

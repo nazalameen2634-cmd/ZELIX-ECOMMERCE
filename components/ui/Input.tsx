@@ -7,11 +7,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
   helperText?: string;
-  theme?: 'light' | 'dark';
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, theme = 'dark', type = 'text', className = '', onFocus, onBlur, onChange, value, defaultValue, ...props }, ref) => {
+  ({ label, error, helperText, type = 'text', className = '', onFocus, onBlur, onChange, value, defaultValue, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [hasValue, setHasValue] = useState(
       !!value || !!defaultValue || false
@@ -40,14 +39,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       idle: {
         y: 12,
         scale: 1,
-        color: '#888888',
-        fontSize: '13px',
+        color: 'var(--color-muted)',
+        fontSize: '14px',
       },
       floating: {
         y: -10,
         scale: 0.85,
-        color: error ? '#DC2626' : (theme === 'light' ? '#111111' : '#FFFFFF'),
-        fontSize: '11px',
+        color: error ? 'var(--color-error)' : 'var(--color-foreground)',
+        fontSize: '12px',
       },
     };
 
@@ -56,12 +55,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative w-full mb-4">
         <div
-          className={`relative border rounded-sm transition-colors duration-200 ${theme === 'light' ? 'bg-[#FFFFFF]' : 'bg-neutral-950'} ${
+          className={`relative border rounded-[14px] bg-white transition-all duration-300 ${
             error
-              ? 'border-red-600'
+              ? 'border-error'
               : isFocused
-              ? (theme === 'light' ? 'border-[rgba(0,0,0,0.3)]' : 'border-white/30')
-              : (theme === 'light' ? 'border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.2)]' : 'border-white/10 hover:border-white/20')
+              ? 'border-accent ring-2 ring-accent/20'
+              : 'border-border hover:border-gray-300'
           }`}
         >
           {/* Animated Floating Label */}
@@ -70,7 +69,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             variants={labelVariants}
             transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
             style={{ originX: 0 }}
-            className="absolute left-4 pointer-events-none select-none font-mono font-semibold tracking-wider uppercase"
+            className="absolute left-4 pointer-events-none select-none font-sans font-medium"
           >
             {label}
           </motion.label>
@@ -84,18 +83,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={handleChange}
             value={value}
             defaultValue={defaultValue}
-            className={`w-full px-4 pt-5 pb-2 text-[13px] ${theme === 'light' ? 'text-[#111111]' : 'text-white'} bg-transparent outline-none ${className}`}
+            className={`w-full px-4 pt-5 pb-2 text-[14px] text-foreground bg-transparent outline-none ${className}`}
             {...props}
           />
         </div>
 
         {/* Error or helper message */}
         {error ? (
-          <p className="mt-1.5 text-[10px] text-red-500 font-mono tracking-wider uppercase">
+          <p className="mt-1.5 text-xs text-error font-sans">
             {error}
           </p>
         ) : helperText ? (
-          <p className="mt-1.5 text-[10px] text-neutral-500 font-mono tracking-wider uppercase">
+          <p className="mt-1.5 text-xs text-muted font-sans">
             {helperText}
           </p>
         ) : null}

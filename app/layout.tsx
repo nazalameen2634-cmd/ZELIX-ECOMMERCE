@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { CartProvider } from '@/context/CartContext';
 
-const cormorant = Cormorant_Garamond({
+const playfair = Playfair_Display({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-serif',
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
 });
 
@@ -41,7 +41,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={`antialiased bg-black text-white selection:bg-white selection:text-black ${cormorant.variable} ${inter.variable} font-sans`}>
+      <body className={`antialiased bg-background text-foreground selection:bg-accent selection:text-white ${playfair.variable} ${inter.variable} font-sans`}>
         <AuthProvider>
           <ToastProvider>
             <CartProvider>

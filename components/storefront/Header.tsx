@@ -52,8 +52,8 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
       <header
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${
           isScrolled
-            ? 'h-[64px] px-8 md:px-16 bg-[rgba(6,6,6,0.92)] backdrop-blur-2xl border-b border-[rgba(245,240,235,0.07)]'
-            : 'h-[80px] px-8 md:px-16 bg-transparent border-b border-transparent'
+            ? 'h-[64px] px-8 md:px-16 bg-background/95 backdrop-blur-2xl border-b border-border shadow-sm'
+            : 'h-[80px] px-8 md:px-16 bg-background/50 backdrop-blur-sm border-b border-transparent'
         }`}
         onMouseLeave={() => setActiveDropdown(null)}
       >
@@ -67,15 +67,15 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
             >
               <Link
                 href={link.href}
-                className={`flex items-center gap-1 font-mono text-[10px] font-bold tracking-[0.2em] transition-all duration-300 pb-0.5 border-b ${
+                className={`flex items-center gap-1 font-sans text-[11px] font-semibold tracking-[0.1em] transition-all duration-300 pb-0.5 border-b-2 ${
                   pathname === link.href || pathname.startsWith(link.href + '?')
-                    ? 'text-[#C9A96E] border-[#C9A96E]'
-                    : 'text-[#9A9490] border-transparent hover:text-[#F5F0EB] hover:border-[#C9A96E]'
+                    ? 'text-accent border-accent'
+                    : 'text-muted border-transparent hover:text-foreground hover:border-accent'
                 }`}
               >
                 {link.label}
                 {link.sub.length > 0 && (
-                  <ChevronDown size={9} className={`transition-transform duration-200 ${activeDropdown === link.href ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={10} className={`transition-transform duration-200 ${activeDropdown === link.href ? 'rotate-180' : ''}`} />
                 )}
               </Link>
 
@@ -87,7 +87,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute top-full left-0 mt-4 w-52 bg-[rgba(10,10,10,0.98)] backdrop-blur-2xl border border-[rgba(245,240,235,0.07)] rounded-[2px] py-3 shadow-[0_24px_80px_rgba(0,0,0,0.7)]"
+                    className="absolute top-full left-0 mt-4 w-52 bg-white backdrop-blur-2xl border border-border rounded-lg py-3 shadow-xl"
                     onMouseEnter={() => setActiveDropdown(link.href)}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
@@ -95,10 +95,10 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                       <Link
                         key={sub.href}
                         href={sub.href}
-                        className="flex items-center justify-between px-5 py-3 font-mono text-[9px] font-bold tracking-[0.18em] text-[#6B6560] hover:text-[#C9A96E] hover:bg-[rgba(201,169,110,0.04)] transition-all duration-200 group/sub"
+                        className="flex items-center justify-between px-5 py-3 font-sans text-[10px] font-semibold tracking-[0.1em] text-muted hover:text-accent hover:bg-gray-50 transition-all duration-200 group/sub"
                       >
                         {sub.label}
-                        <ArrowRight size={9} className="opacity-0 group-hover/sub:opacity-100 transition-opacity" />
+                        <ArrowRight size={10} className="opacity-0 group-hover/sub:opacity-100 transition-opacity" />
                       </Link>
                     ))}
                   </motion.div>
@@ -112,7 +112,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
         <div className="flex lg:hidden flex-1 justify-start">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-1 text-[#9A9490] hover:text-[#F5F0EB] transition-colors cursor-pointer"
+            className="p-1 text-muted hover:text-foreground transition-colors cursor-pointer"
             aria-label="Open menu"
           >
             <Menu size={20} />
@@ -120,12 +120,11 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
         </div>
 
         {/* Center — Brand wordmark */}
-        {/* Center — Brand wordmark */}
         <Link
           href="/"
           className="text-center select-none group/logo"
         >
-          <span className="block font-sans text-[20px] md:text-[24px] font-black tracking-[0.3em] text-[#F5F0EB] group-hover/logo:text-[#C9A96E] transition-colors duration-500 uppercase ml-[0.3em]">
+          <span className="block font-serif text-[24px] md:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase ml-[0.2em]">
             ZELIX
           </span>
         </Link>
@@ -135,21 +134,21 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
           {/* Search */}
           <button
             onClick={onSearchOpen}
-            className="text-[#6B6560] hover:text-[#F5F0EB] transition-colors duration-300 cursor-pointer"
+            className="text-muted hover:text-foreground transition-colors duration-300 cursor-pointer"
             aria-label="Search"
           >
-            <Search size={17} />
+            <Search size={18} />
           </button>
 
           {/* Cart */}
           <button
             id="cart-icon-btn"
             onClick={onCartOpen}
-            className="relative text-[#6B6560] hover:text-[#F5F0EB] transition-colors duration-300 cursor-pointer"
+            className="relative text-muted hover:text-foreground transition-colors duration-300 cursor-pointer"
             aria-label="Shopping bag"
           >
             <motion.div animate={isCartBouncing ? { scale: [1, 1.25, 1] } : {}} transition={{ duration: 0.35 }}>
-              <ShoppingBag size={17} />
+              <ShoppingBag size={18} />
             </motion.div>
             <AnimatePresence>
               {itemCount > 0 && (
@@ -159,8 +158,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                  className="absolute -top-2 -right-2.5 flex items-center justify-center w-4 h-4 rounded-full text-[8px] font-bold font-mono"
-                  style={{ background: '#C9A96E', color: '#080808' }}
+                  className="absolute -top-2 -right-2.5 flex items-center justify-center w-[18px] h-[18px] rounded-full text-[9px] font-bold font-sans bg-accent text-white"
                 >
                   {itemCount}
                 </motion.span>
@@ -178,16 +176,16 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
             animate={{ clipPath: 'inset(0 0 0% 0)' }}
             exit={{ clipPath: 'inset(0 0 100% 0)' }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[60] bg-[#060606] flex flex-col"
+            className="fixed inset-0 z-[60] bg-background flex flex-col"
           >
             {/* Header row */}
-            <div className="flex items-center justify-between px-8 h-[80px] border-b border-[rgba(245,240,235,0.06)]">
-              <span className="font-sans text-[20px] font-black tracking-[0.25em] text-[#F5F0EB]">
+            <div className="flex items-center justify-between px-8 h-[80px] border-b border-border">
+              <span className="font-serif text-[24px] font-bold tracking-[0.2em] text-foreground">
                 ZELIX
               </span>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#6B6560] hover:text-[#F5F0EB] transition-colors cursor-pointer"
+                className="text-muted hover:text-foreground transition-colors cursor-pointer bg-white p-2 rounded-full shadow-sm"
               >
                 <X size={20} />
               </button>
@@ -205,11 +203,11 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                   <Link
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block py-5 border-b border-[rgba(245,240,235,0.05)] group"
+                    className="block py-5 border-b border-border group"
                   >
                     <span
-                      className={`font-sans text-[36px] font-bold tracking-tight uppercase leading-none transition-colors duration-300 ${
-                        pathname === link.href ? 'text-[#C9A96E]' : 'text-[rgba(245,240,235,0.6)] group-hover:text-[#F5F0EB]'
+                      className={`font-serif text-[32px] font-semibold tracking-tight uppercase leading-none transition-colors duration-300 ${
+                        pathname === link.href ? 'text-accent' : 'text-muted group-hover:text-foreground'
                       }`}
                     >
                       {link.label}
@@ -217,17 +215,15 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
                   </Link>
                 </motion.div>
               ))}
-
-              {/* Account link removed */}
             </div>
 
             {/* Footer */}
-            <div className="px-10 pb-10 flex items-center justify-between">
-              <span className="font-mono text-[8px] font-bold tracking-[0.2em] text-[#282420]">
-                © 2026 ZELIX. ALL RIGHTS RESERVED.
+            <div className="px-10 pb-10 flex items-center justify-between text-muted font-sans text-xs uppercase tracking-widest">
+              <span>
+                © 2026 ZELIX
               </span>
-              <span className="font-mono text-[8px] tracking-[0.15em] text-[#282420]">
-                DESIGNED IN INDIA
+              <span>
+                ELEVATED LIVING
               </span>
             </div>
           </motion.div>
