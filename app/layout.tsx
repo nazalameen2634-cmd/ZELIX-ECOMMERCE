@@ -23,8 +23,8 @@ const inter = Inter({
 import { createClient } from '@supabase/supabase-js';
 
 export async function generateMetadata(): Promise<Metadata> {
-  let title = 'ZELIX | Post-Modern Technical Wear';
-  let description = 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.';
+  let title = 'ZELIX GEMS | Fine Jewellery';
+  let description = 'Certified diamonds, hallmarked gold & ethically sourced gemstones. Crafted for those who define elegance.';
   let ogImage = '/og-image.jpg';
   let verificationCode = '';
 
