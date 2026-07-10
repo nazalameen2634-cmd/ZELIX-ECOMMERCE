@@ -150,15 +150,17 @@ export default function AdminSettingsPage() {
         announcement_bar_color: announcementSettings.color,
       };
 
-      const { error } = await supabase
-        .from('site_settings')
-        .update(payload)
-        .eq('id', 1);
+      const res = await fetch('/api/admin/site', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-      if (error) throw error;
+      if (!res.ok) throw new Error('Failed to update site settings');
       toast('BRAND CONFIGURATIONS UPDATED', 'success');
     } catch (err) {
-      toast('BRAND CONFIGURATIONS SAVED (PREVIEW MODE)', 'success');
+      console.error(err);
+      toast('FAILED TO UPDATE BRAND CONFIGURATIONS', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -176,15 +178,17 @@ export default function AdminSettingsPage() {
         robots_txt: seoSettings.robotsTxt,
       };
 
-      const { error } = await supabase
-        .from('seo_settings')
-        .update(payload)
-        .eq('id', 1);
+      const res = await fetch('/api/admin/seo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-      if (error) throw error;
+      if (!res.ok) throw new Error('Failed to update SEO settings');
       toast('SEO & TRACKER SCRIPTS COMMITTED', 'success');
     } catch (err) {
-      toast('SEO SETTINGS COMMITTED (PREVIEW MODE)', 'success');
+      console.error(err);
+      toast('FAILED TO UPDATE SEO SETTINGS', 'error');
     } finally {
       setIsSaving(false);
     }

@@ -147,14 +147,17 @@ export default function AdminSEO() {
     };
 
     try {
-      const { error } = await supabase
-        .from('seo_settings')
-        .upsert(payload, { onConflict: 'id' });
+      const res = await fetch('/api/admin/seo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-      if (error) throw error;
-      toast('Global SEO configurations committed to database', 'success');
+      if (!res.ok) throw new Error('Failed to update SEO settings');
+      toast('GLOBAL SEO SETTINGS UPDATED', 'success');
     } catch (err) {
-      toast('Simulated: Global SEO configurations saved offline', 'success');
+      console.error(err);
+      toast('FAILED TO UPDATE SEO SETTINGS', 'error');
     } finally {
       setSaving(false);
     }
