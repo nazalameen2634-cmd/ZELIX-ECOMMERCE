@@ -721,8 +721,8 @@ export default function HomePage() {
         <div className="absolute inset-0">
           <img
             alt="Hero Background"
-            className="object-cover object-center w-full h-full scale-105 blur-sm"
-            src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1800&auto=format&fit=crop"
+            className="object-cover object-center w-full h-full"
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1800&auto=format&fit=crop"
           />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-20 flex flex-col items-center mt-20">
