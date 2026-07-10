@@ -360,7 +360,7 @@ export default function ProductDetails({
                   animate={{ height: accordions.description ? 'auto' : 0 }}
                   className="overflow-hidden font-sans text-[13px] leading-relaxed text-muted mt-3"
                 >
-                  <p className="pb-2">{product.description}</p>
+                  <p className="pb-2 whitespace-pre-line">{product.description}</p>
                   <p className="pt-2 text-[11px] font-sans text-muted uppercase">
                     Reactive dyed // Pre-shrunk // Double needle stitch structure.
                   </p>

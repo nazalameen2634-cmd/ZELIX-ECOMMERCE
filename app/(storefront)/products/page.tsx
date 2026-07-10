@@ -439,7 +439,7 @@ function ProductsListContent() {
                 <div className="font-mono text-[16px] font-bold mb-6 text-accent">
                   {formatCurrency(quickViewProduct.sale_price ?? quickViewProduct.price)}
                 </div>
-                <p className="text-[13px] leading-relaxed mb-8 text-muted font-sans">
+                <p className="text-[13px] leading-relaxed mb-8 text-muted font-sans whitespace-pre-line">
                   {quickViewProduct.description}
                 </p>
               </div>
