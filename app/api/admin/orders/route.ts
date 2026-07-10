@@ -8,6 +8,24 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+export async function GET(request: Request) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('orders')
+      .select('*, order_items(*, products(*)), order_timeline(*)')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching admin orders:', error);
+      throw error;
+    }
+
+    return NextResponse.json({ orders: data });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message || 'Server error' }, { status: 500 });
+  }
+}
+
 export async function PUT(request: Request) {
   try {
     const body = await request.json();

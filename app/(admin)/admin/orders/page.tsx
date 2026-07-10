@@ -188,13 +188,10 @@ export default function AdminOrdersPage() {
     async function loadOrders() {
       setLoading(true);
       try {
-        const { data, error } = await supabase
-          .from('orders')
-          .select('*, order_items(*, products(*)), order_timeline(*)')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        setOrders((data as unknown as Order[]) || []);
+        const res = await fetch('/api/admin/orders');
+        if (!res.ok) throw new Error('Failed to load orders');
+        const data = await res.json();
+        setOrders((data.orders as unknown as Order[]) || []);
       } catch (err) {
         console.warn('Supabase offline. Simulated orders logs loaded.');
         setOrders(MOCK_ORDERS);
