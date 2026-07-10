@@ -773,7 +773,7 @@ export default function HomePage() {
       ═══════════════════════════════════ */}
       <section className="py-10 bg-background border-b border-border">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {[
               { title: 'PREMIUM QUALITY', body: 'Crafted with the finest materials', icon: <Diamond size={26} className="text-foreground" strokeWidth={1.2} /> },
               { title: 'LIFETIME WARRANTY', body: 'We stand by our promise', icon: <ShieldCheck size={26} className="text-foreground" strokeWidth={1.2} /> },
@@ -804,7 +804,7 @@ export default function HomePage() {
             <div className="w-16 h-px bg-accent"></div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 xl:gap-12">
             {displayProducts.slice(0, 8).map((product) => {
               const mainImage = product.images?.[0]?.image_url || product.og_image_url || '/placeholder.jpg';
               const hasSale = product.sale_price !== null && product.sale_price !== undefined;

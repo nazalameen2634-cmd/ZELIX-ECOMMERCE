@@ -44,17 +44,24 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between transition-all duration-700 ${
-          isScrolled
-            ? 'h-[64px] px-8 md:px-16 bg-background/95 backdrop-blur-2xl border-b border-border shadow-sm'
-            : 'h-[80px] px-8 md:px-16 bg-background/50 backdrop-blur-sm border-b border-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-[64px] lg:h-[80px] px-4 md:px-8 lg:px-16 bg-background/95 backdrop-blur-md border-b border-border shadow-sm transition-all duration-300"
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        {/* Left — Brand wordmark */}
-        <div className="flex-1 flex justify-start">
+        {/* Mobile hamburger (Left on mobile) */}
+        <div className="flex lg:hidden flex-1 justify-start">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="p-1 text-muted hover:text-foreground transition-colors cursor-pointer"
+            aria-label="Open menu"
+          >
+            <Menu size={20} />
+          </button>
+        </div>
+
+        {/* Brand wordmark (Center on mobile, Left on desktop) */}
+        <div className="flex-1 flex justify-center lg:justify-start">
           <Link href="/" className="select-none group/logo">
-            <span className="block font-serif text-[24px] md:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase">
+            <span className="block font-serif text-[20px] md:text-[24px] lg:text-[28px] font-bold tracking-[0.2em] text-foreground group-hover/logo:text-accent transition-colors duration-500 uppercase">
               ZELIX
             </span>
           </Link>
@@ -110,17 +117,6 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
             </div>
           ))}
         </nav>
-
-        {/* Left — Mobile hamburger */}
-        <div className="flex lg:hidden flex-1 justify-start">
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="p-1 text-muted hover:text-foreground transition-colors cursor-pointer"
-            aria-label="Open menu"
-          >
-            <Menu size={20} />
-          </button>
-        </div>
 
         
 
