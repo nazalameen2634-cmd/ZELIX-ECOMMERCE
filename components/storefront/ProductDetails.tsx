@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ChevronDown, ChevronUp, Star, Check, Minus, Plus } from 'lucide-react';
-import { Product, Review } from '@/types';
+import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
@@ -15,13 +15,11 @@ import { supabase } from '@/lib/supabase';
 interface ProductDetailsProps {
   product: Product;
   relatedProducts: Product[];
-  initialReviews: Review[];
 }
 
 export default function ProductDetails({
   product,
   relatedProducts,
-  initialReviews,
 }: ProductDetailsProps) {
   const { addItem } = useCart();
   const { user, profile } = useAuth();
@@ -33,13 +31,7 @@ export default function ProductDetails({
   const [selectedColor, setSelectedColor] = useState('BLACK');
   const [quantity, setQuantity] = useState(1);
   
-  // Review Form States
-  const [reviews, setReviews] = useState<Review[]>(initialReviews);
-  const [newRating, setNewRating] = useState(5);
-  const [newReviewTitle, setNewReviewTitle] = useState('');
-  const [newReviewBody, setNewReviewBody] = useState('');
-  const [guestName, setGuestName] = useState('');
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);  // Accordion Sections open/close
+  // Accordion Sections open/close
   const [accordions, setAccordions] = useState({
     description: true,
     specs: false,
@@ -91,102 +83,6 @@ export default function ProductDetails({
     toast('ADDED TO SHOPPING BAG', 'success');
   };
 
-  // Submit Review to Supabase
-  const handleSubmitReview = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user && !guestName.trim()) {
-      toast('PLEASE ENTER YOUR NAME TO SUBMIT A REVIEW', 'error');
-      return;
-    }
-
-    setIsSubmittingReview(true);
-    try {
-      const newReview = {
-        product_id: product.id,
-        user_id: user ? user.id : null,
-        reviewer_name: user ? (profile?.full_name || 'VERIFIED USER') : guestName.trim().toUpperCase(),
-        rating: newRating,
-        title: newReviewTitle.toUpperCase(),
-        body: newReviewBody,
-        is_verified: user ? true : false,
-      };
-
-      const { data, error } = await supabase
-        .from('reviews')
-        .insert([newReview])
-        .select('*')
-        .single();
-
-      if (error) {
-        console.error(error);
-        toast('FAILED TO SUBMIT REVIEW', 'error');
-      } else {
-        toast('REVIEW SUBMITTED SUCCESSFULLY', 'success');
-        setReviews((prev) => [
-          {
-            ...data,
-            reviewer_name: newReview.reviewer_name,
-            profile: user ? {
-              id: user.id,
-              full_name: profile?.full_name || 'Verified User',
-              email: profile?.email || '',
-              avatar_url: profile?.avatar_url || null,
-              role: profile?.role || 'customer',
-              phone: profile?.phone || null,
-              created_at: profile?.created_at || new Date().toISOString(),
-              updated_at: profile?.updated_at || new Date().toISOString(),
-            } : null,
-          } as Review,
-          ...prev,
-        ]);
-        setNewReviewTitle('');
-        setNewReviewBody('');
-        setGuestName('');
-      }
-    } catch (err) {
-      console.warn('Supabase offline. Simulated review submission.');
-      const localReview: Review = {
-        id: Math.random().toString(),
-        product_id: product.id,
-        user_id: user ? user.id : null,
-        reviewer_name: user ? (profile?.full_name || 'VERIFIED USER') : guestName.trim().toUpperCase(),
-        rating: newRating,
-        title: newReviewTitle.toUpperCase(),
-        body: newReviewBody,
-        is_verified: user ? true : false,
-        created_at: new Date().toISOString(),
-        profile: user ? {
-          id: user.id,
-          full_name: profile?.full_name || 'Verified Customer',
-          email: profile?.email || '',
-          avatar_url: profile?.avatar_url || null,
-          role: 'customer',
-          phone: profile?.phone || null,
-          created_at: profile?.created_at || new Date().toISOString(),
-          updated_at: profile?.updated_at || new Date().toISOString(),
-        } : null,
-      };
-      setReviews((prev) => [localReview, ...prev]);
-      setNewReviewTitle('');
-      setNewReviewBody('');
-      setGuestName('');
-      toast('REVIEW ADDED (PREVIEW MODE)', 'success');
-    } finally {
-      setIsSubmittingReview(false);
-    }
-  };
-
-  // Star Ratings calculations
-  const avgRating =
-    reviews.length > 0
-      ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
-      : '0.0';
-
-  const starsBreakdown = [5, 4, 3, 2, 1].map((stars) => {
-    const count = reviews.filter((r) => r.rating === stars).length;
-    const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
-    return { stars, count, percentage };
-  });
 
   return (
     <div className="bg-background py-8 md:py-16">
@@ -264,25 +160,6 @@ export default function ProductDetails({
               </h1>
             </div>
 
-            {/* Reviews Quick Rating */}
-            {reviews.length > 0 && (
-              <div className="flex items-center gap-2 mb-6 border-b border-border pb-6">
-                <div className="flex text-accent">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, i) => (
-                      <Star
-                        key={i}
-                        size={12}
-                        className={i < Math.round(Number(avgRating)) ? 'fill-accent text-accent' : 'text-muted/50'}
-                      />
-                    ))}
-                </div>
-                <span className="font-sans text-[10px] tracking-wider font-bold text-muted">
-                  {avgRating}
-                </span>
-              </div>
-            )}
 
             {/* Pricing Section */}
             <div className="mb-8">
@@ -451,184 +328,7 @@ export default function ProductDetails({
           </div>
         </div>
 
-        {/* Customer Reviews Section */}
-        <section className="border-t border-border pt-20 mb-24">
-          <h2 className="font-serif text-[11px] font-bold tracking-widest uppercase text-foreground mb-12">
-            CUSTOMER REVIEWS
-          </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            
-            {/* Left: Star Breakdown Bar Chart */}
-            <div className="lg:col-span-4 flex flex-col gap-6">
-              <div className="bg-card border border-border rounded-sm p-6">
-                <span className="font-sans text-[10px] tracking-widest text-muted uppercase">
-                  AVERAGE RATINGS
-                </span>
-                <div className="flex items-baseline gap-2 mt-2">
-                  <span className="text-[36px] font-bold text-foreground">{avgRating}</span>
-                  <span className="text-[14px] text-muted">/ 5.0</span>
-                </div>
-
-                <div className="flex text-foreground mt-2">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, i) => (
-                      <Star
-                        key={i}
-                        size={14}
-                        className={i < Math.round(Number(avgRating)) ? 'fill-accent text-foreground' : 'text-muted/50'}
-                      />
-                    ))}
-                </div>
-
-                {/* Star lists */}
-                <div className="flex flex-col gap-2 mt-8">
-                  {starsBreakdown.map(({ stars, count, percentage }) => (
-                    <div key={stars} className="flex items-center gap-4 text-[10px] font-sans">
-                      <span className="text-muted font-bold">{stars}★</span>
-                      <div className="flex-1 h-1.5 bg-muted/30 rounded-full overflow-hidden">
-                        <div style={{ width: `${percentage}%` }} className="h-full bg-white" />
-                      </div>
-                      <span className="text-muted text-right min-w-[15px]">{count}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Reviews List & Submit Form */}
-            <div className="lg:col-span-8 flex flex-col gap-10">
-              
-              {/* Form Submission */}
-              <div className="border border-border bg-card p-6 rounded-sm">
-                <h3 className="font-serif text-[11px] font-extrabold tracking-widest text-foreground uppercase mb-6">
-                  {user ? 'SUBMIT A VERIFIED REVIEW' : 'SUBMIT A REVIEW (GUEST)'}
-                </h3>
-                <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
-                  
-                  {/* Guest Name input */}
-                  {!user && (
-                    <div className="border border-border rounded-sm bg-muted/30">
-                      <input
-                        type="text"
-                        required
-                        value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
-                        placeholder="YOUR NAME / ALIAS (REQUIRED)"
-                        className="w-full px-4 py-3 bg-transparent text-[11px] font-sans tracking-widest text-foreground uppercase placeholder-neutral-600 outline-none"
-                      />
-                    </div>
-                  )}
-
-                  {/* Star Rating select */}
-                  <div className="flex items-center gap-3">
-                    <span className="font-sans text-[10px] text-muted uppercase">
-                      YOUR RATING:
-                    </span>
-                    <div className="flex gap-1.5">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setNewRating(star)}
-                          className="cursor-pointer text-muted hover:text-foreground"
-                        >
-                          <Star
-                            size={16}
-                            className={star <= newRating ? 'fill-accent text-foreground' : 'text-neutral-800'}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="border border-border rounded-sm bg-muted/30">
-                    <input
-                      type="text"
-                      required
-                      value={newReviewTitle}
-                      onChange={(e) => setNewReviewTitle(e.target.value)}
-                      placeholder="REVIEW HEADLINE (E.G. EXCELLENT COAT)"
-                      className="w-full px-4 py-3 bg-transparent text-[11px] font-sans tracking-widest text-foreground uppercase placeholder-neutral-600 outline-none border-b border-border"
-                    />
-                    <textarea
-                      required
-                      rows={4}
-                      value={newReviewBody}
-                      onChange={(e) => setNewReviewBody(e.target.value)}
-                      placeholder="Write details about comfort, size, and material..."
-                      className="w-full px-4 py-3 bg-transparent text-[13px] text-foreground placeholder-neutral-500 outline-none resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmittingReview}
-                    className="self-end px-6 py-3 bg-white text-white font-sans text-[10px] font-bold tracking-widest rounded-full uppercase hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
-                  >
-                    {isSubmittingReview ? 'SUBMITTING...' : 'PUBLISH REVIEW'}
-                  </button>
-                </form>
-              </div>
-
-              {/* Reviews Cards List */}
-              <div className="flex flex-col gap-6">
-                {reviews.length === 0 ? (
-                  <p className="text-[12px] font-sans text-muted/50 tracking-wider">
-                    NO REVIEWS POSTED YET. BE THE FIRST TO SUBMIT.
-                  </p>
-                ) : (
-                  reviews.map((review) => (
-                    <div
-                      key={review.id}
-                      className="border-b border-border pb-6 last:border-b-0"
-                    >
-                      <div className="flex justify-between items-start gap-4 mb-2">
-                        <div>
-                          <h4 className="text-[12px] font-bold text-foreground tracking-wide uppercase">
-                            {review.title || 'VERIFIED FEEDBACK'}
-                          </h4>
-                          <div className="flex text-foreground mt-1 gap-1">
-                            {Array(5)
-                              .fill(0)
-                              .map((_, i) => (
-                                <Star
-                                  key={i}
-                                  size={10}
-                                  className={i < review.rating ? 'fill-accent text-foreground' : 'text-neutral-800'}
-                                />
-                              ))}
-                          </div>
-                        </div>
-
-                        <div className="text-right">
-                          <span className="text-[10px] font-sans font-bold text-foreground/80 block">
-                            {review.reviewer_name?.toUpperCase() || review.profile?.full_name?.toUpperCase() || 'ANONYMOUS'}
-                          </span>
-                          <span className="text-[9px] font-sans text-muted block mt-0.5">
-                            {new Date(review.created_at || '').toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-
-                      <p className="text-[13px] leading-relaxed text-muted font-sans mt-3">
-                        {review.body}
-                      </p>
-
-                      {review.is_verified && (
-                        <span className="inline-block mt-3 text-[9px] font-sans text-green-500 font-semibold tracking-wider">
-                          ✓ VERIFIED PURCHASE
-                        </span>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-
-            </div>
-          </div>
-        </section>
 
         {/* Related Products Carousel */}
         {relatedProducts.length > 0 && (

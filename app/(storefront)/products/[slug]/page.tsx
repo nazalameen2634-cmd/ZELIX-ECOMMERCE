@@ -1,7 +1,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { Product, Review } from '@/types';
+import { Product } from '@/types';
 import ProductDetails from '@/components/storefront/ProductDetails';
 
 // 1. Enable Incremental Static Regeneration (ISR) revalidating every 60 seconds
@@ -31,7 +31,6 @@ export default async function ProductDetailPage({
   const { slug } = params;
 
   let product: Product | null = null;
-  let reviews: Review[] = [];
   let relatedProducts: Product[] = [];
 
   try {
@@ -45,17 +44,7 @@ export default async function ProductDetailPage({
 
     if (prodData) {
       product = prodData as Product;
-      
-      // B. Fetch reviews joined with customer profiles
-      const { data: revData } = await supabase
-        .from('reviews')
-        .select('*, profile:profiles(full_name, email, avatar_url, role)')
-        .eq('product_id', product.id)
-        .order('created_at', { ascending: false });
-      
-      if (revData) reviews = revData as unknown as Review[];
 
-      // C. Fetch related products matching category (excluding current)
       if (product.category_id) {
         const { data: relData } = await supabase
           .from('products')
@@ -91,7 +80,6 @@ export default async function ProductDetailPage({
     <ProductDetails
       product={product}
       relatedProducts={relatedProducts}
-      initialReviews={reviews}
     />
   );
 }
