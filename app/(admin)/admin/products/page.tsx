@@ -134,6 +134,7 @@ export default function AdminProductsPage() {
   const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore]           = useState(true);
   const [uploadingIndex, setUploadingIndex] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
