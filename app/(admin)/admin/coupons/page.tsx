@@ -186,7 +186,10 @@ export default function AdminCoupons() {
           body: JSON.stringify({ ...payload, id: editId }),
         });
 
-        if (!response.ok) throw new Error('API update failed');
+        if (!response.ok) {
+          const errRes = await response.json().catch(() => ({}));
+          throw new Error(errRes.message || 'API update failed');
+        }
         const resData = await response.json();
 
         setCoupons(
@@ -201,7 +204,10 @@ export default function AdminCoupons() {
           body: JSON.stringify(payload),
         });
 
-        if (!response.ok) throw new Error('API creation failed');
+        if (!response.ok) {
+          const errRes = await response.json().catch(() => ({}));
+          throw new Error(errRes.message || 'API creation failed');
+        }
         const resData = await response.json();
 
         setCoupons([resData.data as Coupon, ...coupons]);
@@ -222,7 +228,10 @@ export default function AdminCoupons() {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('API deletion failed');
+      if (!response.ok) {
+        const errRes = await response.json().catch(() => ({}));
+        throw new Error(errRes.message || 'API deletion failed');
+      }
 
       setCoupons(coupons.filter((c) => c.id !== id));
       toast('Coupon removed successfully', 'success');

@@ -169,7 +169,10 @@ export default function AdminCategories() {
           body: JSON.stringify({ ...payload, id: editId }),
         });
 
-        if (!response.ok) throw new Error('API update failed');
+        if (!response.ok) {
+          const errRes = await response.json().catch(() => ({}));
+          throw new Error(errRes.message || 'API update failed');
+        }
         const resData = await response.json();
 
         setCategories(
@@ -189,7 +192,10 @@ export default function AdminCategories() {
           body: JSON.stringify({ ...payload, id: newId }),
         });
 
-        if (!response.ok) throw new Error('API creation failed');
+        if (!response.ok) {
+          const errRes = await response.json().catch(() => ({}));
+          throw new Error(errRes.message || 'API creation failed');
+        }
         const resData = await response.json();
 
         setCategories([...categories, resData.data]);
@@ -210,7 +216,10 @@ export default function AdminCategories() {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('API deletion failed');
+      if (!response.ok) {
+        const errRes = await response.json().catch(() => ({}));
+        throw new Error(errRes.message || 'API deletion failed');
+      }
 
       setCategories(categories.filter((c) => c.id !== id));
       toast('Category deleted successfully', 'success');
