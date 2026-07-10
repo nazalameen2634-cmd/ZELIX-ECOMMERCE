@@ -116,23 +116,23 @@ export default function CartPage() {
   };
 
   return (
-    <div className="bg-black min-h-screen py-16">
+    <div className="bg-[#FAFAFA] min-h-screen py-16">
       <div className="container-custom">
         {/* Header Breadcrumbs */}
-        <div className="flex flex-col gap-2 mb-12 border-b border-white/5 pb-8">
-          <span className="font-mono text-[9px] tracking-widest text-neutral-500 uppercase">
-            <Link href="/" className="hover:text-white transition-colors">HOME</Link> // SHOPPING BAG
+        <div className="flex flex-col gap-2 mb-12 border-b border-[rgba(0,0,0,0.06)] pb-8">
+          <span className="font-mono text-[9px] tracking-widest text-[#6B6560] uppercase">
+            <Link href="/" className="hover:text-[#111111] transition-colors">HOME</Link> // SHOPPING BAG
           </span>
-          <h1 className="text-[36px] font-black tracking-wider uppercase text-white">
+          <h1 className="text-[36px] font-black tracking-wider uppercase text-[#111111]">
             YOUR BAG
           </h1>
         </div>
 
         {items.length === 0 ? (
           /* Empty state */
-          <div className="flex flex-col items-center justify-center gap-6 py-24 text-center border border-white/5 rounded-sm bg-neutral-950/20">
-            <ShoppingBag size={36} className="text-neutral-600 animate-pulse-glow" />
-            <h2 className="font-mono text-[12px] font-bold tracking-widest text-neutral-400 uppercase">
+          <div className="flex flex-col items-center justify-center gap-6 py-24 text-center border border-[rgba(0,0,0,0.06)] rounded-sm bg-white shadow-sm">
+            <ShoppingBag size={36} className="text-[#6B6560] animate-pulse-glow" />
+            <h2 className="font-mono text-[12px] font-bold tracking-widest text-[#6B6560] uppercase">
               THERE ARE NO ITEMS IN YOUR BAG
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center">
@@ -144,7 +144,7 @@ export default function CartPage() {
               </Link>
               <Link
                 href="/account"
-                className="border border-white/10 hover:border-white text-white font-mono text-[10px] font-bold tracking-[0.18em] px-8 py-4 rounded-full transition-all uppercase flex items-center justify-center gap-1.5"
+                className="border border-[rgba(0,0,0,0.1)] hover:border-black text-[#111111] font-mono text-[10px] font-bold tracking-[0.18em] px-8 py-4 rounded-full transition-all uppercase flex items-center justify-center gap-1.5"
               >
                 <Box size={12} />
                 TRACK ORDER
@@ -165,10 +165,10 @@ export default function CartPage() {
                 return (
                   <div
                     key={`${item.product.id}-${item.size}-${index}`}
-                    className="flex flex-col sm:flex-row gap-6 p-6 border border-white/5 bg-neutral-950/40 rounded-sm relative"
+                    className="flex flex-col sm:flex-row gap-6 p-6 border border-[rgba(0,0,0,0.06)] bg-white rounded-sm relative shadow-sm"
                   >
                     {/* Thumbnail */}
-                    <div className="w-24 aspect-[3/4] overflow-hidden rounded-sm bg-neutral-900 border border-white/5 shrink-0">
+                    <div className="w-24 aspect-[3/4] overflow-hidden rounded-sm bg-[#FAFAFA] border border-[rgba(0,0,0,0.06)] shrink-0">
                       <img
                         src={mainImage}
                         alt={item.product.title}
@@ -180,17 +180,17 @@ export default function CartPage() {
                     <div className="flex-1 flex flex-col justify-between">
                       <div className="flex justify-between items-start gap-4">
                         <div>
-                          <span className="font-mono text-[9px] tracking-widest text-neutral-500 uppercase">
+                          <span className="font-mono text-[9px] tracking-widest text-[#6B6560] uppercase">
                             SKU: {item.product.sku}
                           </span>
-                          <h3 className="text-[16px] font-black text-white tracking-wide uppercase mt-0.5">
+                          <h3 className="text-[16px] font-black text-[#111111] tracking-wide uppercase mt-0.5">
                             {item.product.title}
                           </h3>
-                          <p className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase mt-1">
+                          <p className="text-[10px] font-mono tracking-widest text-[#6B6560] uppercase mt-1">
                             Size: {item.size} {item.color ? `| Color: ${item.color}` : ''}
                           </p>
                         </div>
-                        <span className="text-[14px] font-bold text-white">
+                        <span className="text-[14px] font-bold text-[#111111]">
                           {formatCurrency(item.price)}
                         </span>
                       </div>
@@ -198,20 +198,20 @@ export default function CartPage() {
                       {/* Controls Row */}
                       <div className="flex justify-between items-center mt-6">
                         {/* Quantity controls */}
-                        <div className="flex items-center border border-white/10 rounded-full px-4 py-2 gap-5 bg-neutral-900">
+                        <div className="flex items-center border border-[rgba(0,0,0,0.1)] rounded-full px-4 py-2 gap-5 bg-white">
                           <button
                             onClick={() => updateQuantity(index, item.quantity - 1)}
                             disabled={item.quantity <= 1}
-                            className="text-neutral-400 hover:text-white disabled:opacity-30 transition-colors cursor-pointer"
+                            className="text-[#6B6560] hover:text-[#111111] disabled:opacity-30 transition-colors cursor-pointer"
                           >
                             <Minus size={11} />
                           </button>
-                          <span className="font-mono text-[11px] font-bold text-white min-w-[15px] text-center">
+                          <span className="font-mono text-[11px] font-bold text-[#111111] min-w-[15px] text-center">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQuantity(index, item.quantity + 1)}
-                            className="text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                            className="text-[#6B6560] hover:text-[#111111] transition-colors cursor-pointer"
                           >
                             <Plus size={11} />
                           </button>
@@ -219,12 +219,12 @@ export default function CartPage() {
 
                         {/* Line Total & Remove */}
                         <div className="flex items-center gap-6">
-                          <span className="text-[14px] font-bold text-white">
+                          <span className="text-[14px] font-bold text-[#111111]">
                             {formatCurrency(item.price * item.quantity)}
                           </span>
                           <button
                             onClick={() => removeItem(index)}
-                            className="text-red-500/60 hover:text-red-500 transition-colors cursor-pointer"
+                            className="text-[#F97066]/60 hover:text-[#F97066] transition-colors cursor-pointer"
                             title="Remove from Bag"
                           >
                             <Trash2 size={15} />
@@ -240,27 +240,27 @@ export default function CartPage() {
             {/* Right Column: Calculations card */}
             <div className="lg:col-span-4 flex flex-col gap-6">
               {/* Promo code form */}
-              <div className="p-6 border border-white/5 bg-neutral-950 rounded-sm">
-                <h3 className="font-mono text-[10px] font-bold tracking-widest text-neutral-400 uppercase mb-4 flex items-center gap-2">
+              <div className="p-6 border border-[rgba(0,0,0,0.06)] bg-white rounded-sm shadow-sm">
+                <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#6B6560] uppercase mb-4 flex items-center gap-2">
                   <Tag size={12} /> PROMOTIONAL CODE
                 </h3>
                 {coupon ? (
-                  <div className="flex justify-between items-center bg-neutral-900 border border-white/10 p-3 rounded-sm">
+                  <div className="flex justify-between items-center bg-[#FAFAFA] border border-[rgba(0,0,0,0.1)] p-3 rounded-sm">
                     <div className="flex items-center gap-2">
-                      <Check size={14} className="text-green-500" />
-                      <span className="font-mono text-[11px] font-bold text-white uppercase">
+                      <Check size={14} className="text-green-600" />
+                      <span className="font-mono text-[11px] font-bold text-[#111111] uppercase">
                         {coupon.code} Applied
                       </span>
                     </div>
                     <button
                       onClick={handleRemoveCoupon}
-                      className="text-neutral-500 hover:text-white font-mono text-[9px] font-bold uppercase cursor-pointer"
+                      className="text-[#6B6560] hover:text-[#111111] font-mono text-[9px] font-bold uppercase cursor-pointer"
                     >
                       REMOVE
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleApplyCoupon} className="flex border border-white/10 rounded-sm bg-neutral-900 overflow-hidden">
+                  <form onSubmit={handleApplyCoupon} className="flex border border-[rgba(0,0,0,0.1)] rounded-sm bg-white overflow-hidden">
                     <input
                       type="text"
                       required
@@ -268,12 +268,12 @@ export default function CartPage() {
                       onChange={(e) => setCouponCode(e.target.value)}
                       placeholder="ENTER PROMO CODE"
                       disabled={isValidatingCoupon}
-                      className="flex-1 bg-transparent px-4 py-3 text-[10px] font-mono tracking-widest text-white uppercase placeholder-neutral-600 outline-none"
+                      className="flex-1 bg-transparent px-4 py-3 text-[10px] font-mono tracking-widest text-[#111111] uppercase placeholder-[#6B6560] outline-none"
                     />
                     <button
                       type="submit"
                       disabled={isValidatingCoupon}
-                      className="bg-white hover:bg-neutral-200 text-black font-mono text-[10px] font-bold tracking-wider px-6 transition-colors cursor-pointer disabled:opacity-50"
+                      className="bg-black hover:bg-neutral-800 text-white font-mono text-[10px] font-bold tracking-wider px-6 transition-colors cursor-pointer disabled:opacity-50"
                     >
                       {isValidatingCoupon ? 'VERIFYING' : 'APPLY'}
                     </button>
@@ -282,18 +282,18 @@ export default function CartPage() {
               </div>
 
               {/* Order Calculations card */}
-              <div className="p-6 border border-white/5 bg-neutral-950 rounded-sm flex flex-col">
-                <h3 className="font-mono text-[10px] font-bold tracking-widest text-white uppercase border-b border-white/5 pb-4 mb-4">
+              <div className="p-6 border border-[rgba(0,0,0,0.06)] bg-white rounded-sm flex flex-col shadow-sm">
+                <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#111111] uppercase border-b border-[rgba(0,0,0,0.06)] pb-4 mb-4">
                   ORDER SUMMARY
                 </h3>
 
-                <div className="flex flex-col gap-3.5 border-b border-white/5 pb-5 mb-5 font-mono text-[11px] tracking-wide text-neutral-400">
+                <div className="flex flex-col gap-3.5 border-b border-[rgba(0,0,0,0.06)] pb-5 mb-5 font-mono text-[11px] tracking-wide text-[#6B6560]">
                   <div className="flex justify-between">
                     <span>BAG SUBTOTAL</span>
-                    <span className="text-white font-semibold">{formatCurrency(subtotal)}</span>
+                    <span className="text-[#111111] font-semibold">{formatCurrency(subtotal)}</span>
                   </div>
                   {discountAmount > 0 && (
-                    <div className="flex justify-between text-red-500">
+                    <div className="flex justify-between text-[#F97066]">
                       <span>PROMO DISCOUNT</span>
                       <span className="font-semibold">-{formatCurrency(discountAmount)}</span>
                     </div>
@@ -301,7 +301,7 @@ export default function CartPage() {
 
                   <div className="flex justify-between">
                     <span>SHIPPING FEE</span>
-                    <span className="text-white font-semibold">
+                    <span className="text-[#111111] font-semibold">
                       {shippingCost === 0 ? 'FREE' : formatCurrency(shippingCost)}
                     </span>
                   </div>
@@ -309,10 +309,10 @@ export default function CartPage() {
 
                 {/* Estimate Total */}
                 <div className="flex justify-between items-baseline mb-8">
-                  <span className="font-mono text-[11px] font-black tracking-widest text-white uppercase">
+                  <span className="font-mono text-[11px] font-black tracking-widest text-[#111111] uppercase">
                     ESTIMATED TOTAL
                   </span>
-                  <span className="text-[20px] font-extrabold text-white">
+                  <span className="text-[20px] font-extrabold text-[#111111]">
                     {formatCurrency(finalTotal)}
                   </span>
                 </div>
@@ -332,7 +332,7 @@ export default function CartPage() {
 
                 <Link
                   href="/products"
-                  className="w-full mt-4 text-center text-neutral-500 hover:text-white font-mono text-[9px] font-bold tracking-widest uppercase transition-colors"
+                  className="w-full mt-4 text-center text-[#6B6560] hover:text-[#111111] font-mono text-[9px] font-bold tracking-widest uppercase transition-colors"
                 >
                   OR CONTINUE SHOPPING
                 </Link>
