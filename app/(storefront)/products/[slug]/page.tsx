@@ -1,4 +1,5 @@
 import React from 'react';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Product } from '@/types';
@@ -22,7 +23,33 @@ export async function generateStaticParams() {
   }
 }
 
-// 3. Page component
+// 3. Dynamic SEO Metadata
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  try {
+    const { data: product } = await supabase
+      .from('products')
+      .select('title, description, og_image_url')
+      .eq('slug', params.slug)
+      .eq('status', 'active')
+      .single();
+
+    if (!product) return {};
+
+    return {
+      title: product.title,
+      description: product.description?.substring(0, 160) || 'View this product on ZELIX.',
+      openGraph: {
+        title: product.title,
+        description: product.description?.substring(0, 160),
+        images: product.og_image_url ? [product.og_image_url] : [],
+      },
+    };
+  } catch {
+    return {};
+  }
+}
+
+// 4. Page component
 export default async function ProductDetailPage({
   params,
 }: {

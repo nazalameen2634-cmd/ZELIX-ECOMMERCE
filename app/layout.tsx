@@ -21,13 +21,45 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'ZELIX | Post-Modern Technical Wear',
+  title: {
+    default: 'ZELIX | Post-Modern Technical Wear',
+    template: '%s | ZELIX'
+  },
   description: 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.',
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL('https://www.zelix.shop'),
+  keywords: ['ZELIX', 'Streetwear', 'Technical Wear', 'Activewear', 'Fashion', 'Apparel'],
+  authors: [{ name: 'ZELIX' }],
+  creator: 'ZELIX',
+  publisher: 'ZELIX',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     title: 'ZELIX | Post-Modern Technical Wear',
     description: 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.',
+    url: 'https://www.zelix.shop',
+    siteName: 'ZELIX',
+    images: [
+      {
+        url: '/og-image.jpg', // You can add a default OG image later
+        width: 1200,
+        height: 630,
+        alt: 'ZELIX - Post-Modern Technical Wear',
+      },
+    ],
+    locale: 'en_US',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ZELIX | Post-Modern Technical Wear',
+    description: 'Sleek technical activewear and streetwear silhouetted for the post-modern aesthetic.',
+    images: ['/og-image.jpg'], // Update with actual image if needed
+  },
+  verification: {
+    google: 'YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE_HERE', // User can replace this with actual code
   },
 };
 
