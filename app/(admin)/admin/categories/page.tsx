@@ -163,17 +163,19 @@ export default function AdminCategories() {
     try {
       if (editId) {
         // Edit existing
-        const { error } = await supabase
-          .from('categories')
-          .update(payload)
-          .eq('id', editId);
+        const response = await fetch('/api/admin/categories', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, id: editId }),
+        });
 
-        if (error) throw error;
+        if (!response.ok) throw new Error('API update failed');
+        const resData = await response.json();
 
         setCategories(
           categories.map((c) =>
             c.id === editId
-              ? { ...c, ...payload }
+              ? { ...c, ...resData.data }
               : c
           )
         );
@@ -181,59 +183,40 @@ export default function AdminCategories() {
       } else {
         // Add new
         const newId = crypto.randomUUID();
-        const { data, error } = await supabase
-          .from('categories')
-          .insert([{ ...payload, id: newId }])
-          .select();
+        const response = await fetch('/api/admin/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, id: newId }),
+        });
 
-        if (error) throw error;
+        if (!response.ok) throw new Error('API creation failed');
+        const resData = await response.json();
 
-        const inserted = data ? data[0] : { ...payload, id: newId, created_at: new Date().toISOString() };
-        setCategories([...categories, inserted as Category]);
+        setCategories([...categories, resData.data]);
         toast('Category created successfully', 'success');
       }
       handleCancel();
     } catch (err: any) {
-      // Offline fallback state update
-      if (editId) {
-        setCategories(
-          categories.map((c) =>
-            c.id === editId
-              ? { ...c, ...payload }
-              : c
-          )
-        );
-        toast('Simulated: Category updated offline', 'success');
-      } else {
-        const fallbackNew: Category = {
-          id: Math.random().toString(),
-          name: payload.name,
-          slug: payload.slug,
-          description: payload.description,
-          parent_id: payload.parent_id,
-          sort_order: payload.sort_order,
-          image_url: payload.image_url,
-          created_at: new Date().toISOString(),
-        };
-        setCategories([...categories, fallbackNew]);
-        toast('Simulated: Category added offline', 'success');
-      }
-      handleCancel();
+      console.error('Category save error:', err);
+      toast(`Failed to save category: ${err.message || 'Unknown error'}`, 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category? Sub-categories and products binding will lose parent relations.')) return;
-    
+    if (!confirm('Are you sure you want to delete this category?')) return;
+
     try {
-      const { error } = await supabase.from('categories').delete().eq('id', id);
-      if (error) throw error;
+      const response = await fetch(`/api/admin/categories?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('API deletion failed');
 
       setCategories(categories.filter((c) => c.id !== id));
       toast('Category deleted successfully', 'success');
     } catch (err) {
-      setCategories(categories.filter((c) => c.id !== id));
-      toast('Simulated: Category deleted offline', 'success');
+      console.error(err);
+      toast('Failed to delete category', 'error');
     }
   };
 

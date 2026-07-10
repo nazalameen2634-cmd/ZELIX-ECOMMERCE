@@ -209,31 +209,8 @@ export default function AdminCoupons() {
       }
       handleCancel();
     } catch (err: any) {
-      // Offline fallback state update
-      if (editId) {
-        setCoupons(
-          coupons.map((c) => (c.id === editId ? { ...c, ...payload } : c))
-        );
-        toast('Simulated: Coupon updated offline', 'success');
-      } else {
-        const fallbackNew: Coupon = {
-          id: Math.random().toString(),
-          code: payload.code,
-          type: payload.type,
-          value: payload.value,
-          min_order_amount: payload.min_order_amount,
-          usage_limit: payload.usage_limit,
-          per_customer_limit: payload.per_customer_limit,
-          times_used: 0,
-          valid_from: payload.valid_from,
-          valid_to: payload.valid_to,
-          is_active: payload.is_active,
-          created_at: new Date().toISOString(),
-        };
-        setCoupons([fallbackNew, ...coupons]);
-        toast('Simulated: Coupon added offline', 'success');
-      }
-      handleCancel();
+      console.error('Coupon save error:', err);
+      toast(`Failed to save coupon: ${err.message || 'Unknown error'}`, 'error');
     }
   };
 
