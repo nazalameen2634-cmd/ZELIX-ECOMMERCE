@@ -89,32 +89,7 @@ function FilterPanel({
         </div>
       </div>
 
-      <div style={{ height: '1px', background: 'var(--color-border)' }} />
 
-      {/* Sizes */}
-      <div>
-        <h4 className="font-mono text-[9px] font-bold tracking-[0.22em] mb-4" className="text-muted">
-          SIZE
-        </h4>
-        <div className="grid grid-cols-4 gap-2">
-          {sizes.map((sz) => (
-            <button
-              key={sz}
-              onClick={() => onUpdateFilter('size', sizeParam === sz ? null : sz)}
-              className="py-2 font-mono text-[9px] font-bold rounded-[2px] transition-all duration-200 cursor-pointer"
-              style={
-                sizeParam === sz
-                  ? { background: 'var(--color-accent)', color: '#ffffff', border: '1px solid #C9A96E' }
-                  : { background: 'transparent', color: 'var(--color-muted)', border: '1px solid rgba(232,227,220,0.07)' }
-              }
-            >
-              {sz}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ height: '1px', background: 'var(--color-border)' }} />
 
       {/* Price */}
       <div>
@@ -242,32 +217,31 @@ function ProductsListContent() {
   const clearAll = () => router.push('/products');
 
   return (
-    <div style={{ background: '#ffffff', minHeight: '100vh' }}>
+    <div className="min-h-screen bg-background text-foreground">
 
       {/* ─── Editorial Header ─── */}
       <div
-        className="relative overflow-hidden border-b"
-        style={{ borderColor: 'rgba(232,227,220,0.05)', paddingTop: '100px', paddingBottom: '60px' }}
+        className="relative overflow-hidden border-b border-border pt-[120px] pb-12"
       >
         {/* Ghost text */}
         <div
-          className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden font-sans font-black tracking-tighter text-[rgba(232,227,220,0.02)]"
+          className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden font-sans font-black tracking-tighter text-foreground/5"
           style={{
-            fontSize: 'clamp(100px, 20vw, 260px)',
+            fontSize: 'clamp(80px, 15vw, 180px)',
             whiteSpace: 'nowrap',
             lineHeight: 1,
-            paddingLeft: '40px',
+            paddingLeft: '20px',
           }}
         >
           STORE
         </div>
 
         <div className="container-custom relative z-10">
-          <div className="section-label mb-6">ZELIX // SUMMER DROP VOL. 01</div>
+          <div className="section-label mb-6 text-muted">ZELIX // SUMMER DROP VOL. 01</div>
           <h1
-            className="font-sans font-extrabold uppercase tracking-tight leading-none mb-6 text-[#F5F0EB]"
+            className="font-sans font-extrabold uppercase tracking-tight leading-none mb-6 text-foreground"
             style={{
-              fontSize: 'clamp(36px, 6vw, 84px)',
+              fontSize: 'clamp(32px, 5vw, 64px)',
             }}
           >
             The Storefront.

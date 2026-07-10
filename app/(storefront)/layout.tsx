@@ -18,7 +18,7 @@ export default function StorefrontLayout({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-background">
       {/* Navigation Header */}
       <Header
         onSearchOpen={() => setIsSearchOpen(true)}

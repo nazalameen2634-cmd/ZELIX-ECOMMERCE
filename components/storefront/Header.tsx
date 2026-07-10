@@ -44,7 +44,7 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-[64px] lg:h-[80px] px-4 md:px-8 lg:px-16 bg-background/95 backdrop-blur-md border-b border-border shadow-sm transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-[64px] lg:h-[80px] px-4 md:px-8 lg:px-16 bg-[#FDFBF7]/95 backdrop-blur-md border-b border-border shadow-sm transition-all duration-300"
         onMouseLeave={() => setActiveDropdown(null)}
       >
         {/* Mobile hamburger (Left on mobile) */}
