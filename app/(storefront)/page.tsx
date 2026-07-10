@@ -769,30 +769,6 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════
-          2.5 TRUST PILLARS
-      ═══════════════════════════════════ */}
-      <section className="py-10 bg-background border-b border-border">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-16">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-            {[
-              { title: 'PREMIUM QUALITY', body: 'Crafted with the finest materials', icon: <Diamond size={26} className="text-foreground" strokeWidth={1.2} /> },
-              { title: 'LIFETIME WARRANTY', body: 'We stand by our promise', icon: <ShieldCheck size={26} className="text-foreground" strokeWidth={1.2} /> },
-              { title: 'ELEGANT PACKAGING', body: 'Perfect for every occasion', icon: <Gift size={26} className="text-foreground" strokeWidth={1.2} /> },
-              { title: 'EASY RETURNS', body: 'Hassle-free 7 day returns', icon: <Undo2 size={26} className="text-foreground" strokeWidth={1.2} /> },
-            ].map((pillar, i) => (
-              <div key={i} className="flex items-center gap-5 lg:justify-center border-b sm:border-b-0 lg:border-r border-border pb-6 sm:pb-0 last:border-0 pr-4">
-                <div className="shrink-0">{pillar.icon}</div>
-                <div className="flex flex-col">
-                  <h4 className="font-sans font-bold text-[10px] tracking-widest text-foreground uppercase mb-1">{pillar.title}</h4>
-                  <p className="font-sans text-[11px] font-medium text-muted">{pillar.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════
           3. THE COLLECTION
       ═══════════════════════════════════ */}
       <section className="py-24 sm:py-32 bg-background">
@@ -857,6 +833,35 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════
+          2.5 TRUST PILLARS (MOVED)
+      ═══════════════════════════════════ */}
+      <section className="py-10 bg-background border-b border-border border-t">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+            {[
+              { title: 'PREMIUM QUALITY', body: 'Crafted with the finest materials', icon: <Diamond size={26} className="text-foreground" strokeWidth={1.2} /> },
+              { title: 'LIFETIME WARRANTY', body: 'We stand by our promise', icon: <ShieldCheck size={26} className="text-foreground" strokeWidth={1.2} /> },
+              { title: 'ELEGANT PACKAGING', body: 'Perfect for every occasion', icon: <Gift size={26} className="text-foreground" strokeWidth={1.2} /> },
+              { title: 'EASY RETURNS', body: 'Hassle-free 7 day returns', icon: <Undo2 size={26} className="text-foreground" strokeWidth={1.2} /> },
+            ].map((pillar, i) => (
+              <div key={i} className="flex items-center gap-5 lg:justify-center border-b sm:border-b-0 lg:border-r border-border pb-6 sm:pb-0 last:border-0 pr-4">
+                <div className="shrink-0">{pillar.icon}</div>
+                <div className="flex flex-col">
+                  <h4 className="font-sans font-bold text-[10px] tracking-widest text-foreground uppercase mb-1">{pillar.title}</h4>
+                  <p className="font-sans text-[11px] font-medium text-muted">{pillar.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════
+          ORDER TRACKING
+      ═══════════════════════════════════ */}
+      <OrderTrackingSection />
 
       {/* ═══════════════════════════════════
           4. EDITORIAL FEATURE
