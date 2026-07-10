@@ -367,15 +367,15 @@ export default function CheckoutPage() {
 
   if (checkoutSuccessOrder) {
     return (
-      <div className="bg-black min-h-screen py-24 flex items-center justify-center px-4">
+      <div className="bg-[#FDFBF7] min-h-screen py-24 flex items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="border border-white/5 bg-neutral-950/40 p-10 md:p-16 rounded-sm max-w-3xl w-full text-center flex flex-col items-center shadow-2xl relative overflow-hidden"
+          className="border border-[#E8E3DC] bg-white p-10 md:p-16 rounded-sm max-w-3xl w-full text-center flex flex-col items-center shadow-lg relative overflow-hidden"
         >
           {/* Subtle grid background for premium tech-wear feel */}
-          <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:14px_24px]" />
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(to_right,#000000_1px,transparent_1px),linear-gradient(to_bottom,#000000_1px,transparent_1px)] bg-[size:14px_24px]" />
           
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
