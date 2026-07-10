@@ -225,7 +225,7 @@ function ProductsListContent() {
       >
         {/* Ghost text */}
         <div
-          className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden font-sans font-black tracking-tighter text-foreground/5"
+          className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden font-sans font-black tracking-tighter text-foreground opacity-5"
           style={{
             fontSize: 'clamp(80px, 15vw, 180px)',
             whiteSpace: 'nowrap',
