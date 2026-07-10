@@ -762,7 +762,7 @@ export default function AdminProductsPage() {
             {view === 'create' && (formFields.hasSizes || formFields.hasColors) && (
               <>
                 <h3 className="font-mono text-[10px] font-bold tracking-widest text-[#666666] border-b border-[rgba(0,0,0,0.03)] pb-3 mt-6 uppercase">
-                  VARIANT OPTIONS SWATCHES
+                  VARIANT OPTIONS
                 </h3>
                 <div className="flex flex-col gap-2">
                   <div className="grid grid-cols-4 gap-4 font-mono text-[9px] text-[#666666] font-bold uppercase mb-1">

@@ -305,7 +305,7 @@ export default function ProductDetails({
             {/* Variant Selectors: Colors */}
             <div className="flex flex-col gap-3 mb-6">
               <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
-                SWATCH // COLOR: {(() => {
+                {(() => {
                   const match = selectedColor.match(/(.+?)\s*\((#[0-9a-fA-F]+)\)/);
                   return match ? match[1].trim() : selectedColor;
                 })()}
@@ -340,7 +340,7 @@ export default function ProductDetails({
             <div className="flex flex-col gap-3 mb-8">
               <div className="flex justify-between items-center">
                 <span className="font-sans text-[10px] font-bold tracking-widest text-muted uppercase">
-                  SIZE: {selectedSize}
+                  {selectedSize}
                 </span>
                 <Link
                   href="#size-guide"
