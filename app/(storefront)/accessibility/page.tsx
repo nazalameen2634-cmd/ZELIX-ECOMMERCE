@@ -8,8 +8,8 @@ export const metadata = {
 
 export default function AccessibilityPage() {
   return (
-    <div className="bg-black text-white min-h-screen">
-      <section className="border-b border-white/5 py-20 px-6">
+    <div className="bg-white text-black min-h-screen">
+      <section className="border-b border-black/10 py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <span className="font-mono text-[9px] tracking-[0.3em] text-neutral-500 uppercase block mb-4">ZELIX / LEGAL</span>
           <h1 className="font-black text-[40px] md:text-[60px] uppercase tracking-wide leading-none mb-6">ACCESSIBILITY<br />STATEMENT</h1>
@@ -20,8 +20,8 @@ export default function AccessibilityPage() {
       <section className="py-16 px-6">
         <div className="max-w-3xl mx-auto flex flex-col gap-10">
 
-          <div className="p-6 border border-white/5 rounded-sm bg-neutral-950">
-            <p className="font-mono text-[11px] text-neutral-400 leading-relaxed tracking-wide">
+          <div className="p-6 border border-black/10 rounded-sm bg-neutral-50">
+            <p className="font-mono text-[11px] text-neutral-600 leading-relaxed tracking-wide">
               ZELIX IS COMMITTED TO ENSURING DIGITAL ACCESSIBILITY FOR PEOPLE WITH DISABILITIES. WE CONTINUALLY IMPROVE THE USER EXPERIENCE FOR EVERYONE AND APPLY RELEVANT ACCESSIBILITY STANDARDS.
             </p>
           </div>
@@ -80,16 +80,16 @@ Response time: Within 5 business days
 We take all accessibility feedback seriously and will investigate reported issues promptly.`,
             },
           ].map((section, i) => (
-            <div key={i} className="border-b border-white/[0.03] pb-10 last:border-0">
-              <h2 className="font-black text-[13px] uppercase tracking-widest mb-5 text-white">{section.title}</h2>
-              <div className="font-mono text-[11px] text-neutral-400 leading-relaxed tracking-wide whitespace-pre-line">{section.content}</div>
+            <div key={i} className="border-b border-black/5 pb-10 last:border-0">
+              <h2 className="font-black text-[13px] uppercase tracking-widest mb-5 text-black">{section.title}</h2>
+              <div className="font-mono text-[11px] text-neutral-600 leading-relaxed tracking-wide whitespace-pre-line">{section.content}</div>
             </div>
           ))}
 
-          <div className="p-6 border border-white/5 rounded-sm">
+          <div className="p-6 border border-black/10 rounded-sm">
             <p className="font-mono text-[10px] text-neutral-500 leading-relaxed tracking-wide">
               THIS STATEMENT WAS PREPARED ON JUNE 2025. IT WILL BE REVIEWED AND UPDATED ANNUALLY.{' '}
-              <Link href="/contact-support" className="text-white underline underline-offset-4 hover:text-neutral-300 transition-colors">
+              <Link href="/contact-support" className="text-black underline underline-offset-4 hover:text-neutral-600 transition-colors">
                 CONTACT SUPPORT →
               </Link>
             </p>

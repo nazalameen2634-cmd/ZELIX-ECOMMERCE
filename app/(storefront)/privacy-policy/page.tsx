@@ -153,8 +153,8 @@ We aim to respond to all privacy-related requests within a reasonable timeframe.
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="bg-black text-white min-h-screen">
-      <section className="border-b border-white/5 py-20 px-6">
+    <div className="bg-white text-black min-h-screen">
+      <section className="border-b border-black/10 py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <span className="font-mono text-[9px] tracking-[0.3em] text-neutral-500 uppercase block mb-4">ZELIX / LEGAL</span>
           <h1 className="font-black text-[40px] md:text-[60px] uppercase tracking-wide leading-none mb-6">PRIVACY<br />POLICY</h1>
@@ -164,8 +164,8 @@ export default function PrivacyPolicyPage() {
 
       <section className="py-16 px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="mb-10 p-6 border border-white/5 rounded-sm bg-neutral-950">
-            <p className="font-mono text-[11px] text-neutral-400 leading-relaxed tracking-wide">
+          <div className="mb-10 p-6 border border-black/10 rounded-sm bg-neutral-50">
+            <p className="font-mono text-[11px] text-neutral-600 leading-relaxed tracking-wide">
               WELCOME TO ZELIX ("WE," "OUR," OR "US"). YOUR PRIVACY IS IMPORTANT TO US. THIS PRIVACY POLICY EXPLAINS HOW WE COLLECT, USE, STORE, AND PROTECT YOUR PERSONAL INFORMATION WHEN YOU VISIT OUR WEBSITE, PLACE AN ORDER, OR INTERACT WITH OUR SERVICES.
               <br /><br />
               BY ACCESSING OR USING OUR WEBSITE, YOU AGREE TO THE PRACTICES DESCRIBED IN THIS PRIVACY POLICY.
@@ -174,9 +174,9 @@ export default function PrivacyPolicyPage() {
 
           <div className="flex flex-col gap-10">
             {sections.map((section, i) => (
-              <div key={i} className="border-b border-white/[0.03] pb-10 last:border-0">
-                <h2 className="font-black text-[13px] uppercase tracking-widest mb-5 text-white">{section.title}</h2>
-                <div className="font-mono text-[11px] text-neutral-400 leading-relaxed tracking-wide whitespace-pre-line">{section.content}</div>
+              <div key={i} className="border-b border-black/5 pb-10 last:border-0">
+                <h2 className="font-black text-[13px] uppercase tracking-widest mb-5 text-black">{section.title}</h2>
+                <div className="font-mono text-[11px] text-neutral-600 leading-relaxed tracking-wide whitespace-pre-line">{section.content}</div>
               </div>
             ))}
           </div>

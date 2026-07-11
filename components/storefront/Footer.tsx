@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase';
 const SUPPORT_LINKS = [
   { label: 'Shipping & Returns', href: '/shipping-returns' },
   { label: 'Contact Support',    href: '/contact' },
-  { label: 'Size Guide',         href: '/size-guide' },
   { label: 'FAQ',                href: '/faq' },
 ];
 const LEGAL_LINKS = [
@@ -98,10 +97,10 @@ export default function Footer() {
               Shop
             </h4>
             <ul className="flex flex-col gap-4">
-              {['New Arrivals', 'Outerwear', 'Apparel', 'Footwear', 'Accessories'].map((item) => (
+              {['NEW IN', 'RINGS', 'NECKLACES', 'EARRINGS', 'BRACELETS', 'COLLECTIONS', 'ABOUT'].map((item) => (
                 <li key={item}>
                   <Link
-                    href={`/products?category=${item.toLowerCase().replace(' ', '-')}`}
+                    href={item === 'ABOUT' ? '/about' : `/products?category=${item.toLowerCase().replace(' ', '-')}`}
                     className="font-sans text-sm text-muted hover:text-accent transition-colors duration-200"
                   >
                     {item}
