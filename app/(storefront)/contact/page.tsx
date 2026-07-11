@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, MapPin, AtSign, Send } from 'lucide-react';
+import { Mail, MapPin, AtSign, Send, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ContactPage() {
@@ -38,10 +38,10 @@ export default function ContactPage() {
               <span className="font-mono text-[9px] tracking-widest text-neutral-600 uppercase block mb-6">REACH US</span>
               <div className="flex flex-col gap-6">
                 {[
-                  { icon: <Mail size={16} />, label: 'GENERAL ENQUIRIES', value: 'hello@zelix.store', href: 'mailto:hello@zelix.store' },
-                  { icon: <Mail size={16} />, label: 'CUSTOMER SUPPORT', value: 'support@zelix.store', href: 'mailto:support@zelix.store' },
-                  { icon: <AtSign size={16} />, label: 'INSTAGRAM', value: '@zelixofficial', href: 'https://instagram.com/zelixofficial' },
-                  { icon: <MapPin size={16} />, label: 'LOCATION', value: 'INDIA', href: null },
+                  { icon: <Mail size={16} />, label: 'EMAIL', value: 'zelixupdates@gmail.com', href: 'mailto:zelixupdates@gmail.com' },
+                  { icon: <AtSign size={16} />, label: 'INSTAGRAM', value: '@zelix.gems', href: 'https://instagram.com/zelix.gems' },
+                  { icon: <MessageCircle size={16} />, label: 'WHATSAPP', value: '8606213948', href: 'https://wa.me/8606213948' },
+                  { icon: <MapPin size={16} />, label: 'LOCATION', value: 'CALICUT , INDIA', href: null },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4">
                     <div className="w-8 h-8 border border-white/5 rounded-sm flex items-center justify-center text-neutral-500 flex-shrink-0 mt-0.5">{item.icon}</div>
