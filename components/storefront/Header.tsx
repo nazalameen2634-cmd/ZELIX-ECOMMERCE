@@ -131,6 +131,15 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
             <Search size={18} />
           </button>
 
+          {/* User Profile / Login */}
+          <Link
+            href={user ? "/profile" : "/login"}
+            className="text-muted hover:text-foreground transition-colors duration-300 cursor-pointer"
+            aria-label={user ? "Profile" : "Login"}
+          >
+            <User size={18} />
+          </Link>
+
           {/* Cart */}
           <button
             id="cart-icon-btn"

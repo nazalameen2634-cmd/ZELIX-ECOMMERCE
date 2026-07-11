@@ -7,7 +7,7 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 
 // Add routes that require authentication
-const protectedRoutes = ['/profile', '/admin', '/checkout'];
+const protectedRoutes = ['/profile', '/admin'];
 // Add routes that are only for unauthenticated users
 const authRoutes = ['/login', '/verify-otp'];
 
