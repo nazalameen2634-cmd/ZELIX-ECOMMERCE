@@ -37,6 +37,7 @@ export async function GET(request: Request) {
       .from('orders')
       .select('id, order_number, total, payment_status, fulfillment_status, created_at')
       .eq('email', decodedSession.email)
+      .neq('payment_status', 'pending')
       .order('created_at', { ascending: false });
 
     if (error) {

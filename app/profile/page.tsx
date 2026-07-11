@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ProfilePage() {
   const { user, loading, signOut, refreshProfile } = useAuth();
@@ -75,19 +76,24 @@ export default function ProfilePage() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-2xl mx-auto w-full"
       >
-        <div className="mb-12 border-b border-gray-200 pb-8 flex justify-between items-end">
+        <div className="mb-12 border-b border-gray-200 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-serif tracking-[0.1em] uppercase mb-2">My Account</h1>
             <p className="text-gray-500 text-sm tracking-wide">Manage your ZELIX profile</p>
           </div>
-          {!isEditing && (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-xs tracking-widest uppercase font-semibold text-gray-500 hover:text-black transition-colors underline underline-offset-4"
-            >
-              Edit Profile
-            </button>
-          )}
+          <div className="flex items-center gap-6">
+            <Link href="/products" className="text-xs tracking-widest uppercase font-semibold text-gray-500 hover:text-black transition-colors underline underline-offset-4">
+              Continue Shopping
+            </Link>
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-xs tracking-widest uppercase font-semibold text-gray-500 hover:text-black transition-colors underline underline-offset-4"
+              >
+                Edit Profile
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="space-y-8">
@@ -122,13 +128,6 @@ export default function ProfilePage() {
                 <div>
                   <label className="block text-xs tracking-widest text-gray-400 uppercase mb-2">Phone Number</label>
                   <div className="text-lg font-medium">{user.phone || 'Not provided'}</div>
-                </div>
-                
-                <div>
-                  <label className="block text-xs tracking-widest text-gray-400 uppercase mb-2">Account Role</label>
-                  <div className="inline-block px-3 py-1 bg-gray-100 rounded-full text-xs tracking-widest uppercase font-semibold">
-                    {user.role}
-                  </div>
                 </div>
               </div>
             ) : (

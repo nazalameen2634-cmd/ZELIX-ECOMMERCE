@@ -5,10 +5,10 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name, phone } = await request.json();
+    const { email, password, name, phone, otp } = await request.json();
 
-    if (!email || !password || !name || !phone) {
-      return NextResponse.json({ error: 'Email, password, name, and phone are required' }, { status: 400 });
+    if (!email || !password || !name || !phone || !otp) {
+      return NextResponse.json({ error: 'All fields including OTP are required' }, { status: 400 });
     }
 
     // Check if user already exists
@@ -22,6 +22,34 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User already exists' }, { status: 400 });
     }
 
+    // Verify OTP
+    const { data: otpRecords, error: fetchError } = await supabaseAdmin
+      .from('otp')
+      .select('*')
+      .eq('email', email)
+      .eq('otp_code', otp)
+      .eq('purpose', 'register')
+      .eq('verified', false)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (fetchError || !otpRecords || otpRecords.length === 0) {
+      return NextResponse.json({ error: 'Invalid or expired OTP' }, { status: 400 });
+    }
+
+    const otpRecord = otpRecords[0];
+
+    // Check if expired
+    if (new Date(otpRecord.expires_at) < new Date()) {
+      return NextResponse.json({ error: 'OTP has expired' }, { status: 400 });
+    }
+
+    // Mark OTP as verified
+    await supabaseAdmin
+      .from('otp')
+      .update({ verified: true })
+      .eq('id', otpRecord.id);
+
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
@@ -34,7 +62,7 @@ export async function POST(request: Request) {
         password_hash,
         full_name: name,
         phone: phone || null,
-        email_verified: false,
+        email_verified: true, // Mark as verified since they used OTP
         role: 'user',
         last_login: new Date().toISOString()
       })
