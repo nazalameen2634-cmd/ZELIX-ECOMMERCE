@@ -93,7 +93,8 @@ export default function RegisterPage() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Phone Number (Optional)"
+              placeholder="Phone Number"
+              required
               disabled={loading}
               className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
             />
@@ -126,7 +127,7 @@ export default function RegisterPage() {
           <div className="pt-4">
             <button
               type="submit"
-              disabled={loading || !formData.email || !formData.password || !formData.name}
+              disabled={loading || !formData.email || !formData.password || !formData.name || !formData.phone}
               className="w-full bg-white text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {loading ? (

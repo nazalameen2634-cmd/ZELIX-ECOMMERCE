@@ -132,13 +132,53 @@ export default function Header({ onSearchOpen, onCartOpen }: HeaderProps) {
           </button>
 
           {/* User Profile / Login */}
-          <Link
-            href={user ? "/profile" : "/login"}
-            className="text-muted hover:text-foreground transition-colors duration-300 cursor-pointer"
-            aria-label={user ? "Profile" : "Login"}
-          >
-            <User size={18} />
-          </Link>
+          <div className="relative group/profile" onMouseEnter={() => user && setActiveDropdown('profile')}>
+            {user ? (
+              <button
+                className="text-muted hover:text-foreground transition-colors duration-300 cursor-pointer flex items-center"
+                aria-label="Profile Menu"
+                onClick={() => setActiveDropdown(activeDropdown === 'profile' ? null : 'profile')}
+              >
+                <User size={18} />
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="text-muted hover:text-foreground transition-colors duration-300 cursor-pointer flex items-center"
+                aria-label="Login"
+              >
+                <User size={18} />
+              </Link>
+            )}
+
+            <AnimatePresence>
+              {user && activeDropdown === 'profile' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute top-full right-0 mt-4 w-40 bg-white backdrop-blur-2xl border border-border rounded-lg py-2 shadow-xl z-50"
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <Link
+                    href="/profile"
+                    className="block px-5 py-3 font-sans text-[11px] font-semibold tracking-[0.1em] text-muted hover:text-accent hover:bg-gray-50 transition-all duration-200"
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    MY PROFILE
+                  </Link>
+                  <Link
+                    href="/orders"
+                    className="block px-5 py-3 font-sans text-[11px] font-semibold tracking-[0.1em] text-muted hover:text-accent hover:bg-gray-50 transition-all duration-200"
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    MY ORDERS
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Cart */}
           <button

@@ -7,8 +7,8 @@ export async function POST(request: Request) {
   try {
     const { email, password, name, phone } = await request.json();
 
-    if (!email || !password || !name) {
-      return NextResponse.json({ error: 'Email, password, and name are required' }, { status: 400 });
+    if (!email || !password || !name || !phone) {
+      return NextResponse.json({ error: 'Email, password, name, and phone are required' }, { status: 400 });
     }
 
     // Check if user already exists
