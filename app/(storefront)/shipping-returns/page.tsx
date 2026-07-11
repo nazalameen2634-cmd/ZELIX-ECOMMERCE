@@ -34,9 +34,9 @@ export default function ShippingReturnsPage() {
           </div>
           <div className="p-8 border flex flex-col gap-4" style={{ borderColor: 'rgba(245,240,235,0.05)', background: '#0b0b0f' }}>
             <span style={{ color: '#C9A96E' }}><RotateCcw size={24} /></span>
-            <h3 className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#F5F0EB]">7-DAY EASY RETURNS</h3>
+            <h3 className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#F5F0EB]">FINAL SALE</h3>
             <p className="text-[12px] leading-relaxed" style={{ color: '#8C827A' }}>
-              Unhappy with your selection? Return or exchange unworn pieces within 7 days.
+              All purchases are final. Returns are only accepted for damaged or incorrect items with a valid unboxing video.
             </p>
           </div>
           <div className="p-8 border flex flex-col gap-4" style={{ borderColor: 'rgba(245,240,235,0.05)', background: '#0b0b0f' }}>
@@ -64,31 +64,86 @@ export default function ShippingReturnsPage() {
           <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
 
           <section className="flex flex-col gap-4">
-            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">2. RETURN POLICY</h2>
+            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">2. FINAL SALE POLICY</h2>
             <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
-              We offer a 7-day return and exchange policy for all items in their original, unused condition, including all original packaging, tags, and GIA certificates (if applicable).
-            </p>
-            <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
-              Please note that custom-made, engraved, or modified jewelry pieces are final sale and cannot be returned or exchanged.
+              All purchases made through ZELIX are considered final. We do not offer returns, exchanges, or refunds except in cases where a product is received damaged or an incorrect item is delivered.
             </p>
           </section>
 
           <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
 
           <section className="flex flex-col gap-4">
-            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">3. REFUND TIMELINE</h2>
+            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">3. IN-STORE PURCHASES</h2>
             <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
-              Once we receive your return, our quality assurance team will inspect the item. Approved returns will be processed within 5-7 business days, and the refund will be credited back to your original payment method (Razorpay/UPI/Bank Account).
+              For purchases made at our physical store, every product is thoroughly inspected before being handed over to the customer. Once an item has been sold and accepted, we cannot be held responsible for any damage, defects, or issues arising thereafter, as we are unable to verify how the product has been handled or used.
             </p>
           </section>
 
           <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
 
           <section className="flex flex-col gap-4">
-            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">NEED ASSISTANCE?</h2>
+            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">4. DAMAGED OR INCORRECT ORDERS</h2>
             <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
-              If you have any questions regarding your shipment or need to start a return, please reach out to us at <a href="mailto:orders@zelix.shop" style={{ color: '#C9A96E' }}>orders@zelix.shop</a> or use our WhatsApp Support.
+              If you receive a damaged product or an item different from what you ordered, please contact us within 48 hours of delivery.
             </p>
+            <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
+              To process your request, an unboxing video is mandatory. Claims submitted without a valid unboxing video cannot be reviewed.
+            </p>
+            <p className="text-[14px] leading-relaxed text-[#D4CBBF] font-semibold mt-2">The unboxing video must:</p>
+            <ul className="list-disc pl-5 text-[14px] leading-relaxed text-[#D4CBBF] flex flex-col gap-1">
+              <li>Show the sealed package from all sides (360° view) before opening.</li>
+              <li>Record the entire unboxing process in one continuous video.</li>
+              <li>Contain no cuts, edits, pauses, or interruptions.</li>
+              <li>Clearly display the damaged or incorrect product received.</li>
+            </ul>
+          </section>
+
+          <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
+
+          <section className="flex flex-col gap-4">
+            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">5. RETURN ELIGIBILITY</h2>
+            <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
+              If your claim is approved, the product must be:
+            </p>
+            <ul className="list-disc pl-5 text-[14px] leading-relaxed text-[#D4CBBF] flex flex-col gap-1">
+              <li>Unused and in its original condition.</li>
+              <li>Returned with all original packaging, tags, accessories, and invoices.</li>
+              <li>Shipped back within the timeframe communicated by our support team.</li>
+            </ul>
+            <p className="text-[14px] leading-relaxed text-[#D4CBBF] mt-2">
+              Once the returned product is received and successfully inspected, any eligible refund will be processed within 3 working days to the original payment method, where applicable.
+            </p>
+          </section>
+
+          <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
+
+          <section className="flex flex-col gap-4">
+            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">6. NON-RETURNABLE CASES</h2>
+            <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
+              Returns, exchanges, or refunds will not be accepted for:
+            </p>
+            <ul className="list-disc pl-5 text-[14px] leading-relaxed text-[#D4CBBF] flex flex-col gap-1">
+              <li>Change of mind.</li>
+              <li>Incorrect size, color, or design selection made by the customer.</li>
+              <li>Normal wear and tear.</li>
+              <li>Damage caused after delivery due to misuse, improper handling, accidental damage, or inadequate care.</li>
+              <li>Claims submitted without a valid unboxing video.</li>
+              <li>Claims reported more than 48 hours after delivery.</li>
+            </ul>
+          </section>
+
+          <div style={{ height: '1px', background: 'rgba(245,240,235,0.05)' }} />
+
+          <section className="flex flex-col gap-4">
+            <h2 className="font-mono text-[13px] font-bold tracking-[0.2em] text-[#C9A96E]">CONTACT US</h2>
+            <p className="text-[14px] leading-relaxed text-[#D4CBBF]">
+              If you have any questions regarding your order or this policy, our support team is always happy to assist you.
+            </p>
+            <div className="text-[14px] leading-relaxed text-[#D4CBBF] mt-2">
+              <strong>ZELIX Customer Support</strong><br/>
+              Customer Support: 8606213948<br/>
+              Website: <a href="https://www.zelix.shop" style={{ color: '#C9A96E' }}>www.zelix.shop</a>
+            </div>
           </section>
 
         </div>

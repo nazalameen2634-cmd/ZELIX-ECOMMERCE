@@ -232,14 +232,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
                 {/* Checkout CTA */}
                 <button
-                  onClick={() => { onClose(); router.push('/checkout'); }}
+                  onClick={() => { onClose(); router.push('/cart'); }}
                   className="w-full flex items-center justify-center gap-3 font-mono text-[10px] font-bold tracking-[0.2em] py-4 rounded-[2px] cursor-pointer transition-all duration-300"
                   style={{ background: '#C9A96E', color: '#080808' }}
                   onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = '#E8CFA0'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = '#C9A96E'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
                 >
-                  <Lock size={11} />
-                  SECURE CHECKOUT
+                  <ShoppingBag size={11} />
+                  VIEW BAG
                 </button>
               </div>
             )}
