@@ -43,8 +43,18 @@ export default function ProfilePage() {
             
             <div className="space-y-6">
               <div>
+                <label className="block text-xs tracking-widest text-zinc-500 uppercase mb-2">Full Name</label>
+                <div className="text-lg">{user.name || 'Not provided'}</div>
+              </div>
+
+              <div>
                 <label className="block text-xs tracking-widest text-zinc-500 uppercase mb-2">Email Address</label>
                 <div className="text-lg">{user.email}</div>
+              </div>
+              
+              <div>
+                <label className="block text-xs tracking-widest text-zinc-500 uppercase mb-2">Phone Number</label>
+                <div className="text-lg">{user.phone || 'Not provided'}</div>
               </div>
               
               <div>

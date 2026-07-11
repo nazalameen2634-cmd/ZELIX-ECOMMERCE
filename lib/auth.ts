@@ -11,6 +11,8 @@ export type SessionPayload = {
   id: string;
   email: string;
   role: string;
+  name?: string;
+  phone?: string;
   expiresAt: Date;
 };
 
