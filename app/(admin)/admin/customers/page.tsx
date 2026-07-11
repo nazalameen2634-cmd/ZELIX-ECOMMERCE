@@ -91,36 +91,15 @@ export default function AdminCustomers() {
   async function loadCustomers() {
     setLoading(true);
     try {
-      // Fetch profiles
-      const { data: profiles, error: profileErr } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (profileErr) throw profileErr;
-
-      if (profiles && profiles.length > 0) {
-        // Fetch order counts & totals to aggregate
-        const { data: orders } = await supabase
-          .from('orders')
-          .select('user_id, total, payment_status');
-
-        const enriched = profiles.map((p) => {
-          const userOrders = (orders || []).filter((o) => o.user_id === p.id);
-          const paidOrders = userOrders.filter((o) => o.payment_status === 'paid');
-          return {
-            ...p,
-            orders_count: userOrders.length,
-            total_spent: paidOrders.reduce((sum, o) => sum + Number(o.total), 0),
-          };
-        });
-
-        setCustomers(enriched as CustomerProfile[]);
+      const res = await fetch('/api/admin/customers');
+      const data = await res.json();
+      if (res.ok && data.customers) {
+        setCustomers(data.customers);
       } else {
-        setCustomers(MOCK_CUSTOMERS);
+        throw new Error(data.error || 'Failed to fetch');
       }
     } catch (err) {
-      console.warn('Unable to load Supabase profiles. Loading mock dataset.', err);
+      console.warn('Unable to load customers from API. Loading mock dataset.', err);
       setCustomers(MOCK_CUSTOMERS);
     } finally {
       setLoading(false);
@@ -132,12 +111,13 @@ export default function AdminCustomers() {
     if (!confirm(`Are you sure you want to change role of ${cust.email} to ${nextRole.toUpperCase()}?`)) return;
 
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ role: nextRole })
-        .eq('id', cust.id);
-
-      if (error) throw error;
+      const res = await fetch('/api/admin/customers', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: cust.id, role: nextRole })
+      });
+      
+      if (!res.ok) throw new Error('Failed to update');
 
       setCustomers(
         customers.map((c) => (c.id === cust.id ? { ...c, role: nextRole } : c))
@@ -155,8 +135,10 @@ export default function AdminCustomers() {
     if (!confirm('Are you sure you want to delete this client profile?')) return;
 
     try {
-      const { error } = await supabase.from('profiles').delete().eq('id', id);
-      if (error) throw error;
+      const res = await fetch(`/api/admin/customers?id=${id}`, {
+        method: 'DELETE'
+      });
+      if (!res.ok) throw new Error('Failed to delete');
 
       setCustomers(customers.filter((c) => c.id !== id));
       toast('Client profile deleted', 'success');
