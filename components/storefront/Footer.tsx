@@ -179,7 +179,9 @@ export default function Footer() {
             © 2026 ZELIX. ALL RIGHTS RESERVED.
           </span>
           <span className="font-sans text-xs tracking-widest uppercase text-muted">
-            Global Design
+            <a href="https://www.instagram.com/nazallameen" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+              Designed by nazalame
+            </a>
           </span>
         </div>
       </div>
