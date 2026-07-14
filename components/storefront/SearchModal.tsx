@@ -128,7 +128,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[1000] flex flex-col bg-black">
+        <div className="fixed inset-0 z-[1000] flex flex-col bg-background">
           {/* Header Row */}
           <div className="flex justify-between items-center h-[80px] px-6 md:px-12 border-b border-white/5">
             <span className="text-[11px] font-mono font-bold tracking-widest text-neutral-500 uppercase">
@@ -136,16 +136,16 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             </span>
             <button
               onClick={onClose}
-              className="text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              className="text-muted hover:text-foreground transition-colors cursor-pointer"
             >
               <X size={20} />
             </button>
           </div>
 
           {/* Search Input Area */}
-          <div className="px-6 md:px-12 py-10 border-b border-white/5 bg-neutral-950">
+          <div className="px-6 md:px-12 py-10 border-b border-border bg-card">
             <div className="max-w-4xl mx-auto relative flex items-center">
-              <Search className="absolute left-0 text-neutral-500" size={24} />
+              <Search className="absolute left-0 text-muted" size={24} />
               <input
                 ref={inputRef}
                 type="text"
@@ -153,7 +153,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="ENTER SEARCH QUERY..."
-                className="w-full pl-10 pr-20 py-4 bg-transparent text-[22px] font-bold text-white tracking-widest uppercase outline-none border-none placeholder-neutral-700"
+                className="w-full pl-10 pr-20 py-4 bg-transparent text-[22px] font-bold text-foreground tracking-widest uppercase outline-none border-none placeholder-muted"
               />
               <span className="absolute right-0 text-[10px] font-mono text-neutral-600 tracking-wider flex items-center gap-1.5 hidden md:flex select-none">
                 ESC TO CLOSE
@@ -162,12 +162,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           </div>
 
           {/* Results Area */}
-          <div className="flex-1 overflow-y-auto px-6 md:px-12 py-8 bg-black hide-scrollbar">
+          <div className="flex-1 overflow-y-auto px-6 md:px-12 py-8 bg-background hide-scrollbar">
             <div className="max-w-4xl mx-auto">
               
               {isLoading && (
                 <div className="flex justify-center items-center py-12">
-                  <div className="animate-spin h-6 w-6 border-2 border-white border-t-transparent rounded-full" />
+                  <div className="animate-spin h-6 w-6 border-2 border-foreground border-t-transparent rounded-full" />
                 </div>
               )}
 
@@ -181,7 +181,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     {recentSearches.length > 0 && (
                       <button
                         onClick={clearRecent}
-                        className="text-[9px] font-mono text-neutral-500 hover:text-white tracking-wide cursor-pointer uppercase"
+                        className="text-[9px] font-mono text-muted hover:text-foreground tracking-wide cursor-pointer uppercase"
                       >
                         CLEAR HISTORY
                       </button>
@@ -197,9 +197,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         <button
                           key={term}
                           onClick={() => handleRecentClick(term)}
-                          className="flex items-center gap-3 py-2 text-left text-[13px] font-mono font-bold tracking-wider text-neutral-400 hover:text-white cursor-pointer uppercase"
+                          className="flex items-center gap-3 py-2 text-left text-[13px] font-mono font-bold tracking-wider text-muted hover:text-foreground cursor-pointer uppercase"
                         >
-                          <Clock size={12} className="text-neutral-600" />
+                          <Clock size={12} className="text-muted" />
                           {term}
                         </button>
                       ))}
@@ -238,12 +238,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                           onMouseEnter={() => setActiveIndex(idx)}
                           className={`flex items-center gap-4 p-4 rounded-sm border cursor-pointer transition-colors duration-150 ${
                             isActive
-                              ? 'bg-neutral-900 border-white/20'
-                              : 'bg-neutral-950/50 border-white/5 hover:bg-neutral-900/50 hover:border-white/10'
+                              ? 'bg-card border-border'
+                              : 'bg-background border-border/50 hover:bg-card hover:border-border'
                           }`}
                         >
                           {/* Thumbnail */}
-                          <div className="w-12 aspect-[3/4] overflow-hidden rounded-sm bg-neutral-900 border border-white/5">
+                          <div className="w-12 aspect-[3/4] overflow-hidden rounded-sm bg-card border border-border/50">
                             <img
                               src={image}
                               alt={product.title}
@@ -253,7 +253,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
                           {/* Info */}
                           <div className="flex-1">
-                            <h4 className="text-[13px] font-bold text-white tracking-wide uppercase">
+                            <h4 className="text-[13px] font-bold text-foreground tracking-wide uppercase">
                               {product.title}
                             </h4>
                             <p className="text-[10px] font-mono text-neutral-500 tracking-wider mt-0.5 uppercase">
@@ -263,7 +263,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
                           {/* Price */}
                           <div className="text-right">
-                            <span className="text-[13px] font-semibold text-white">
+                            <span className="text-[13px] font-semibold text-foreground">
                               {formatCurrency(product.price)}
                             </span>
                             {isActive && (

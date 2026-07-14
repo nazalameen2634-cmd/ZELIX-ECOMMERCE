@@ -89,7 +89,7 @@ function ResetPasswordForm() {
   if (!email) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4 py-20">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4 py-20">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -101,35 +101,35 @@ function ResetPasswordForm() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black"
+              className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background"
             >
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', damping: 15 }}
-                className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-6"
+                className="w-20 h-20 rounded-full bg-foreground flex items-center justify-center mb-6"
               >
-                <svg className="w-10 h-10 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-10 h-10 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               </motion.div>
               <h2 className="text-xl font-bold tracking-widest uppercase mb-2">Password Reset</h2>
-              <p className="text-zinc-400 text-sm">Redirecting to login...</p>
+              <p className="text-muted text-sm">Redirecting to login...</p>
             </motion.div>
           )}
         </AnimatePresence>
 
         <div className="text-center mb-12">
           <h1 className="text-2xl font-medium tracking-[0.1em] mb-4">NEW PASSWORD</h1>
-          <p className="text-zinc-500 text-sm tracking-wide">
+          <p className="text-muted text-sm tracking-wide">
             Enter the 6-digit code sent to<br/>
-            <span className="text-white mt-1 block">{email}</span>
+            <span className="text-foreground mt-1 block">{email}</span>
           </p>
         </div>
 
         <form onSubmit={handleReset} className="space-y-8">
           <div className="space-y-2">
-            <label className="block text-xs tracking-widest text-zinc-500 uppercase text-center mb-4">Reset Code</label>
+            <label className="block text-xs tracking-widest text-muted uppercase text-center mb-4">Reset Code</label>
             <motion.div 
               className="flex justify-between gap-2"
               animate={error ? { x: [-5, 5, -5, 5, 0] } : {}}
@@ -148,7 +148,7 @@ function ResetPasswordForm() {
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={handlePaste}
                   disabled={loading || isSuccess}
-                  className="w-12 h-14 bg-zinc-900 border border-zinc-800 text-center text-2xl focus:outline-none focus:border-white focus:bg-black transition-colors rounded-lg disabled:opacity-50"
+                  className="w-12 h-14 bg-card border border-border text-foreground text-center text-2xl focus:outline-none focus:border-foreground focus:bg-background transition-colors rounded-lg disabled:opacity-50"
                 />
               ))}
             </motion.div>
@@ -162,7 +162,7 @@ function ResetPasswordForm() {
               placeholder="New Password"
               required
               disabled={loading || isSuccess}
-              className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+              className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
             />
           </div>
 
@@ -183,10 +183,10 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading || isSuccess || otp.join('').length !== 6 || !newPassword}
-              className="w-full bg-white text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-foreground text-background py-4 font-medium tracking-widest uppercase text-sm hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {loading && !isSuccess ? (
-                <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
               ) : (
                 'Reset Password'
               )}
@@ -200,7 +200,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <ResetPasswordForm />
     </Suspense>
   );

@@ -62,7 +62,7 @@ export default function OrderTrackingSection() {
   };
 
   return (
-    <section className="py-24 border-b bg-[#FDFBF7] border-border">
+    <section className="py-24 border-b bg-background border-border">
       <div className="container-custom">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10">
@@ -89,7 +89,7 @@ export default function OrderTrackingSection() {
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center justify-center gap-2 px-8 py-4 font-mono text-[11px] font-bold tracking-[0.2em] uppercase transition-colors whitespace-nowrap bg-foreground text-white hover:bg-black"
+              className="flex items-center justify-center gap-2 px-8 py-4 font-mono text-[11px] font-bold tracking-[0.2em] uppercase transition-colors whitespace-nowrap bg-foreground text-background hover:bg-muted"
             >
               {loading ? 'TRACKING...' : 'TRACK ORDER'} <ArrowRight size={14} />
             </button>

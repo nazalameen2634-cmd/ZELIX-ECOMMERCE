@@ -27,8 +27,8 @@ export default function ProfilePage() {
   // If loading, show a blank or loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
-        <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="h-5 w-5 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -69,7 +69,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-black px-4 pt-32 pb-16 font-sans">
+    <div className="min-h-screen bg-background text-foreground px-4 pt-32 pb-16 font-sans">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -97,8 +97,8 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-8">
-          <div className="bg-white p-6 md:p-8 rounded-lg border border-gray-200 shadow-sm">
-            <h2 className="text-sm font-semibold tracking-widest uppercase text-gray-400 mb-6">Profile Details</h2>
+          <div className="bg-card p-6 md:p-8 rounded-lg border border-border shadow-sm">
+            <h2 className="text-sm font-semibold tracking-widest uppercase text-muted mb-6">Profile Details</h2>
             
             <AnimatePresence>
               {error && (
@@ -140,7 +140,7 @@ export default function ProfilePage() {
                     onChange={(e) => setName(e.target.value)}
                     required
                     disabled={saving}
-                    className="w-full border-b border-gray-300 pb-2 text-lg focus:outline-none focus:border-black transition-colors bg-transparent disabled:opacity-50"
+                    className="w-full border-b border-border pb-2 text-lg focus:outline-none focus:border-foreground transition-colors bg-transparent disabled:opacity-50"
                   />
                 </div>
 
@@ -162,7 +162,7 @@ export default function ProfilePage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     disabled={saving}
-                    className="w-full border-b border-gray-300 pb-2 text-lg focus:outline-none focus:border-black transition-colors bg-transparent disabled:opacity-50"
+                    className="w-full border-b border-border pb-2 text-lg focus:outline-none focus:border-foreground transition-colors bg-transparent disabled:opacity-50"
                   />
                 </div>
 
@@ -170,10 +170,10 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={saving || !name}
-                    className="px-8 py-3 bg-black text-white font-semibold tracking-widest uppercase text-xs hover:bg-gray-800 transition-colors disabled:opacity-50 flex items-center justify-center"
+                    className="px-8 py-3 bg-foreground text-background font-semibold tracking-widest uppercase text-xs hover:bg-muted transition-colors disabled:opacity-50 flex items-center justify-center"
                   >
                     {saving ? (
-                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="h-4 w-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
                     ) : (
                       'Save Changes'
                     )}
@@ -188,7 +188,7 @@ export default function ProfilePage() {
                       setSuccess('');
                     }}
                     disabled={saving}
-                    className="px-8 py-3 bg-white text-black border border-gray-300 font-semibold tracking-widest uppercase text-xs hover:bg-gray-50 transition-colors disabled:opacity-50"
+                    className="px-8 py-3 bg-background text-foreground border border-border font-semibold tracking-widest uppercase text-xs hover:bg-card transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -201,7 +201,7 @@ export default function ProfilePage() {
             <div className="pt-8">
               <button
                 onClick={signOut}
-                className="px-8 py-3 bg-white border border-gray-300 text-black font-semibold tracking-widest uppercase text-xs hover:bg-gray-50 transition-colors w-full md:w-auto"
+                className="px-8 py-3 bg-background border border-border text-foreground font-semibold tracking-widest uppercase text-xs hover:bg-card transition-colors w-full md:w-auto"
               >
                 Sign Out
               </button>

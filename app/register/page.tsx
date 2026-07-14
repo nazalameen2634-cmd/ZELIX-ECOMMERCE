@@ -117,7 +117,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4 py-20">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4 py-20">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -126,7 +126,7 @@ export default function RegisterPage() {
       >
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold tracking-[0.2em] mb-4 uppercase">ZELIX</h1>
-          <p className="text-zinc-500 text-sm tracking-widest uppercase">
+          <p className="text-muted text-sm tracking-widest uppercase">
             {step === 'details' ? 'Create an account' : 'Verify your email'}
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function RegisterPage() {
                   placeholder="Full Name"
                   required
                   disabled={loading}
-                  className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+                  className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
                 />
 
                 <input
@@ -161,7 +161,7 @@ export default function RegisterPage() {
                   placeholder="Email Address"
                   required
                   disabled={loading}
-                  className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+                  className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
                 />
 
                 <input
@@ -172,7 +172,7 @@ export default function RegisterPage() {
                   placeholder="Phone Number"
                   required
                   disabled={loading}
-                  className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+                  className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
                 />
                 
                 <input
@@ -183,7 +183,7 @@ export default function RegisterPage() {
                   placeholder="Password"
                   required
                   disabled={loading}
-                  className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+                  className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
                 />
               </div>
 
@@ -204,10 +204,10 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={loading || !formData.email || !formData.password || !formData.name || !formData.phone}
-                  className="w-full bg-white text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-full bg-foreground text-background py-4 font-medium tracking-widest uppercase text-sm hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   {loading ? (
-                    <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                    <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                   ) : (
                     'Continue'
                   )}
@@ -215,7 +215,7 @@ export default function RegisterPage() {
               </div>
               
               <div className="text-center pt-4">
-                <Link href="/login" className="text-zinc-500 hover:text-white text-sm tracking-wide transition-colors">
+                <Link href="/login" className="text-muted hover:text-foreground text-sm tracking-wide transition-colors">
                   Already have an account? <span className="underline underline-offset-4">Sign In</span>
                 </Link>
               </div>
@@ -229,9 +229,9 @@ export default function RegisterPage() {
               onSubmit={handleRegister} 
               className="space-y-8"
             >
-              <p className="text-zinc-500 text-sm text-center">
+              <p className="text-muted text-sm text-center">
                 We sent a 6-digit code to <br />
-                <span className="text-white">{formData.email}</span>
+                <span className="text-foreground">{formData.email}</span>
               </p>
               
               <div className="flex justify-center gap-2">
@@ -248,7 +248,7 @@ export default function RegisterPage() {
                     onKeyDown={(e) => handleOtpKeyDown(index, e)}
                     onPaste={handleOtpPaste}
                     disabled={loading}
-                    className="w-12 h-14 bg-zinc-900 border border-zinc-800 text-center text-2xl focus:outline-none focus:border-white focus:bg-black transition-colors rounded-lg disabled:opacity-50"
+                    className="w-12 h-14 bg-card border border-border text-foreground text-center text-2xl focus:outline-none focus:border-foreground focus:bg-background transition-colors rounded-lg disabled:opacity-50"
                   />
                 ))}
               </div>
@@ -270,10 +270,10 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={loading || otp.join('').length !== 6}
-                  className="w-full bg-white text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-full bg-foreground text-background py-4 font-medium tracking-widest uppercase text-sm hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   {loading ? (
-                    <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                    <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                   ) : (
                     'Verify & Create Account'
                   )}
@@ -284,7 +284,7 @@ export default function RegisterPage() {
                 <button 
                   type="button" 
                   onClick={() => setStep('details')}
-                  className="text-zinc-500 hover:text-white text-sm tracking-wide transition-colors underline underline-offset-4"
+                  className="text-muted hover:text-foreground text-sm tracking-wide transition-colors underline underline-offset-4"
                 >
                   Back
                 </button>

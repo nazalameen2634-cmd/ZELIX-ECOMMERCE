@@ -44,7 +44,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -53,7 +53,7 @@ export default function LoginPage() {
       >
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold tracking-[0.2em] mb-4 uppercase">ZELIX</h1>
-          <p className="text-zinc-500 text-sm tracking-widest uppercase">Sign In to your account</p>
+          <p className="text-muted text-sm tracking-widest uppercase">Sign In to your account</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-8">
@@ -65,7 +65,7 @@ export default function LoginPage() {
               placeholder="Email Address"
               required
               disabled={loading}
-              className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+              className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
             />
             
             <div className="relative">
@@ -76,10 +76,10 @@ export default function LoginPage() {
                 placeholder="Password"
                 required
                 disabled={loading}
-                className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+                className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
               />
               <div className="text-right mt-3">
-                <Link href="/forgot-password" className="text-zinc-500 hover:text-white text-xs tracking-wide transition-colors">
+                <Link href="/forgot-password" className="text-muted hover:text-foreground text-xs tracking-wide transition-colors">
                   Forgot Password?
                 </Link>
               </div>
@@ -103,10 +103,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading || !email || !password}
-              className="w-full bg-white text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-foreground text-background py-4 font-medium tracking-widest uppercase text-sm hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {loading ? (
-                <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
               ) : (
                 'Sign In'
               )}
@@ -114,7 +114,7 @@ export default function LoginPage() {
           </div>
           
           <div className="text-center pt-4">
-            <Link href="/register" className="text-zinc-500 hover:text-white text-sm tracking-wide transition-colors">
+            <Link href="/register" className="text-muted hover:text-foreground text-sm tracking-wide transition-colors">
               Don't have an account? <span className="underline underline-offset-4">Create one</span>
             </Link>
           </div>

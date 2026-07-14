@@ -208,7 +208,7 @@ export default function ProductDetails({
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock_quantity === 0 && product.track_inventory && !product.allow_backorders}
-                  className="flex-1 py-4 bg-accent text-white font-sans text-[11px] font-bold tracking-[0.2em] rounded-full flex items-center justify-center gap-2 hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-sm disabled:bg-muted/30 disabled:text-neutral-600 disabled:cursor-not-allowed disabled:scale-100"
+                  className="flex-1 py-4 bg-accent text-background font-sans text-[11px] font-bold tracking-[0.2em] rounded-full flex items-center justify-center gap-2 hover:bg-accent-hover hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer shadow-sm disabled:bg-muted/30 disabled:text-neutral-600 disabled:cursor-not-allowed disabled:scale-100"
                 >
                   <ShoppingBag size={12} />
                   {product.stock_quantity === 0 && product.track_inventory && !product.allow_backorders

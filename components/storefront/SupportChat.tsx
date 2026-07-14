@@ -100,7 +100,7 @@ export default function SupportChat() {
       {/* Floating Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-14 h-14 bg-white text-black hover:bg-neutral-200 shadow-2xl flex flex-col gap-1 items-center justify-center border border-white/20 transition-all rounded-full"
+        className="w-14 h-14 bg-foreground text-background hover:bg-muted shadow-2xl flex flex-col gap-1 items-center justify-center border border-white/20 transition-all rounded-full"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -166,7 +166,7 @@ export default function SupportChat() {
                   <div
                     className={`px-3 py-2 text-[10px] tracking-wide leading-relaxed rounded-sm ${
                       msg.sender === 'user'
-                        ? 'bg-white text-black font-semibold text-right'
+                        ? 'bg-foreground text-background font-semibold text-right'
                         : 'bg-neutral-900 text-neutral-200 border border-white/5'
                     }`}
                   >
@@ -223,7 +223,7 @@ export default function SupportChat() {
               <button
                 type="submit"
                 disabled={isTyping || !inputValue.trim()}
-                className="p-2 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-900 disabled:text-neutral-600 transition-colors rounded-sm flex items-center justify-center"
+                className="p-2 bg-foreground text-background hover:bg-muted disabled:bg-neutral-900 disabled:text-neutral-600 transition-colors rounded-sm flex items-center justify-center"
               >
                 <Send size={10} />
               </button>

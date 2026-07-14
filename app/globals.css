@@ -9,16 +9,16 @@
 
 @layer theme {
   :root {
-    --color-background: #FDFBF7;
-    --color-foreground: #212121;
-    --color-card: #FAF8F5;
-    --color-border: #E8E3DC;
-    --color-accent: #D99A9A;
-    --color-accent-hover: #C98A8A;
-    --color-muted: #666666;
-    --color-success: #2E7D5A;
-    --color-warning: #C99A3B;
-    --color-error: #C84D4D;
+    --color-background: #F7F3EB;
+    --color-foreground: #3E2C20;
+    --color-card: #F0E8D9;
+    --color-border: #D8CBB6;
+    --color-accent: #8C6239;
+    --color-accent-hover: #704D2D;
+    --color-muted: #8A7A6D;
+    --color-success: #4A6E46;
+    --color-warning: #B38640;
+    --color-error: #B04B4B;
     --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     --font-serif: var(--font-serif), ui-serif, Georgia, serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;

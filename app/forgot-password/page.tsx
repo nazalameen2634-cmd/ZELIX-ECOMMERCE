@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
       >
         <div className="text-center mb-12">
           <h1 className="text-2xl font-bold tracking-[0.1em] mb-4 uppercase">Reset Password</h1>
-          <p className="text-zinc-500 text-sm tracking-wide">Enter your email to receive a reset code</p>
+          <p className="text-muted text-sm tracking-wide">Enter your email to receive a reset code</p>
         </div>
 
         <form onSubmit={handleSendResetOtp} className="space-y-8">
@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
               placeholder="Email Address"
               required
               disabled={loading}
-              className="w-full bg-transparent border-b border-zinc-800 pb-4 text-center text-lg focus:outline-none focus:border-white transition-colors placeholder:text-zinc-700 disabled:opacity-50"
+              className="w-full bg-transparent border-b border-border pb-4 text-center text-lg focus:outline-none focus:border-foreground transition-colors placeholder:text-muted disabled:opacity-50"
             />
           </div>
 
@@ -74,10 +74,10 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading || !email}
-              className="w-full bg-white text-black py-4 font-medium tracking-widest uppercase text-sm hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-foreground text-background py-4 font-medium tracking-widest uppercase text-sm hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {loading ? (
-                <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                <div className="h-5 w-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
               ) : (
                 'Send Reset Code'
               )}
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
           </div>
           
           <div className="text-center pt-4">
-            <Link href="/login" className="text-zinc-500 hover:text-white text-sm tracking-wide transition-colors">
+            <Link href="/login" className="text-muted hover:text-foreground text-sm tracking-wide transition-colors">
               Remembered your password? <span className="underline underline-offset-4">Sign In</span>
             </Link>
           </div>
